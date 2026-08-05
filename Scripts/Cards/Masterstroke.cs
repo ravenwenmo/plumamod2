@@ -27,16 +27,14 @@ public class Masterstroke : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 动态变量：基础伤害 1，乘数为渐入佳境层数，最终 CalculatedDamage = 1 * 层数
+    // 仿照 TimesUp：基础伤害 0，额外伤害 1，乘数为玩家身上的渐入佳境层数
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new CalculationBaseVar(1m),   // 基础伤害 1
+        new CalculationBaseVar(0m),
+        new ExtraDamageVar(1m),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
-        {
-            if (card?.Owner?.Creature != null)
-                return card.Owner.Creature.GetPowerAmount<FlowState>();
-            return 0m;
-        })
+            card?.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0
+        )
     };
 
     public Masterstroke() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -45,7 +43,6 @@ public class Masterstroke : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 直接使用计算好的伤害变量
         await DamageCmd.Attack(base.DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!)
