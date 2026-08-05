@@ -1,0 +1,61 @@
+<Project Sdk="Godot.NET.Sdk/4.5.1">
+  <PropertyGroup>
+    <!-- 如果你安装了10.0并遇到问题，改下这里 -->
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>true</ImplicitUsings>
+    <LangVersion>13.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    
+
+    <!-- 改成你的杀戮尖塔2目录 -->
+    <Sts2Dir>E:\SteamLibrary\steamapps\common\Slay the Spire 2</Sts2Dir>
+    <Sts2DataDir>$(Sts2Dir)\data_sts2_windows_x86_64</Sts2DataDir>
+      
+    <!-- 其余省略，添加以下这行，可以自动部署到你的mods文件夹 -->
+    <RitsuLibDeployDir>$(Sts2Dir)/mods/STS2-RitsuLib/</RitsuLibDeployDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="sts2">
+      <HintPath>$(Sts2DataDir)\sts2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="0Harmony">
+      <HintPath>$(Sts2DataDir)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- NuGet获取 -->
+    <PackageReference Include="STS2.RitsuLib" Version="*" />
+    <!-- 如果你在其他版本开发，自由指定兼容版本 -->
+    <!-- <PackageReference Include=" STS2.RitsuLib.Compat.0.103.2 " Version="*" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="pluma\images\cards\" />
+    <Folder Include="pluma\images\relics\" />
+    <Folder Include="pluma\images\scenes\" />
+    <Folder Include="pluma\images\spineAni\ori\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="pluma\localization\zhs\ancients.json" />
+    <Content Include="pluma\localization\zhs\cards.json" />
+    <Content Include="pluma\localization\zhs\card_keywords.json" />
+    <Content Include="pluma\localization\zhs\characters.json" />
+    <Content Include="pluma\localization\zhs\events.json" />
+    <Content Include="pluma\localization\zhs\powers.json" />
+    <Content Include="pluma\localization\zhs\relics.json" />
+    <Content Include="pluma\localization\zhs\static_hover_tips.json" />
+  </ItemGroup>
+
+  <!-- 自动复制dll和json -->
+  <Target Name="Copy Mod" AfterTargets="PostBuildEvent">
+    <Message Text="Copying mod to Slay the Spire 2 mods folder..." Importance="high" />
+    <MakeDir Directories="$(Sts2Dir)\mods\" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(Sts2Dir)\mods\$(MSBuildProjectName)\" />
+    <Copy SourceFiles="$(MSBuildProjectName).json" DestinationFolder="$(Sts2Dir)/mods/$(MSBuildProjectName)/" />
+  </Target>
+</Project>

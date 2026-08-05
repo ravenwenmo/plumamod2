@@ -1,0 +1,41 @@
+﻿{
+  "PLUMA_POWER_RAPID_SLASHING_STACKS.description": "达到一定层数时再使用高速切割或额外进行一次高速切割",
+  "PLUMA_POWER_RAPID_SLASHING_STACKS.smartDescription": "达到一定层数时再使用高速切割或额外进行一次高速切割，已叠[blue]{Amount}层。",
+  "PLUMA_POWER_RAPID_SLASHING_STACKS.title": "高速切割",
+
+  "PLUMA_POWER_REAPER_HEALING_POWER.description": "造成伤害时恢复血量。",
+  "PLUMA_POWER_REAPER_HEALING_POWER.smartDescription": "造成伤害时恢复血量。",
+  "PLUMA_POWER_REAPER_HEALING_POWER.title": "收割者",
+  
+  "PLUMA_POWER_SHARPEN_BLADE_POWER.description": "下一张攻击牌会造成额外伤害。",
+  "PLUMA_POWER_SHARPEN_BLADE_POWER.smartDescription": "下一张攻击牌会造成[blue]{Amount}%额外伤害。",
+  "PLUMA_POWER_SHARPEN_BLADE_POWER.title": "磨刀",
+
+  "PLUMA_POWER_CHARGING_POWER.description": "下一张攻击牌会额外打出一次。",
+  "PLUMA_POWER_CHARGING_POWER.smartDescription": "下一张攻击牌会额外打出一次。回合结束消失。",
+  "PLUMA_POWER_CHARGING_POWER.title": "蓄力",
+
+  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌,根据层数获得攻击力加成",
+  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，当前攻击力加成：[blue]3*[/blue][blue]{Amount}%",
+  "PLUMA_POWER_FLOW_STATE.title": "渐入佳境",
+
+  "PLUMA_POWER_THE_BEAT_POWER.title": "节奏感",
+  "PLUMA_POWER_THE_BEAT_POWER.description": "每打出一张本能牌，获得 1 点能量。",
+  "PLUMA_POWER_THE_BEAT_POWER.smartDescription": "每打出一张本能牌，获得 1 点能量。",
+
+  "PLUMA_POWER_OPEN_WOUND_POWER.title": "创伤",
+  "PLUMA_POWER_OPEN_WOUND_POWER.description": "造成伤害时，先受到等量于层数的伤害，然后层数减少1。",
+  "PLUMA_POWER_OPEN_WOUND_POWER.smartDescription": "造成伤害时，受到 [red]{Amount}[/red] 点伤害并将层数减少 [blue]1[/blue]。",
+
+  "PLUMA_POWER_TRANSPARENT_WORLD_POWER.title": "通透世界",
+  "PLUMA_POWER_TRANSPARENT_WORLD_POWER.description": "渐入佳境抽到的本能牌自动打出。",
+  "PLUMA_POWER_TRANSPARENT_WORLD_POWER.smartDescription": "渐入佳境抽到的本能牌自动打出。",
+
+  "PLUMA_POWER_CONSTANT_FLOW_POWER.title": "源源不断",
+  "PLUMA_POWER_CONSTANT_FLOW_POWER.description": "每回合开始，获得等于层数的 渐入佳境 。",
+  "PLUMA_POWER_CONSTANT_FLOW_POWER.smartDescription": "每回合获得 [blue]{Amount}[/blue] 层 渐入佳境 。",
+
+  "PLUMA_POWER_LIBERI_POWER.title": "黎博利",
+  "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
+  "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"
+}

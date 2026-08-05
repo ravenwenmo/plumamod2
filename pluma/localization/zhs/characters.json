@@ -1,0 +1,18 @@
+﻿{
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.aromaPrinciple": "[sine][blue]……等待……[/blue][/sine]  // 混沌香气事件中的内心独白",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.banter.alive.endTurnPing": "多人模式：存活时回合结束对白",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.banter.dead.endTurnPing": "多人模式：死亡后回合结束对白",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.cardsModifierDescription": "羽毛笔的卡牌现在会出现在奖励和商店中。",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.cardsModifierTitle": "羽毛笔卡牌",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.description": "这是角色选择界面描述",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.eventDeathPrevention": "这是死亡时事件对话",
+
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.goldMonologue": "[sine]这些金币……也许能派上用场……[/sine]这是沉没宝库事件中对金币的独白",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.possessiveAdjective": "她的",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.pronounObject": "她",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.pronounPossessive": "她的",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.pronounSubject": "她",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.title": "羽毛笔",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.titleObject": "羽毛笔",
+  "PLUMA_CHARACTER_PLUMA_CHARACTER.unlockText": "用[pink]{Prerequisite}[/pink]进行一局游戏来解锁这个角色。//解锁条件文案，{Prerequisite} 会被替换"
+}
