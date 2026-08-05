@@ -32,9 +32,9 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
             
             Scenes: new(
                 // 人物模型tscn路径。
-                VisualsPath: "res://pluma/images/spineAni/ori/ori_character.tscn"
+                VisualsPath: "res://pluma/images/spineAni/ori/ori_character.tscn",
                 // 能量表盘tscn路径。
-                //EnergyCounterPath: "res://pluma/scenes/test_energy_counter.tscn",
+                EnergyCounterPath: "res://pluma/images/scenes/TestEnergy.tscn"
                 // 商店人物场景。
                 //MerchantAnimPath: "res://pluma/scenes/test_character_merchant.tscn",
                 // 篝火休息场景。
@@ -43,13 +43,13 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
             Ui: new(
                 // 对于图片，只要是godot支持的格式都可以，例如png,jpg,svg等等，之后不再说明
                 // 人物头像路径。自适应大小。
-                //IconTexturePath: "res://icon.svg",
+                IconTexturePath: "res://pluma/images/1img/char_late/character2.png",
                 // 游戏左上角头像、角色统计页头像、每日挑战角色头像。这个是场景而不是图片。参考下方附赠资源搭建。
-                //IconPath: "res://Test/scenes/test_icon.tscn",
+                IconPath: "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
                 // 人物选择背景。
-                //CharacterSelectBgPath: "res://Test/scenes/test_bg.tscn",
+                CharacterSelectBgPath: "res://pluma/images/scenes/ori_background.tscn",
                 // 人物选择图标。
-                //CharacterSelectIconPath: "res://Test/images/char_select_test.png",
+                CharacterSelectIconPath: "res://Test/images/char_select_test.png"
                 // 人物选择图标-锁定状态。
                 //CharacterSelectLockedIconPath: "res://Test/images/char_select_test_locked.png",
                 // 人物选择过渡动画。

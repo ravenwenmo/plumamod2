@@ -35,7 +35,7 @@
   "PLUMA_POWER_CONSTANT_FLOW_POWER.description": "每回合开始，获得等于层数的 渐入佳境 。",
   "PLUMA_POWER_CONSTANT_FLOW_POWER.smartDescription": "每回合获得 [blue]{Amount}[/blue] 层 渐入佳境 。",
 
-  "PLUMA_POWER_LIBERI_POWER.title": "黎博利",
+  "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"
 }
