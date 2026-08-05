@@ -32,23 +32,27 @@ public class FlowState : ModPowerTemplate
         IconPath: "res://pluma/images/powers/RapidSlashingStacks.png",
         BigIconPath: "res://pluma/images/powers/RapidSlashingStacks.png"
     );
-
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         await base.AfterPowerAmountChanged(choiceContext, power, amount, applier, cardSource);
 
         if (power != this || amount <= 0) return;
 
-        // 如果正在抽牌中，将新增层数加入待处理队列，避免递归
-        if (_isDrawing)
+        // 立即通知遗物（如果存在）
+        var player = base.Owner.Player;
+        if (player != null)
         {
-            _pendingDrawAmount += amount;
-            return;
+            var modShard = player.Relics.OfType<ModShard>().FirstOrDefault();
+            if (modShard != null)
+            {
+                await modShard.CheckAndUpdateStrength();
+            }
         }
 
+        // 原有的抽牌逻辑（带延迟）
+        await Task.Delay(1);
         await DrawAttackCard(choiceContext, amount);
     }
-
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {
         // 如果伤害来自 ButFocused，本能力不重复计算

@@ -6,6 +6,22 @@
   "PLUMA_RELIC_LIBERI_LENS.title": "黎博利思维",
   "PLUMA_RELIC_LIBERI_LENS.description": "进入战斗时，获得2层 黎博利 。所有敌人获得1层 黎博利 。",
   "PLUMA_RELIC_LIBERI_LENS.flavor": "“你是一只黎博利，你也是一只黎博利，大家都是黎博利”",
+
+  "PLUMA_RELIC_MOD_SHARD.title": "模组碎片",
+  "PLUMA_RELIC_MOD_SHARD.description": "渐入佳境 层数大于 8 时，获得 2 点 力量 。",
+  "PLUMA_RELIC_MOD_SHARD.flavor": "某个数值给的很抠的模组的一部分，但它的触发条件为什么反而变简单了？",
+
+  "PLUMA_RELIC_GOLDEN_PLAINS.title": "黄金平原",
+  "PLUMA_RELIC_GOLDEN_PLAINS.description": "每洗牌两次，获得获得[blue]{Energy:energyIcons()}[/blue]。",
+  "PLUMA_RELIC_GOLDEN_PLAINS.flavor": "“黄金平原怎么会在这？你怎么找到它的？”“拉菲艾拉毕竟是一名调酒师，大概冥冥之中有种感应......”",
+  
+  "PLUMA_RELIC_FIRST_LAW.title": "第一法则",
+  "PLUMA_RELIC_FIRST_LAW.description": "每洗牌两次，获得[blue]{Energy:energyIcons()}[/blue]。",
+  "PLUMA_RELIC_FIRST_LAW.flavor": "“日晷叠的全面上位，你这写的不纯纯假卡？”“这东西放本家也是假遗物，不超模反而是ooc有没有懂的。”",
+  
+  "PLUMA_RELIC_SPINACH_CAN.title": "绿叶菜罐头",
+  "PLUMA_RELIC_SPINACH_CAN.description": "每当你获得 渐入佳境 ，获得1层 活力 。",
+  "PLUMA_RELIC_SPINACH_CAN.flavor": "“很多卡特斯相信吃下这盒罐头，他们就会变得力大无穷。出色的广告效果，业界经典成功案例。”",
   
   "SEA_GLASS.PLUMA_CHARACTER_PLUMA_CHARACTER.title": "戈多玻璃"
 }
