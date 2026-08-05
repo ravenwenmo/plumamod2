@@ -27,22 +27,18 @@ public class ButFocused : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 基础伤害0，额外伤害14，乘数=1 + 渐入佳境层数 * 倍率 * 3%
-    // 倍率通过 Multiplier 变量管理（5→10）
+    // 变量：基础伤害14，额外伤害14，乘数 = 层数 * 倍率 * 3%
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new CalculationBaseVar(0m),
+        new CalculationBaseVar(14m),
         new ExtraDamageVar(14m),
         ModCardVars.Int("Multiplier", 5),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
         {
-            if (card == null) return 1m;
+            if (card == null) return 0m; // 预览时无加成
             var stacks = card.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0;
-            // 安全获取 Multiplier 变量，如果尚未初始化则使用基础值 5
-            var multiplier = card.DynamicVars.TryGetValue("Multiplier", out var dynVar)
-                ? dynVar.BaseValue
-                : 5m;
-            return 1m + stacks * multiplier * 0.03m;
+            var multiplier = card.DynamicVars.TryGetValue("Multiplier", out var mv) ? mv.BaseValue : 5m;
+            return stacks * multiplier * 0.03m;
         })
     };
 
