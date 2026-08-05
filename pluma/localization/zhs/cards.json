@@ -76,7 +76,7 @@
 
   "PLUMA_CARD_MASTERSTROKE.title": "大师斩",
   "PLUMA_CARD_MASTERSTROKE.description": "造成等于 渐入佳境 层数的伤害。\n当前伤害：{CalculatedDamage:diff()}",
-
+  
   "PLUMA_CARD_BUT_FOCUSED.title": "截然相反的集中",
   "PLUMA_CARD_BUT_FOCUSED.description": "造成 {CalculatedDamage:diff()} 点伤害。\n渐入佳境 在本攻击上效果提高至 [blue]{Multiplier}[/blue] 倍。",
   
