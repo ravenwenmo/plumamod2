@@ -13,7 +13,7 @@ namespace Pluma.Scripts;
 
 // 第一法则：每洗牌两次，获得2点能量。
 [RegisterRelic(typeof(PlumaRelicPool))]
-public class FirstLaw : ModRelicTemplate
+public class PrimaRegola : ModRelicTemplate
 {
     private int _shuffleCount;
 
