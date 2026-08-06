@@ -97,4 +97,5 @@ public static class PlumaSkins
         if (index < 0 || index >= Skins.Count) return;
         CurrentIndex = index;
     }
+    
 }
