@@ -18,11 +18,11 @@ public static class PlumaSkins
     {
         new()
         {
-            Name = "原皮",
+            Name = "默认",
             VisualsPath = "res://pluma/images/spineAni/ori/ori_character.tscn",
             CharacterSelectBgPath = "res://pluma/images/scenes/ori_background_skins.tscn",
             IconPath = "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
-            IconTexturePath = "res://pluma/images/1img/char_late/character2.png",
+            IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",// 人物头像路径。自适应大小。
             PortraitPath = "res://pluma/images/scenes/test_background.png", // 立绘图片
             BackgroundColor = new Color(0.209f, 0.623f, 0.734f)
         },
@@ -32,7 +32,7 @@ public static class PlumaSkins
             VisualsPath = "res://pluma/images/spineAni/sum/sum_character.tscn", // 你的夏卉模型路径
             CharacterSelectBgPath = "res://pluma/images/scenes/ori_background_skins.tscn",
             IconPath = "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
-            IconTexturePath = "res://pluma/images/1img/char_late/character2.png", // 可替换
+            IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",// 人物头像路径。自适应大小。
             PortraitPath = "res://pluma/images/scenes/test_background.png", // 夏卉立绘（暂时用同一张，可替换）
             BackgroundColor = new Color(0.5f, 0.2f, 0.8f)
         }

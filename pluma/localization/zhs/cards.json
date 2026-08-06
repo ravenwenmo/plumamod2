@@ -79,6 +79,12 @@
   
   "PLUMA_CARD_BUT_FOCUSED.title": "截然相反的集中",
   "PLUMA_CARD_BUT_FOCUSED.description": "造成 {CalculatedDamage:diff()} 点伤害。\n渐入佳境 在本攻击上效果提高至 [blue]{Multiplier}[/blue] 倍。",
+
+  "PLUMA_CARD_SPECIAL_BLEND.title": "特调",
+  "PLUMA_CARD_SPECIAL_BLEND.description": "选择并消耗 2 张手牌。\n 将 1 张升级过的随机牌加入你的手牌。",
+
+  "PLUMA_CARD_DESPERATE_STRIKE.title": "放手一搏",
+  "PLUMA_CARD_DESPERATE_STRIKE.description": "弃掉所有手牌。\n获得等量层数的 渐入佳境 。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成 {Damage:diff()} 点伤害。"

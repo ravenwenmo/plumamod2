@@ -45,7 +45,7 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
                 //RestSiteAnimPath: "res://pluma/scenes/test_character_rest_site.tscn"
             ),
             Ui: new(
-                
+
                 /* 
                 // 对于图片，只要是godot支持的格式都可以，例如png,jpg,svg等等，之后不再说明
                 // 人物头像路径。自适应大小。
@@ -59,12 +59,15 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
                 */
                 
                 // 使用当前皮肤的头像图片路径
+                //IconTexturePath:"res://pluma/images/scenes/test_background.png", // 立绘图片，不过这行好像注释对应的不对？
                 IconTexturePath: PlumaSkins.Current.IconTexturePath,
                 // 使用当前皮肤的头像图标场景路径
                 IconPath: PlumaSkins.Current.IconPath,
                 // 使用当前皮肤的角色选择背景场景路径
                 CharacterSelectBgPath: PlumaSkins.Current.CharacterSelectBgPath,
-                CharacterSelectIconPath: "res://pluma/images/spineAin/ori/TestSelectIcon.png"
+                
+                //角色选择界面下边的头像
+                CharacterSelectIconPath: "res://pluma/images/spineAni/ori/TestSelectIcon.png"
                 
                 
 
