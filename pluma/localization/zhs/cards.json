@@ -85,6 +85,9 @@
 
   "PLUMA_CARD_DESPERATE_STRIKE.title": "放手一搏",
   "PLUMA_CARD_DESPERATE_STRIKE.description": "弃掉所有手牌。\n获得等量层数的 渐入佳境 。",
+
+  "PLUMA_CARD_LIBERI_BITE.title": "黎博利咬",
+  "PLUMA_CARD_LIBERI_BITE.description": "施加 {OpenWound:diff()} 层 [gold]创伤[/gold] 。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成 {Damage:diff()} 点伤害。"
