@@ -14,11 +14,12 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.CardPools;
 
 namespace Pluma.Scripts;
 
 // 切割：0费生成攻击牌，对所有敌人造成伤害，虚无。
-[RegisterCard(typeof(PlumaCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public class Slashing : ModCardTemplate
 {
     private const int energyCost = 0;
@@ -45,6 +46,42 @@ public class Slashing : ModCardTemplate
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState)
             .Execute(choiceContext);
+        
+        
+        //连击上创伤
+        var history = CombatManager.Instance.History.CardPlaysStarted;
+        var previous = history.Reverse()
+            .FirstOrDefault(entry => entry.CardPlay != cardPlay)?
+            .CardPlay.Card;
+
+        int count = 0;
+
+        foreach (var entry in history.Reverse())
+        {
+            // 跳过当前正在打出的这张牌
+            if (entry.CardPlay.Card == this) continue;
+            
+            // 如果这张牌带有 SlashingTag，计数加一；否则结束循环
+            if (entry.CardPlay.Card.Tags.Any(t => t == PlumaTags.Slashing))
+                count++;
+            else
+                break;
+            
+        }
+        // 对所有可攻击敌人施加创伤（不是 cardPlay.Target!）
+        if (count > 0)
+        {
+            foreach (var enemy in CombatState.HittableEnemies)
+            {
+                await PowerCmd.Apply<OpenWoundPower>(
+                    choiceContext,
+                    enemy,
+                    count,
+                    base.Owner.Creature,
+                    this
+                );
+            }
+        }
     }
 
     protected override void OnUpgrade()
@@ -65,6 +102,13 @@ public class Slashing : ModCardTemplate
         return cards;
     }
 
+    
+    
+    protected override HashSet<CardTag> CanonicalTags => [
+        PlumaTags.Slashing, // 添加自定义tag
+        // CardTag.Strike, // 添加原版tag
+    ];
+    
     public static async Task<CardModel?> CreateInHand(Player owner, ICombatState combatState, Player? creator = null)
     {
         return (await CreateInHand(owner, 1, combatState, creator)).FirstOrDefault();
