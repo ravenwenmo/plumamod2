@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -53,7 +54,10 @@ public class Parka : ModCardTemplate
         await PowerCmd.Apply<PlatingPower>(choiceContext, base.Owner.Creature, 
             base.DynamicVars["PlatingPower"].BaseValue, base.Owner.Creature, this);
     }
-
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<PlatingPower>()
+    };
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {

@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -41,6 +42,13 @@ public class Reformation : ModCardTemplate
             choiceContext, base.Owner.Creature, 5, base.Owner.Creature, this);
     }
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<ConstantFlowPower>(),
+        HoverTipFactory.FromPower<MindRotPower>()
+    };
+
+    
     protected override void OnUpgrade()
     {
         // 费用 -1

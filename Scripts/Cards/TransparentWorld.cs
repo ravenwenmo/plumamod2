@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -42,7 +43,12 @@ public class TransparentWorld : ModCardTemplate
         await PowerCmd.Apply<ConstantFlowPower>(
             choiceContext, base.Owner.Creature, 3, base.Owner.Creature, this);
     }
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
 
+    
     protected override void OnUpgrade()
     {
         RemoveKeyword(CardKeyword.Ethereal);

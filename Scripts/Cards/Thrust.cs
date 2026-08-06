@@ -64,6 +64,10 @@ public class Thrust : ModCardTemplate
 
     }
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {

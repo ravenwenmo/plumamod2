@@ -11,6 +11,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Scaffolding.Content;
 
+
 namespace Pluma.Scripts;
 
 [RegisterCard(typeof(PlumaCardPool))]
@@ -47,6 +48,11 @@ public class Flow : ModCardTemplate
         );
     }
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
+    
     protected override void OnUpgrade()
     {
         // 升级后层数从 3 变为 4

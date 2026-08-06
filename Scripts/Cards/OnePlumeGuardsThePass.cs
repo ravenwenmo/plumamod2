@@ -58,7 +58,10 @@ public class OnePlumeGuardsThePass : ModCardTemplate
             this
         );
     }
-
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(3m); // 8 → 11

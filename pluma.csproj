@@ -39,7 +39,6 @@
     <Folder Include="pluma\images\scenes\" />
     <Folder Include="pluma\images\spineAni\ori\" />
     <Folder Include="Scripts\Others\" />
-    <Folder Include="Scripts\Test\" />
   </ItemGroup>
 
   <ItemGroup>

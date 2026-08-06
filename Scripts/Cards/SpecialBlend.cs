@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -76,6 +77,11 @@ public class SpecialBlend : ModCardTemplate
         await CardPileCmd.AddGeneratedCardsToCombat(generated, PileType.Hand, base.Owner);
     }
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
+    };
+    
     protected override void OnUpgrade()
     {
         base.EnergyCost.UpgradeBy(-1); // 1费 → 0费

@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -48,6 +49,10 @@ public class Masterstroke : ModCardTemplate
             .Targeting(cardPlay.Target!)
             .Execute(choiceContext);
     }
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
 
     protected override void OnUpgrade()
     {

@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -66,6 +67,12 @@ public class Interrupt : ModCardTemplate
         }
     }
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<OpenWoundPower>()
+    };
+
+    
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(4m);        // 7 → 11

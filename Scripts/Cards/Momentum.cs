@@ -7,7 +7,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models.Powers;
-
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 //势头,获得力量
@@ -52,6 +52,11 @@ public class Momentum : ModCardTemplate
         );
     }
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<StrengthPower>()
+    };
+    
     protected override void OnUpgrade()
     {
         // 升级后力量从2变为3
