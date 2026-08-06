@@ -26,13 +26,17 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
     public override int StartingHp => 70;
     public override int StartingGold => 100;
 
+    
+    
     public override CharacterAssetProfile AssetProfile => CharacterAssetProfiles.Merge(
         CharacterAssetProfiles.Ironclad(),
         new(
             
             Scenes: new(
                 // 人物模型tscn路径。
-                VisualsPath: "res://pluma/images/spineAni/ori/ori_character.tscn",
+                VisualsPath: "res://pluma/images/spineAni/sum/sum_character.tscn",
+                // 使用当前皮肤的模型路径
+                //VisualsPath: PlumaSkins.Current.VisualsPath,
                 // 能量表盘tscn路径。
                 EnergyCounterPath: "res://pluma/images/scenes/TestEnergy.tscn"
                 // 商店人物场景。
@@ -41,15 +45,29 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
                 //RestSiteAnimPath: "res://pluma/scenes/test_character_rest_site.tscn"
             ),
             Ui: new(
+                
+                /* 
                 // 对于图片，只要是godot支持的格式都可以，例如png,jpg,svg等等，之后不再说明
                 // 人物头像路径。自适应大小。
                 IconTexturePath: "res://pluma/images/1img/char_late/character2.png",
                 // 游戏左上角头像、角色统计页头像、每日挑战角色头像。这个是场景而不是图片。参考下方附赠资源搭建。
                 IconPath: "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
                 // 人物选择背景。
-                CharacterSelectBgPath: "res://pluma/images/scenes/ori_background.tscn",
+                CharacterSelectBgPath: "res://pluma/images/scenes/ori_background_skins.tscn",
                 // 人物选择图标。
-                CharacterSelectIconPath: "res://Test/images/char_select_test.png"
+                CharacterSelectIconPath: "res://pluma/images/spineAin/ori/TestSelectIcon.png"
+                */
+                
+                // 使用当前皮肤的头像图片路径
+                IconTexturePath: PlumaSkins.Current.IconTexturePath,
+                // 使用当前皮肤的头像图标场景路径
+                IconPath: PlumaSkins.Current.IconPath,
+                // 使用当前皮肤的角色选择背景场景路径
+                CharacterSelectBgPath: PlumaSkins.Current.CharacterSelectBgPath,
+                CharacterSelectIconPath: "res://pluma/images/spineAin/ori/TestSelectIcon.png"
+                
+                
+
                 // 人物选择图标-锁定状态。
                 //CharacterSelectLockedIconPath: "res://Test/images/char_select_test_locked.png",
                 // 人物选择过渡动画。
@@ -95,6 +113,8 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
             //     new (CharacterOwnedVanillaRelicModelId.YummyCookie, new("res://icon.svg")) // 美味饼干覆盖
             // ],
             // VanillaPotionVisualOverrides: []
+            
+            
         ));
 
     // 攻击和施法动画延迟，以对齐动画
@@ -105,8 +125,13 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
     public override bool RequiresEpochAndTimeline => false;
 
     // 自动转换人物场景，让你不需要手动挂脚本。复制即可。
-    protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.Scenes!.VisualsPath!);
-
+    //protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.Scenes!.VisualsPath!);
+    protected override NCreatureVisuals? TryCreateCreatureVisuals()
+    {
+        // 始终使用当前皮肤的模型路径，忽略 AssetProfile 中的静态路径
+        string visualsPath = PlumaSkins.Current.VisualsPath;
+        return RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(visualsPath);
+    }
     // 初始卡组，或者在卡牌类上用RegisterCharacterStarterCard就不用写这个
     // protected override IEnumerable<StartingDeckEntry> StartingDeckEntries => [
     //     new(typeof(TestCard), 5)

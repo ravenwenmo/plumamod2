@@ -32,5 +32,7 @@ public class Entry
         RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<ReaperBadge, ReaperBadge>();
         //
         
+        
+        
     }
 }
