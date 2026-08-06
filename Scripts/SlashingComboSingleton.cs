@@ -1,0 +1,77 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Models;
+
+namespace Pluma.Scripts;
+
+[RegisterSingleton]
+public class TSlashingComboSingleton : HookedSingletonModel
+{
+    // 为每个玩家维护独立的连击计数器
+    private readonly Dictionary<Player, int> _comboCounters = new();
+
+    public TSlashingComboSingleton() : base(HookType.Combat)
+    {
+    }
+
+    // ===== 计数逻辑：卡牌打出时更新 =====
+    public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        var player = cardPlay.Card.Owner;
+        if (player == null) return Task.CompletedTask;
+
+        // 如果这张牌带有 Slashing 标签，计数 +1；否则清零
+        if (cardPlay.Card.Tags.Any(t => t == PlumaTags.Slashing))
+        {
+            _comboCounters.TryGetValue(player, out int current);
+            _comboCounters[player] = current + 1;
+        }
+        else
+        {
+            _comboCounters.Remove(player); // 清零
+        }
+
+        return Task.CompletedTask;
+    }
+
+    // ===== 施伤逻辑：造成伤害时附加创伤 =====
+    public override async Task AfterDamageGiven(
+        PlayerChoiceContext choiceContext,
+        Creature? dealer,
+        DamageResult result,
+        ValueProp props,
+        Creature target,
+        CardModel? cardSource)
+    {
+        // 必须有卡牌来源，且卡牌带有 Slashing 标签
+        if (cardSource == null || !cardSource.Tags.Any(t => t == PlumaTags.Slashing))
+            return;
+
+        var player = cardSource.Owner;
+        if (player == null) return;
+
+        // 获取该玩家当前的连击计数
+        if (!_comboCounters.TryGetValue(player, out int count) || count <= 0)
+            return;
+
+        // 给受伤的目标施加 count 层创伤
+        await PowerCmd.Apply<OpenWoundPower>(
+            choiceContext,
+            target,
+            (decimal)count,
+            dealer,
+            cardSource
+        );
+    }
+}

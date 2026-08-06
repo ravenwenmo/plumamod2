@@ -32,7 +32,7 @@ public class Slashing : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Exhaust };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Ethereal };
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new[] { new DamageVar(3m, ValueProp.Move) };
 
@@ -47,7 +47,8 @@ public class Slashing : ModCardTemplate
             .TargetingAllOpponents(CombatState)
             .Execute(choiceContext);
         
-        
+        //已经在单例中实现
+        /*
         //连击上创伤
         var history = CombatManager.Instance.History.CardPlaysStarted;
         var previous = history.Reverse()
@@ -82,6 +83,7 @@ public class Slashing : ModCardTemplate
                 );
             }
         }
+        */
     }
 
     protected override void OnUpgrade()
