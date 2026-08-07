@@ -94,6 +94,10 @@
 
   "PLUMA_CARD_SLASHING_MASTER.title": "切割大师",
   "PLUMA_CARD_SLASHING_MASTER.description": "生成{Cards:diff()}张[gold]切割[/gold]。",
+
+  "PLUMA_CARD_FORMAL_SCYTHE.title": "制式镰刀",
+  "PLUMA_CARD_FORMAL_SCYTHE.description": "造成{Damage:diff()}点伤害。\n选择一张手牌添加[gold]切割[/gold]。",
+  "PLUMA_CARD_FORMAL_SCYTHE.selectPrompt": "选择一张手牌添加切割",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

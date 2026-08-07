@@ -66,6 +66,12 @@ public class DoubleSlash : ModCardTemplate
             .Execute(choiceContext);
     }
 
+    
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.Slashing
+    };
+    
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {

@@ -32,7 +32,11 @@ public class Slashing : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Ethereal };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        CardKeyword.Ethereal,
+        MyKeywords.Slashing
+    };
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new[] { new DamageVar(3m, ValueProp.Move) };
 

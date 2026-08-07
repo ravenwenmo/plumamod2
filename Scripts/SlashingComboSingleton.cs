@@ -31,8 +31,8 @@ public class TSlashingComboSingleton : HookedSingletonModel
         var player = cardPlay.Card.Owner;
         if (player == null) return Task.CompletedTask;
 
-        // 如果这张牌带有 Slashing 标签，计数 +1；否则清零
-        if (cardPlay.Card.Tags.Any(t => t == PlumaTags.Slashing))
+        // 如果这张牌是 Slashing ，计数 +1；否则清零
+        if (cardPlay.Card.Keywords.Contains(MyKeywords.Slashing))
         {
             _comboCounters.TryGetValue(player, out int current);
             _comboCounters[player] = current + 1;
@@ -54,9 +54,10 @@ public class TSlashingComboSingleton : HookedSingletonModel
         Creature target,
         CardModel? cardSource)
     {
-        // 必须有卡牌来源，且卡牌带有 Slashing 标签
-        if (cardSource == null || !cardSource.Tags.Any(t => t == PlumaTags.Slashing))
+        // 必须有卡牌来源，且卡牌 Slashing 
+        if (cardSource == null || !cardSource.Keywords.Contains(MyKeywords.Slashing))
             return;
+        // 施加创伤...
 
         var player = cardSource.Owner;
         if (player == null) return;

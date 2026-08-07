@@ -81,6 +81,13 @@ public class RapidSlashing : ModCardTemplate
         }
     }
 
+    
+    // 切割关键词
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.Slashing
+    };
+    
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
