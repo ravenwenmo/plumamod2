@@ -104,6 +104,12 @@
 
   "PLUMA_CARD_SUBCONSCIOUS.title": "下意识",
   "PLUMA_CARD_SUBCONSCIOUS.description": "获得{Block:diff()}点格挡。",
+
+  "PLUMA_CARD_FORESIGHT_SLASH.title": "见切",
+  "PLUMA_CARD_FORESIGHT_SLASH.description": "造成{Damage:diff()}点伤害。\n获得{Block:diff()}点格挡。\n[gold]渐入佳境[/gold]1",
+
+  "PLUMA_CARD_EXCELLENT_MOBILITY.title": "优良机动",
+  "PLUMA_CARD_EXCELLENT_MOBILITY.description": "每当获得[gold]渐入佳境[/gold]时，获得1点格挡。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

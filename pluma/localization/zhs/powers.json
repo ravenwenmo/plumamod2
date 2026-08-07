@@ -35,6 +35,10 @@
   "PLUMA_POWER_CONSTANT_FLOW_POWER.description": "每回合开始，获得等于层数的 渐入佳境 。",
   "PLUMA_POWER_CONSTANT_FLOW_POWER.smartDescription": "每回合获得 [blue]{Amount}[/blue] 层 渐入佳境 。",
 
+  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.title": "优良机动",
+  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.description": "每层提供：每当获得渐入佳境时，获得1点格挡。",
+  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.smartDescription": "每当获得渐入佳境时，获得 [blue]{Amount}[/blue] 点格挡。",
+
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"
