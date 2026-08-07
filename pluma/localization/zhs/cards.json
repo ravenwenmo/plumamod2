@@ -98,6 +98,12 @@
   "PLUMA_CARD_FORMAL_SCYTHE.title": "制式镰刀",
   "PLUMA_CARD_FORMAL_SCYTHE.description": "造成{Damage:diff()}点伤害。\n选择一张手牌添加[gold]切割[/gold]。",
   "PLUMA_CARD_FORMAL_SCYTHE.selectPrompt": "选择一张手牌添加切割",
+
+  "PLUMA_CARD_KICK.title": "踢击",
+  "PLUMA_CARD_KICK.description": "造成{Damage:diff()}点伤害。\n抽{Cards:diff()}张牌。",
+
+  "PLUMA_CARD_SUBCONSCIOUS.title": "下意识",
+  "PLUMA_CARD_SUBCONSCIOUS.description": "获得{Block:diff()}点格挡。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"
