@@ -6,7 +6,7 @@
   "PLUMA_CARD_DEFEND_PLUMA.description": "获得{Block:diff()}点[gold]格挡[/gold]。",
   
   "PLUMA_CARD_HARVEST.title": "收割",
-  "PLUMA_CARD_HARVEST.description": "对所有敌人造成{Damage:diff()}点伤害，并对半血以下的敌人额外造成50%的伤害。",
+  "PLUMA_CARD_HARVEST.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害，并对半血以下的敌人额外造成50%的伤害。",
 
   "PLUMA_CARD_RAPID_SLASHING.title": "高速切割",
   "PLUMA_CARD_RAPID_SLASHING.description": "造成{Damage:diff()}点伤害，每打出{Threshold:diff()}次可以额外造成一段伤害。",
