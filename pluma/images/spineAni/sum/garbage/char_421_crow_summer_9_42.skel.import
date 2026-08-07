@@ -1,0 +1,14 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://c1safw82ochxs"
+path="res://.godot/imported/char_421_crow_summer_9_42.skel-162f7fe41728b5187110cd3ce4d9ad15.spskel"
+
+[deps]
+
+source_file="res://pluma/images/spineAni/sum/garbage/char_421_crow_summer_9_42.skel"
+dest_files=["res://.godot/imported/char_421_crow_summer_9_42.skel-162f7fe41728b5187110cd3ce4d9ad15.spskel"]
+
+[params]
+

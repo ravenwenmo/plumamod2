@@ -1,0 +1,13 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://brg3xir7o64bh"
+valid=false
+
+[deps]
+
+source_file="res://pluma/images/spineAni/sum/char_421_crow_summer_9_3.8.skel"
+
+[params]
+

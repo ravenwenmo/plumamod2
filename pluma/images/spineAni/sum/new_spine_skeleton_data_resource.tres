@@ -1,0 +1,8 @@
+[gd_resource type="SpineSkeletonDataResource" load_steps=3 format=3 uid="uid://bj22rfwtg1ed8"]
+
+[ext_resource type="SpineAtlasResource" uid="uid://cca3wo62t5ufw" path="res://pluma/images/spineAni/sum/char_421_crow_summer_9.atlas" id="1_mrsn0"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://60wxfpen2kpm" path="res://pluma/images/spineAni/sum/char_421_crow_summer_9.skel" id="2_v3ito"]
+
+[resource]
+atlas_res = ExtResource("1_mrsn0")
+skeleton_file_res = ExtResource("2_v3ito")

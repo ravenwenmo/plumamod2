@@ -1,0 +1,8 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://brs13it2u5kfy"]
+
+[ext_resource type="Texture2D" uid="uid://dyyjy1htf2548" path="res://pluma/images/scenes/sum_icon.png" id="1_v1tsm"]
+
+[resource]
+texture = ExtResource("1_v1tsm")
+texture_margin_left = 40.0
+texture_margin_right = 40.0

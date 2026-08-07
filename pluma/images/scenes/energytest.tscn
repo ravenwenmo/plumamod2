@@ -1,0 +1,64 @@
+[gd_scene load_steps=9 format=3 uid="uid://bv2161tg4ty45"]
+
+[ext_resource type="Texture2D" uid="uid://cdabdw0tdwg6a" path="res://pluma/images/1img/UI/orb/vfx.png" id="1_kvxmy"]
+[ext_resource type="Texture2D" uid="uid://b2a7ckbmdp4jh" path="res://pluma/images/1img/UI/orb/layer1.png" id="2_adpql"]
+[ext_resource type="Texture2D" uid="uid://bq58sld0ap3is" path="res://pluma/images/1img/UI/orb/layer3.png" id="3_eymn4"]
+[ext_resource type="Texture2D" uid="uid://doc3bgqb07sui" path="res://pluma/images/1img/UI/orb/layer3d.png" id="4_v8rgg"]
+[ext_resource type="Texture2D" uid="uid://bpenhinsaxb70" path="res://pluma/images/1img/UI/orb/layer2.png" id="5_yffwe"]
+[ext_resource type="Texture2D" uid="uid://bkssl6dgjwlt" path="res://pluma/images/1img/UI/orb/layer6.png" id="6_tfeal"]
+[ext_resource type="Texture2D" uid="uid://d2xed3dqaojm7" path="res://pluma/images/1img/UI/orb/layer5.png" id="7_1okyu"]
+[ext_resource type="Texture2D" uid="uid://enejfvltyjm5" path="res://pluma/images/1img/UI/orb/layer4.png" id="8_m3mrw"]
+
+[node name="Energy" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_kvxmy")
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_adpql")
+
+[node name="TextureRect4" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_eymn4")
+
+[node name="TextureRect5" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_v8rgg")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+texture = ExtResource("5_yffwe")
+
+[node name="TextureRect6" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_tfeal")
+
+[node name="TextureRect7" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("7_1okyu")
+
+[node name="TextureRect8" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("8_m3mrw")

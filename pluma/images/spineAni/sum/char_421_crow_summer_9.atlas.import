@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://cca3wo62t5ufw"
+path="res://.godot/imported/char_421_crow_summer_9.atlas-e8322067e7d9dc04f209b5f70fe89937.spatlas"
+
+[deps]
+
+source_file="res://pluma/images/spineAni/sum/char_421_crow_summer_9.atlas"
+dest_files=["res://.godot/imported/char_421_crow_summer_9.atlas-e8322067e7d9dc04f209b5f70fe89937.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

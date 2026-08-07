@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://cowds2g60irh2"
+path="res://.godot/imported/char_421_crow.atlas-5ad9a3cac8a24df4d635e9a41b1783e4.spatlas"
+
+[deps]
+
+source_file="res://pluma/images/spineAni/ori/char_421_crow.atlas"
+dest_files=["res://.godot/imported/char_421_crow.atlas-5ad9a3cac8a24df4d635e9a41b1783e4.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"
