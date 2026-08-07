@@ -20,8 +20,8 @@ public class ReaperHealingPower : ModPowerTemplate
     public override PowerInstanceType InstanceType => PowerInstanceType.Instanced;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/ReaperHealing.png",
-        BigIconPath: "res://pluma/images/powers/ReaperHealing.png"
+        IconPath: "res://pluma/images/powers/ReaperHealingPower.png",
+        BigIconPath: "res://pluma/images/powers/ReaperHealingPower.png"
     );
 
     public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props,

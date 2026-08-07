@@ -19,8 +19,8 @@ public class ConstantFlowPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/ConstantFlow.png",
-        BigIconPath: "res://pluma/images/powers/ConstantFlow.png"
+        IconPath: "res://pluma/images/powers/ConstantFlowPower.png",
+        BigIconPath: "res://pluma/images/powers/ConstantFlowPower.png"
     );
 
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)

@@ -30,8 +30,8 @@ public class ChargingPower : ModPowerTemplate
 
     // 自定义图标路径。1:1即可。原版游戏大图256x256，小图64x64。
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/RapidSlashingStacks.png",
-        BigIconPath: "res://pluma/images/powers/RapidSlashingStacks.png"
+        IconPath: "res://pluma/images/powers/ChargingPower.png",
+        BigIconPath: "res://pluma/images/powers/ChargingPower.png"
     );
     public override int ModifyCardPlayCount(CardModel card, Creature? target, int playCount)
     {

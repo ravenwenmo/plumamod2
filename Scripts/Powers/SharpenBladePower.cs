@@ -25,8 +25,8 @@ public class SharpenBladePower : ModPowerTemplate
     // public override PowerInstanceType InstanceType => PowerInstanceType.Instanced;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/RapidSlashingStacks.png",
-        BigIconPath: "res://pluma/images/powers/RapidSlashingStacks.png"
+        IconPath: "res://pluma/images/powers/SharpenBladePower.png",
+        BigIconPath: "res://pluma/images/powers/SharpenBladePower.png"
     );
 
     // 百分比加成

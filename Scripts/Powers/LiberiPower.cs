@@ -18,8 +18,8 @@ public class LiberiPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter; // 可叠加，获得后永久生效
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/Liberi.png",
-        BigIconPath: "res://pluma/images/powers/Liberi.png"
+        IconPath: "res://pluma/images/powers/LiberiPower.png",
+        BigIconPath: "res://pluma/images/powers/LiberiPower.png"
     );
 
     public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props,

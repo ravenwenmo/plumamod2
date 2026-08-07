@@ -29,8 +29,8 @@ public class FlowState : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/RapidSlashingStacks.png",
-        BigIconPath: "res://pluma/images/powers/RapidSlashingStacks.png"
+        IconPath: "res://pluma/images/powers/FlowState.png",
+        BigIconPath: "res://pluma/images/powers/FlowState.png"
     );
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {

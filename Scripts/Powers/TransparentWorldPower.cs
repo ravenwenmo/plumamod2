@@ -11,7 +11,7 @@ public class TransparentWorldPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/TransparentWorld.png",
-        BigIconPath: "res://pluma/images/powers/TransparentWorld.png"
+        IconPath: "res://pluma/images/powers/TransparentWorldPower.png",
+        BigIconPath: "res://pluma/images/powers/TransparentWorldPower.png"
     );
 }

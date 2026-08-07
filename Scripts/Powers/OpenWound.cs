@@ -24,8 +24,8 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/OpenWound.png",
-        BigIconPath: "res://pluma/images/powers/OpenWound.png"
+        IconPath: "res://pluma/images/powers/OpenWoundPower.png",
+        BigIconPath: "res://pluma/images/powers/OpenWoundPower.png"
     );
 
     public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props,

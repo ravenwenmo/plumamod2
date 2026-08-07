@@ -15,8 +15,8 @@ public class TheBeatPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/TheBeat.png",
-        BigIconPath: "res://pluma/images/powers/TheBeat.png"
+        IconPath: "res://pluma/images/powers/TheBeatPower.png",
+        BigIconPath: "res://pluma/images/powers/TheBeatPower.png"
     );
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
