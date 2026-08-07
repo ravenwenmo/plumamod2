@@ -110,6 +110,16 @@
 
   "PLUMA_CARD_EXCELLENT_MOBILITY.title": "优良机动",
   "PLUMA_CARD_EXCELLENT_MOBILITY.description": "每当获得[gold]渐入佳境[/gold]时，获得1点格挡。",
+
+  "PLUMA_CARD_DESPERATE_ATTACK.title": "舍身攻击",
+  "PLUMA_CARD_DESPERATE_ATTACK.description": "获得1层[gold]不可防御[/gold]。造成{Damage:diff()}点伤害{Hits:diff()}次。",
+
+  "PLUMA_CARD_FRIENDSHIP.title": "友情与羁绊",
+  "PLUMA_CARD_FRIENDSHIP.description": "[gold]渐入佳境[/gold]50\n回合结束时移除所有[gold]渐入佳境[/gold]。",
+
+  "PLUMA_CARD_COUNTER_INTUITIVE.title": "反直觉",
+  "PLUMA_CARD_COUNTER_INTUITIVE.description": "从抽牌堆选择{Choices:diff()}张非攻击且非[gold]本能[/gold]的牌并打出。",
+  "PLUMA_CARD_COUNTER_INTUITIVE.selectPrompt": "选择非攻击且非本能的牌",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"
