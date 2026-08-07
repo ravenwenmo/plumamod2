@@ -37,7 +37,7 @@ public class ConstantFlow : ModCardTemplate
     
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<OpenWoundPower>()
+        HoverTipFactory.FromPower<FlowState>()
     };
 
 
