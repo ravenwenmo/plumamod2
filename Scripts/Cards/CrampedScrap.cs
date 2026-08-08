@@ -13,7 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-
+//短兵相接
 // 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
