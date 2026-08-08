@@ -99,7 +99,7 @@
   "PLUMA_CARD_SLASHING_MASTER.description": "生成{Cards:diff()}张[gold]切割[/gold]。",
 
   "PLUMA_CARD_FORMAL_SCYTHE.title": "制式镰刀",
-  "PLUMA_CARD_FORMAL_SCYTHE.description": "造成{Damage:diff()}点伤害。\n选择一张手牌添加[gold]切割[/gold]。",
+  "PLUMA_CARD_FORMAL_SCYTHE.description": "造成{Damage:diff()}点伤害。\n选择一张攻击牌牌添加[gold]切割[/gold]。",
   "PLUMA_CARD_FORMAL_SCYTHE.selectPrompt": "选择一张手牌添加切割",
 
   "PLUMA_CARD_KICK.title": "踢击",
@@ -123,6 +123,19 @@
   "PLUMA_CARD_COUNTER_INTUITIVE.title": "反直觉",
   "PLUMA_CARD_COUNTER_INTUITIVE.description": "从抽牌堆选择{Choices:diff()}张非攻击且非[gold]本能[/gold]的牌并打出。",
   "PLUMA_CARD_COUNTER_INTUITIVE.selectPrompt": "选择非攻击且非本能的牌",
+
+  "PLUMA_CARD_MUSCLE_MEMORY.title": "肌肉记忆",
+  "PLUMA_CARD_MUSCLE_MEMORY.description": "获得 {Block:diff()} 点格挡。\n选择一张手牌，获得[gold]本能[/gold]。",
+  "PLUMA_CARD_MUSCLE_MEMORY.selectPrompt": "选择一张手牌添加本能",
+
+  "PLUMA_CARD_SLASHING_DRAW.title": "切割连携",
+  "PLUMA_CARD_SLASHING_DRAW.description": "每当打出[gold]切割[/gold]时，抽1张牌。",
+
+  "PLUMA_CARD_STRATEGIC_ABANDONMENT.title": "战略性舍弃",
+  "PLUMA_CARD_STRATEGIC_ABANDONMENT.description": "失去两点生命。\n获得{Block:diff()}点格挡。",
+
+  "PLUMA_CARD_LIKE_A_BIRD.title": "如羽兽一般",
+  "PLUMA_CARD_LIKE_A_BIRD.description": "每当你受到攻击时，获得1层渐入佳境。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

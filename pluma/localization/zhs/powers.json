@@ -42,6 +42,14 @@
   "PLUMA_POWER_REMOVE_FLOW_AT_TURN_END_POWER.title": "透支",
   "PLUMA_POWER_REMOVE_FLOW_AT_TURN_END_POWER.description": "回合结束时，移除所有 渐入佳境 。",
 
+  "PLUMA_POWER_SLASHING_DRAW_POWER.title": "切割连携",
+  "PLUMA_POWER_SLASHING_DRAW_POWER.description": "每当你打出切割时，抽取1张牌。",
+  "PLUMA_POWER_SLASHING_DRAW_POWER.smartDescription": "打出切割时抽[blue]{Amount}[/blue]张牌。",
+
+  "PLUMA_POWER_LIKE_A_BIRD_POWER.title": "如羽兽一般",
+  "PLUMA_POWER_LIKE_A_BIRD_POWER.description": "受到攻击时，获得1层渐入佳境。",
+  "PLUMA_POWER_LIKE_A_BIRD_POWER.smartDescription": "受到攻击时，获得[blue]{Amount}[/blue]层渐入佳境。",
+  
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"
