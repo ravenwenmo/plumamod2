@@ -45,7 +45,7 @@ public class ItsLiberi : ModCardTemplate
     }
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<FlowState>()
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
 
     protected override void OnUpgrade()
