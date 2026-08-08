@@ -16,9 +16,7 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace Pluma.Scripts;
 
 [RegisterRelic(typeof(PlumaRelicPool))]
-[RegisterCharacterStarterRelic(typeof(PlumaCharacter))]
-[RegisterTouchOfOrobasRefinement(typeof(AquaDawn))]
-public class ReaperBadge : ModRelicTemplate
+public class AquaDawn : ModRelicTemplate
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 
@@ -46,6 +44,6 @@ public class ReaperBadge : ModRelicTemplate
         if (!base.Owner.Creature.CombatState.HittableEnemies.Contains(target)) return;
 
         Flash();                              // 回血时闪光
-        await CreatureCmd.Heal(base.Owner.Creature, 1); // 回复等于遗物层数？这里遗物没有层数，固定回复1点。
+        await CreatureCmd.Heal(base.Owner.Creature, 2); // 回复等于遗物层数？这里遗物没有层数，固定回复1点。
     }
 }

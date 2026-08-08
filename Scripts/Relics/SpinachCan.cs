@@ -15,7 +15,7 @@ namespace Pluma.Scripts;
 [RegisterRelic(typeof(PlumaRelicPool))]
 public class SpinachCan : ModRelicTemplate
 {
-    public override RelicRarity Rarity => RelicRarity.Common; // 可根据需要调整稀有度
+    public override RelicRarity Rarity => RelicRarity.Uncommon; // 可根据需要调整稀有度
 
     public override RelicAssetProfile AssetProfile => new(
         IconPath: $"res://pluma/images/relics/{GetType().Name}.png",

@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -42,4 +43,8 @@ public class LiberiPower : ModPowerTemplate
             cardSource
         );
     }
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<OpenWoundPower>()
+    };
 }

@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Rooms;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -52,4 +53,10 @@ public class LiberiLens : ModRelicTemplate
             );
         }
     }
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<LiberiPower>(),
+        HoverTipFactory.FromPower<OpenWoundPower>(),
+    };
+
 }

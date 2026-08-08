@@ -1,8 +1,12 @@
 ﻿{
   "PLUMA_RELIC_REAPER_BADGE.title": "收割者证章",
-  "PLUMA_RELIC_REAPER_BADGE.description": "每进行一次攻击，恢复攻击目标数的生命值。",
+  "PLUMA_RELIC_REAPER_BADGE.description": "每攻击一次，回复1点生命。",
   "PLUMA_RELIC_REAPER_BADGE.flavor": "“你不觉得攻击回血在塔2太超模了吗？”“玩的就是超模！”",
 
+  "PLUMA_RELIC_AQUA_DAWN.title": "水蓝色黎明",
+  "PLUMA_RELIC_AQUA_DAWN.description": "每造成一次攻击伤害，回复2点生命。",
+  "PLUMA_RELIC_AQUA_DAWN.flavor": "“人们为什么喜欢喝酒呢，席尔瓦小姐？”“我觉得……是为了能在清醒里尝到一点快乐，在苦味里留住一丝甘甜。然后就觉得，生活该是这样，就够了。”",
+  
   "PLUMA_RELIC_LIBERI_LENS.title": "黎博利思维",
   "PLUMA_RELIC_LIBERI_LENS.description": "进入战斗时，获得2层 黎博利 。所有敌人获得1层 黎博利 。",
   "PLUMA_RELIC_LIBERI_LENS.flavor": "“你是一只黎博利，你也是一只黎博利，大家都是黎博利”",

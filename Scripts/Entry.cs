@@ -27,9 +27,9 @@ public class Entry
         PlumaSettingsPage.Register();
         
         //古老牙齿可以把一张初始卡变成先古升级
-        RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<Harvest, Harvest>();
+        RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<RapidSlashing, RapidSlashingMax>();
         //欧洛巴斯之触可以把初始遗物升级。
-        RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<ReaperBadge, ReaperBadge>();
+        RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<ReaperBadge, AquaDawn>();
         //
         
         
