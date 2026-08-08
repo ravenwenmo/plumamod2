@@ -19,7 +19,7 @@ public class Friendship : ModCardTemplate
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Skill;
-    private const CardRarity rarity = CardRarity.Rare;
+    private const CardRarity rarity = CardRarity.Ancient;
     private const TargetType targetType = TargetType.Self;
     private const bool shouldShowInCardLibrary = true;
 
