@@ -14,9 +14,9 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Momentum : ModCardTemplate
 {
-    private const int energyCost = 1;
+    private const int energyCost = 2;
     private const CardType type = CardType.Power;         // 能力牌
-    private const CardRarity rarity = CardRarity.Uncommon;  
+    private const CardRarity rarity = CardRarity.Rare;  
     private const bool shouldShowInCardLibrary = true;
     // 目标类型（AnyEnemy表示任意敌人）
     private const TargetType targetType = TargetType.Self;
@@ -60,6 +60,7 @@ public class Momentum : ModCardTemplate
     protected override void OnUpgrade()
     {
         // 升级后力量从2变为3
-        DynamicVars["StrengthAmount"].UpgradeValueBy(1m);
+        //DynamicVars["StrengthAmount"].UpgradeValueBy(1m);
+        base.EnergyCost.UpgradeBy(-1); // 2费 → 1费
     }
 }

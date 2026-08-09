@@ -12,8 +12,23 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.HoverTips;
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.Powers;
+using STS2RitsuLib.Cards.DynamicVars;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
+
 namespace Pluma.Scripts;
 
+// 放空：弃掉所有手牌并洗牌，移除所有渐入佳境，每失去5层获得1能量，抽牌。升级后多抽1张。
 [RegisterCard(typeof(PlumaCardPool))]
 public class EmptyMind : ModCardTemplate
 {
@@ -28,14 +43,18 @@ public class EmptyMind : ModCardTemplate
     );
 
     // 本能 + 消耗
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
         MyKeywords.MuscleMemory,
         CardKeyword.Exhaust
-    ];
+    };
 
-    // 层数变量（基础 4，升级后 5）
+    // 动态变量：抽牌数（基础4，升级后5）
+
+    // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        ModCardVars.Int("FlowStateAmount", 4)
+        new EnergyVar(1),
+        new CardsVar(2)
     ];
 
     public EmptyMind() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -44,36 +63,44 @@ public class EmptyMind : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var player = cardPlay.Player;
+        var player = base.Owner; // Player 类型
         if (player == null) return;
 
-        // 1. 弃掉所有手牌（DiscardAndDraw 抽 0 张即只弃不抽）
+        // 获取当前渐入佳境层数
+        var flowPower = base.Owner.Creature.Powers.OfType<FlowState>().FirstOrDefault();
+        int lostFlowAmount = flowPower != null ? (int)flowPower.Amount : 0;
+
+        // 1. 弃掉所有手牌（只弃不抽）
+        /*
         var handCards = PileType.Hand.GetPile(player).Cards;
         await CardCmd.DiscardAndDraw(choiceContext, handCards, 0);
-
+        */
+        
         // 2. 洗牌
         await CardPileCmd.Shuffle(choiceContext, player);
 
-        // 3. 失去所有渐入佳境（直接移除 FlowState 能力）
+        // 3. 失去所有渐入佳境
         await PowerCmd.Remove<FlowState>(base.Owner.Creature);
 
-        // 4. 获得新层数
-        await PowerCmd.Apply<FlowState>(
-            choiceContext,
-            base.Owner.Creature,
-            DynamicVars["FlowStateAmount"].BaseValue,
-            base.Owner.Creature,
-            this
-        );
+        // 4. 每失去5层，获得1点能量
+        int energyGain = lostFlowAmount / 5;
+        if (energyGain > 0)
+        {
+            await PlayerCmd.GainEnergy(energyGain, base.Owner);
+        }
+
+        // 5. 抽牌（基础4张，升级后5张）
+        await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
     }
 
+    // 悬浮提示：渐入佳境（方便查看效果）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromPower<FlowState>()
     };
-    
+
     protected override void OnUpgrade()
     {
-        DynamicVars["FlowStateAmount"].UpgradeValueBy(1m);
+        DynamicVars.Cards.UpgradeValueBy(1m); // 抽牌 2→3
     }
 }
