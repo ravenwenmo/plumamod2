@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using Godot;
+using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Multiplayer.Game.Lobby;
+using MegaCrit.Sts2.Core.Runs;
+using STS2RitsuLib.RunData;
 
 namespace Pluma.Scripts;
 
 public static class PlumaSkins
 {
-    // 配置文件路径（保存在用户数据目录）
+    // 本地持久化（单人模式 / 默认值）
     private const string ConfigPath = "user://pluma_skin.cfg";
     private const string Section = "Skin";
     private const string Key = "Index";
 
-    /// <summary>
-    /// 皮肤列表，每套皮肤包含需要替换的路径。
-    /// </summary>
-  
+    // 多人同步槽位（从 Entry 获取）
+    private static PlayerRunSavedData<SkinIndexWrapper> Slot => Entry.SkinData;
+
     public static readonly IReadOnlyList<SkinData> Skins = new List<SkinData>
     {
         new()
@@ -21,26 +24,27 @@ public static class PlumaSkins
             Name = "默认",
             VisualsPath = "res://pluma/images/spineAni/ori/ori_character.tscn",
             CharacterSelectBgPath = "res://pluma/images/scenes/ori_background_skins.tscn",
+            CharacterSelectBgPathMulti = "res://pluma/images/scenes/ori_background_skins_mul.tscn", // 多人模式
             IconPath = "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
-            IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",// 人物头像路径。自适应大小。
-            PortraitPath = "res://pluma/images/scenes/test_background.png", // 立绘图片
+            IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",
+            PortraitPath = "res://pluma/images/scenes/test_background.png",
             BackgroundColor = new Color(0.209f, 0.623f, 0.734f)
         },
         new()
         {
             Name = "夏卉",
-            VisualsPath = "res://pluma/images/spineAni/sum/sum_character.tscn", // 你的夏卉模型路径
+            VisualsPath = "res://pluma/images/spineAni/sum/sum_character.tscn",
             CharacterSelectBgPath = "res://pluma/images/scenes/ori_background_skins.tscn",
+            CharacterSelectBgPathMulti = "res://pluma/images/scenes/ori_background_skins_mul.tscn",
             IconPath = "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
-            IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",// 人物头像路径。自适应大小。
-            PortraitPath = "res://pluma/images/scenes/test_background.png", // 夏卉立绘（暂时用同一张，可替换）
+            IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",
+            PortraitPath = "res://pluma/images/scenes/test_background.png",
             BackgroundColor = new Color(0.5f, 0.2f, 0.8f)
         }
     };
-    /// <summary>
-    /// 当前皮肤索引（自动读写配置文件）
-    /// </summary>
-    public static int CurrentIndex
+
+    // 本地索引
+    public static int LocalIndex
     {
         get
         {
@@ -57,45 +61,54 @@ public static class PlumaSkins
         }
     }
 
-    /// <summary>
-    /// 获取当前皮肤数据
-    /// </summary>
+    // 获取玩家皮肤索引（局内从 RunState，否则回退本地）
+    public static int GetSkinIndex(Player? player = null)
+    {
+        if (player != null && Slot != null)
+        {
+            var runState = player.RunState as RunState;
+            if (runState != null)
+            {
+                var wrapper = Slot.Get(runState, player.NetId);
+                return Mathf.Clamp(wrapper.Index, 0, Skins.Count - 1);
+            }
+        }
+        return Mathf.Clamp(LocalIndex, 0, Skins.Count - 1);
+    }
+
+    // 获取皮肤数据
+    public static SkinData GetCurrentSkin(Player? player = null) => Skins[GetSkinIndex(player)];
+
+    // 单人模式切换
+    public static void SelectSkinLocal(int skinIndex)
+    {
+        skinIndex = Mathf.Clamp(skinIndex, 0, Skins.Count - 1);
+        LocalIndex = skinIndex;
+    }
+
+    // 多人模式大厅切换（自动同步）
+    public static void SelectSkinInLobby(StartRunLobby lobby, ulong playerNetId, int skinIndex)
+    {
+        skinIndex = Mathf.Clamp(skinIndex, 0, Skins.Count - 1);
+        Slot?.Lobby.Modify(lobby, playerNetId, wrapper => wrapper.Index = skinIndex);
+    }
+
+    // 旧接口兼容
+    public static int CurrentIndex { get => LocalIndex; set => SelectSkinLocal(value); }
     public static SkinData Current => Skins[CurrentIndex];
+    public static void Next() => SelectSkinLocal((CurrentIndex + 1) % Skins.Count);
+    public static void Previous() => SelectSkinLocal((CurrentIndex - 1 + Skins.Count) % Skins.Count);
+    public static void SetIndex(int index) => SelectSkinLocal(index);
 
-    /// <summary>
-    /// 切换到下一套皮肤
-    /// </summary>
-    public static void Next()
-    {
-        CurrentIndex = (CurrentIndex + 1) % Skins.Count;
-    }
-
-    /// <summary>
-    /// 切换到上一套皮肤
-    /// </summary>
-    public static void Previous()
-    {
-        CurrentIndex = (CurrentIndex - 1 + Skins.Count) % Skins.Count;
-    }
-
-    /// <summary>
-    /// 皮肤数据类，包含所有可能随皮肤变化的路径。
-    /// </summary>
     public class SkinData
     {
         public string Name { get; init; }
-        public string VisualsPath { get; init; }           // 人物模型场景
-        public string CharacterSelectBgPath { get; init; } // 角色选择背景场景
-        public string IconPath { get; init; }               // 头像图标场景
-        public string IconTexturePath { get; init; }        // 头像图片
-        public string PortraitPath { get; init; }           // 立绘图片
-        public Color BackgroundColor { get; init; }         // 背景颜色（可选）
+        public string VisualsPath { get; init; }
+        public string CharacterSelectBgPath { get; init; }
+        public string CharacterSelectBgPathMulti { get; init; } // 多人模式背景
+        public string IconPath { get; init; }
+        public string IconTexturePath { get; init; }
+        public string PortraitPath { get; init; }
+        public Color BackgroundColor { get; init; }
     }
-    // 在 PlumaSkins 类中添加以下方法
-    public static void SetIndex(int index)
-    {
-        if (index < 0 || index >= Skins.Count) return;
-        CurrentIndex = index;
-    }
-    
 }

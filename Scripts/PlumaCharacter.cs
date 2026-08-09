@@ -6,7 +6,7 @@ using STS2RitsuLib.Data.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Godot;
-
+using MegaCrit.Sts2.Core.Context; 
 namespace Pluma.Scripts;
 
 [RegisterCharacter]
@@ -24,7 +24,7 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
 
     // 初始血量和金币
     public override int StartingHp => 70;
-    public override int StartingGold => 100;
+    public override int StartingGold => 99;
 
     
     
@@ -64,8 +64,9 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
                 // 使用当前皮肤的头像图标场景路径
                 IconPath: PlumaSkins.Current.IconPath,
                 // 使用当前皮肤的角色选择背景场景路径
-                CharacterSelectBgPath: PlumaSkins.Current.CharacterSelectBgPath,
-                
+                CharacterSelectBgPath: true
+                    ? PlumaSkins.GetCurrentSkin().CharacterSelectBgPathMulti
+                    : PlumaSkins.GetCurrentSkin().CharacterSelectBgPath,
                 //角色选择界面下边的头像
                 CharacterSelectIconPath: "res://pluma/images/spineAni/ori/TestSelectIcon.png"
                 
