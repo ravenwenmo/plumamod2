@@ -43,11 +43,12 @@ public class Harvest : ModCardTemplate
     );
 
     // 关键词：本能
+    /*
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         MyKeywords.MuscleMemory
     };
-
+    */
     // 动态变量：伤害5，升级+4
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
