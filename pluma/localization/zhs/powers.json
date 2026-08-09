@@ -49,6 +49,10 @@
   "PLUMA_POWER_LIKE_A_BIRD_POWER.title": "如羽兽一般",
   "PLUMA_POWER_LIKE_A_BIRD_POWER.description": "受到攻击时，获得1层渐入佳境。",
   "PLUMA_POWER_LIKE_A_BIRD_POWER.smartDescription": "受到攻击时，获得[blue]{Amount}[/blue]层渐入佳境。",
+
+  "PLUMA_POWER_FEINT_POWER.title": "假动作",
+  "PLUMA_POWER_FEINT_POWER.description": "本回合结束时触发创伤效果。",
+  "PLUMA_POWER_FEINT_POWER.smartDescription": "本回合结束时触发[blue]{Amount}[/blue]次创伤效果。",
   
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
