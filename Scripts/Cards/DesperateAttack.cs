@@ -48,13 +48,11 @@ public class DesperateAttack : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 移除自己所有格挡
-        await CreatureCmd.LoseBlock(choiceContext, Owner.Creature, Owner.Creature.Block, Owner.Creature);
         // 先给自己施加“无法获得格挡”
         await PowerCmd.Apply<NoBlockPower>(
             choiceContext,
             base.Owner.Creature,
-            2,
+            1,
             base.Owner.Creature,
             this
         );

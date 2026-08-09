@@ -61,7 +61,7 @@ public class MuscleMemory : ModCardTemplate
         await Task.Delay(1);
 
         // 选择一张手牌添加本能关键词
-        var selectPrompt = new LocString("cards", "PLUMA_CARD_MUSCLE_MEMORY.selectPrompt");
+        var selectPrompt = new LocString("cards", "PLUMA_CARD_MUSCLE_MEMORY_CARD.selectPrompt");
         var selected = await CardSelectCmd.FromHand(
             context: choiceContext,
             player: base.Owner,
