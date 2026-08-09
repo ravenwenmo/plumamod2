@@ -47,7 +47,7 @@ public class Workhorse : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(8m, ValueProp.Move),
         new BlockVar(8m, ValueProp.Move),
-        new CardsVar(1),
+        new CardsVar(2),
     ];
     
 
@@ -71,22 +71,11 @@ public class Workhorse : ModCardTemplate
 
     }
     
-    protected override bool ShouldGlowGoldInternal
-    {
-        get
-        {
-            var lastStarted = CombatManager.Instance.History.CardPlaysStarted.LastOrDefault();
-            if (lastStarted == null) return false;
-            var previousCard = lastStarted.CardPlay.Card;
-            return previousCard.Type == CardType.Attack;
-        }
-    }
-
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);		
         DynamicVars.Block.UpgradeValueBy(3m);
-        base.DynamicVars.Cards.UpgradeValueBy(1m);
+        //base.DynamicVars.Cards.UpgradeValueBy(1m);
     }
 } 
