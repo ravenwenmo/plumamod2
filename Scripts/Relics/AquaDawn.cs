@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.Entities.RestSite; // 提供 RestSiteOption
 
 namespace Pluma.Scripts;
 
@@ -45,5 +46,21 @@ public class AquaDawn : ModRelicTemplate
 
         Flash();                              // 回血时闪光
         await CreatureCmd.Heal(base.Owner.Creature, 2); // 回复等于遗物层数？这里遗物没有层数，固定回复1点。
+    }
+    
+    // 移除“休息”选项，让玩家无法选择
+    public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
+    {
+        if (player != base.Owner) return false;
+
+        // 假设 RestSiteOption 有一个 Type 属性，其值为 RestSiteOptionType.Heal
+        var healOption = options.FirstOrDefault(o => o.GetType() == typeof(HealRestSiteOption));
+        if (healOption != null)
+        {
+            options.Remove(healOption);
+            Flash();
+            return true;
+        }
+        return false;
     }
 }
