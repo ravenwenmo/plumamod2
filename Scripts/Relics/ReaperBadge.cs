@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Commands;
@@ -49,14 +50,20 @@ public class ReaperBadge : ModRelicTemplate
         Flash();                              // 回血时闪光
         await CreatureCmd.Heal(base.Owner.Creature, 1); // 回复等于遗物层数？这里遗物没有层数，固定回复1点。
     }
+    
     // 移除“休息”选项，让玩家无法选择
     public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
     {
         if (player != base.Owner) return false;
 
-        // 假设 RestSiteOption 有一个 Type 属性，其值为 RestSiteOptionType.Heal
-        var healOption = options.FirstOrDefault(o => o.GetType() == typeof(HealRestSiteOption));
-        if (healOption != null)
+        var healOption = options.FirstOrDefault(o => o is HealRestSiteOption);
+        if (healOption == null) return false;
+
+        // 检查是否有除休息以外的可用选项
+        bool hasOtherEnabledOption = options.Any(o => o != healOption && o.IsEnabled);
+        // 我焯为什么只能检测到敲牌是否可用啊不应该啊md算了就这样吧
+        
+        if (hasOtherEnabledOption)
         {
             options.Remove(healOption);
             Flash();
@@ -64,4 +71,16 @@ public class ReaperBadge : ModRelicTemplate
         }
         return false;
     }
+    
+    // 让“休息”回血变为 0，选项保留，避免卡死
+    public override decimal ModifyRestSiteHealAmount(Creature creature, decimal originalAmount)
+    {
+        if (creature == base.Owner.Creature)
+        {
+            Flash();
+            return 0;
+        }
+        return originalAmount;
+    }
+    
 }
