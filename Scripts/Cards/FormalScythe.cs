@@ -71,6 +71,11 @@ public class FormalScythe : ModCardTemplate
             CardCmd.ApplyKeyword(targetCard, MyKeywords.Slashing);
         }
     }
+    
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.Slashing
+    };
 
     protected override void OnUpgrade()
     {

@@ -147,7 +147,7 @@
   "PLUMA_CARD_WIND_FEATHER.description": "每打出一张攻击牌[gold]渐入佳境[/gold]{Stacks:diff()}。\n但渐入佳境不再抽牌。",
 
   "PLUMA_CARD_FEATHER_WAVE.title": "羽浪",
-  "PLUMA_CARD_FEATHER_WAVE.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害3次。\n当前生命值最高的敌人施加等同于[gold]渐入佳境[/gold]层数的[gold]创伤[/gold]",
+  "PLUMA_CARD_FEATHER_WAVE.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害3次。\n对当前生命值最高的敌人施加等同于[gold]渐入佳境[/gold]层数的[gold]创伤[/gold]",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

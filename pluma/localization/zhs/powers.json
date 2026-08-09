@@ -55,8 +55,8 @@
   "PLUMA_POWER_FEINT_POWER.smartDescription": "本回合结束时触发[blue]{Amount}[/blue]次创伤效果。",
 
   "PLUMA_POWER_FLAW_SENSE_POWER.title": "破绽感知",
-  "PLUMA_POWER_FLAW_SENSE_POWER.description": "每层使拥有创伤的敌人造成的攻击伤害减半。每回合结束减少1层。",
-  "PLUMA_POWER_FLAW_SENSE_POWER.smartDescription": "来自拥有创伤的敌人的攻击伤害 × [blue]{DamageReduction}[/blue] ，本回合结束时移除。",
+  "PLUMA_POWER_FLAW_SENSE_POWER.description": "每层使拥有创伤的敌人造成的攻击伤害减半。",
+  "PLUMA_POWER_FLAW_SENSE_POWER.smartDescription": "拥有创伤的敌人攻击伤害×[blue]{DamageReduction}[/blue]，当前[blue]{Amount}[/blue]层",
 
   "PLUMA_POWER_WIND_FEATHER_POWER.title": "风中之羽",
   "PLUMA_POWER_WIND_FEATHER_POWER.description": "每打出一张攻击牌，获得等量于层数的渐入佳境。",

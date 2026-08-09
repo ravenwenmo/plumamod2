@@ -4,7 +4,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer; // 提供 PlayerChoiceContext
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -15,7 +15,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 
 namespace Pluma.Scripts;
 
-// 破绽感知：每层使拥有创伤的敌人造成的攻击伤害减半。回合结束时移除。
+// 破绽感知：每层使拥有创伤的敌人造成的攻击伤害减半。下回合开始时移除。
 [RegisterPower]
 public class FlawSensePower : ModPowerTemplate
 {
@@ -44,8 +44,8 @@ public class FlawSensePower : ModPowerTemplate
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
-        // 在自己的回合结束时移除该能力
-        if (participants.Contains(base.Owner))
+        // 在敌方回合结束时移除该能力（保证防御效果覆盖整个敌方回合）
+        if (side == CombatSide.Enemy)
         {
             await PowerCmd.Remove(this);
         }
