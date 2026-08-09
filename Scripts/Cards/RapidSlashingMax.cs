@@ -46,7 +46,7 @@ public class RapidSlashingMax : ModCardTemplate
 
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(7m, ValueProp.Move),
+        new DamageVar(9m, ValueProp.Move),
         new IntVar("Threshold", 2m),   // 初始阈值 2 次
 
     ];

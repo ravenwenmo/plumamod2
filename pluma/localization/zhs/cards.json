@@ -139,6 +139,15 @@
 
   "PLUMA_CARD_FEINT.title": "假动作",
   "PLUMA_CARD_FEINT.description": "目标本回合结束时也会触发{Stacks:diff()}次创伤效果。",
+
+  "PLUMA_CARD_FLAW_SENSE.title": "破绽感知",
+  "PLUMA_CARD_FLAW_SENSE.description": "减少一半来自拥有创伤的敌人造成的伤害。",
+
+  "PLUMA_CARD_WIND_FEATHER.title": "风中之羽",
+  "PLUMA_CARD_WIND_FEATHER.description": "每打出一张攻击牌[gold]渐入佳境[/gold]{Stacks:diff()}。\n但渐入佳境不再抽牌。",
+
+  "PLUMA_CARD_FEATHER_WAVE.title": "羽浪",
+  "PLUMA_CARD_FEATHER_WAVE.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害3次。\n当前生命值最高的敌人施加等同于[gold]渐入佳境[/gold]层数的[gold]创伤[/gold]",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

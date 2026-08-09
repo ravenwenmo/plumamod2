@@ -38,7 +38,7 @@ public class FlowState : ModPowerTemplate
 
         if (power != this || amount <= 0) return;
 
-        // 立即通知遗物（如果存在）
+        // 立即通知模组碎片（如果存在）
         var player = base.Owner.Player;
         if (player != null)
         {
@@ -47,6 +47,11 @@ public class FlowState : ModPowerTemplate
             {
                 await modShard.CheckAndUpdateStrength();
             }
+        }
+        // 如果持有者拥有“风中之羽”，则不抽牌
+        if (base.Owner.HasPower<WindFeatherPower>())
+        {
+            return; // 阻止抽牌，但保留伤害加成等其它效果
         }
 
         // 原有的抽牌逻辑（带延迟）

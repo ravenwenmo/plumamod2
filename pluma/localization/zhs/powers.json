@@ -53,7 +53,15 @@
   "PLUMA_POWER_FEINT_POWER.title": "假动作",
   "PLUMA_POWER_FEINT_POWER.description": "本回合结束时触发创伤效果。",
   "PLUMA_POWER_FEINT_POWER.smartDescription": "本回合结束时触发[blue]{Amount}[/blue]次创伤效果。",
-  
+
+  "PLUMA_POWER_FLAW_SENSE_POWER.title": "破绽感知",
+  "PLUMA_POWER_FLAW_SENSE_POWER.description": "每层使拥有创伤的敌人造成的攻击伤害减半。每回合结束减少1层。",
+  "PLUMA_POWER_FLAW_SENSE_POWER.smartDescription": "来自拥有创伤的敌人的攻击伤害 × [blue]{DamageReduction}[/blue] ，本回合结束时移除。",
+
+  "PLUMA_POWER_WIND_FEATHER_POWER.title": "风中之羽",
+  "PLUMA_POWER_WIND_FEATHER_POWER.description": "每打出一张攻击牌，获得等量于层数的渐入佳境。",
+  "PLUMA_POWER_WIND_FEATHER_POWER.smartDescription": "每打出攻击牌获得[blue]{Amount}[/blue]层渐入佳境。",
+
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"
