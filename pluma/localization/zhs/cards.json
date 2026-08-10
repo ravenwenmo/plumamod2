@@ -141,7 +141,7 @@
   "PLUMA_CARD_FEINT.description": "目标本回合结束时也会触发{Stacks:diff()}次创伤效果。",
 
   "PLUMA_CARD_FLAW_SENSE.title": "破绽感知",
-  "PLUMA_CARD_FLAW_SENSE.description": "减少一半来自拥有创伤的敌人造成的伤害。",
+  "PLUMA_CARD_FLAW_SENSE.description": "获得{Stacks:diff()}层破绽感知。",
 
   "PLUMA_CARD_WIND_FEATHER.title": "风中之羽",
   "PLUMA_CARD_WIND_FEATHER.description": "每打出一张攻击牌[gold]渐入佳境[/gold]{Stacks:diff()}。\n但渐入佳境不再抽牌。",

@@ -47,7 +47,8 @@ public class FlawSensePower : ModPowerTemplate
         // 在敌方回合结束时移除该能力（保证防御效果覆盖整个敌方回合）
         if (side == CombatSide.Enemy)
         {
-            await PowerCmd.Remove(this);
+            await PowerCmd.Decrement(this);
+            //await PowerCmd.Remove(this);
         }
     }
 }

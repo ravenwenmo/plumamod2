@@ -48,12 +48,22 @@ public class CounterIntuitive : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        
+        // 如果是自动打出模式，随机执行效果，不弹窗
+        if (FlowState.AutoSkipCounterSelect)
+        {
+            await AutoRandomPlay(choiceContext, cardPlay);
+            return;
+        }
+        
         var player = base.Owner;
         var drawPile = PileType.Draw.GetPile(player);
         if (drawPile.IsEmpty) return;
 
         int count = DynamicVars["Choices"].IntValue;
 
+        
+        
         // 使用 filter 参数直接过滤：非攻击，且非本能
         var selected = await CardSelectCmd.FromCombatPile(
             prefs: new CardSelectorPrefs(
@@ -72,6 +82,28 @@ public class CounterIntuitive : ModCardTemplate
         }
     }
 
+    /// <summary>
+    /// 自动打出模式：随机选择符合条件的牌并自动打出
+    /// </summary>
+    private async Task AutoRandomPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        var player = base.Owner;
+        var drawPile = PileType.Draw.GetPile(player);
+        int count = DynamicVars["Choices"].IntValue;
+
+        var validCards = drawPile.Cards
+            .Where(c => c.Type != CardType.Attack && !c.Keywords.Contains(MyKeywords.MuscleMemory))
+            .ToList();
+
+        var random = new System.Random();
+        var selected = validCards.OrderBy(_ => random.Next()).Take(count).ToList();
+
+        foreach (var card in selected)
+        {
+            await CardCmd.AutoPlay(choiceContext, card, null);
+        }
+    }
+    
     protected override void OnUpgrade()
     {
         DynamicVars["Choices"].UpgradeValueBy(1m); // 1 → 2

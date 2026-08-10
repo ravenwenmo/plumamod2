@@ -21,7 +21,8 @@ namespace Pluma.Scripts;
 public class FlowState : ModPowerTemplate
 {
     private readonly HashSet<CardModel> _discountedCards = new();
-
+// 放在 FlowState 类的字段区域
+    internal static bool AutoSkipCounterSelect = false;
     // 防重入锁及待处理层数
     private bool _isDrawing;
     private decimal _pendingDrawAmount;
@@ -129,8 +130,17 @@ public class FlowState : ModPowerTemplate
 
                 if (hasKeyword && autoPlay)
                 {
-                    // 自动打出（注意：这可能会再次增加渐入佳境，但会被 _isDrawing 拦截并加入 _pendingDrawAmount）
-                    await CardCmd.AutoPlay(choiceContext, targetCard, null);
+                    if (targetCard is CounterIntuitive)
+                    {
+                        // 设置标记，让 CounterIntuitive 自动打出时随机选牌
+                        AutoSkipCounterSelect = true;
+                        await CardCmd.AutoPlay(choiceContext, targetCard, null);
+                        AutoSkipCounterSelect = false;
+                    }
+                    else
+                    {
+                        await CardCmd.AutoPlay(choiceContext, targetCard, null);
+                    }
                 }
                 else
                 {
