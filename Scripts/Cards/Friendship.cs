@@ -13,12 +13,12 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
-// 友情与羁绊：1费稀有技能，获得50层渐入佳境，回合结束时移除所有渐入佳境。本能，消耗。升级后费用为0。
+// 友情与羁绊：1费先古能力，获得50层渐入佳境，回合结束时移除所有渐入佳境。本能，消耗。升级后费用为0。
 [RegisterCard(typeof(PlumaCardPool))]
 public class Friendship : ModCardTemplate
 {
     private const int energyCost = 1;
-    private const CardType type = CardType.Skill;
+    private const CardType type = CardType.Power;
     private const CardRarity rarity = CardRarity.Ancient;
     private const TargetType targetType = TargetType.Self;
     private const bool shouldShowInCardLibrary = true;

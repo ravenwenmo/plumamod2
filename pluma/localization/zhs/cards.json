@@ -148,6 +148,21 @@
 
   "PLUMA_CARD_FEATHER_WAVE.title": "羽浪",
   "PLUMA_CARD_FEATHER_WAVE.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害3次。\n对当前生命值最高的敌人施加等同于[gold]渐入佳境[/gold]层数的[gold]创伤[/gold]",
+
+  "PLUMA_CARD_COCKTAIL.title": "鸡尾酒",
+  "PLUMA_CARD_COCKTAIL.description": "获得3个随机增益。",
+
+  "PLUMA_CARD_LIBERI_VIGILANCE.title": "羽兽的警惕",
+  "PLUMA_CARD_LIBERI_VIGILANCE.description": "对所有敌人施加{OpenWound:diff()}层创伤\n获得所有敌人总创伤层数的格挡。",
+
+  "PLUMA_CARD_RECALL_STRIKE.title": "回钩",
+  "PLUMA_CARD_RECALL_STRIKE.description": "造成{Damage:diff()}点伤害。\n将上一张打出的牌放回手牌。",
+
+  "PLUMA_CARD_CONCESSION.title": "让步",
+  "PLUMA_CARD_CONCESSION.description": "获得{Block:diff()}点格挡。\n对自己施加1层虚弱。",
+
+  "PLUMA_CARD_FEATHER_STORM.title": "羽毛风暴",
+  "PLUMA_CARD_FEATHER_STORM.description": "指定一名敌人，造成{Damage:diff()}点伤害并施加2层易伤，然后随机攻击{RandomHits:diff()}次。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

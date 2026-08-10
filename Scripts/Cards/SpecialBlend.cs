@@ -79,7 +79,8 @@ public class SpecialBlend : ModCardTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
+        HoverTipFactory.FromKeyword(MyKeywords.MuscleMemory)
+        
     };
     
     protected override void OnUpgrade()

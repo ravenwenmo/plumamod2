@@ -25,8 +25,10 @@ public class SlashingMaster : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 无额外关键词（若不想要消耗，可留空或移除）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => Enumerable.Empty<CardKeyword>();
+    // 关键词（消耗）
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [
+        CardKeyword.Exhaust, // 添加原版关键词
+    ];
 
     // 生成数量，升级后 +1
     protected override IEnumerable<DynamicVar> CanonicalVars => new[] { new CardsVar(3) };
