@@ -41,11 +41,11 @@ public class AquaDawn : ModRelicTemplate
         // 必须是遗物持有者自己造成的伤害
         if (dealer != base.Owner.Creature) return;
 
-        // 只对敌人造成的伤害生效（排除自伤、反伤等）
-        if (!base.Owner.Creature.CombatState.HittableEnemies.Contains(target)) return;
+        // 只要目标不是自己（避免自伤回血），就回血
+        if (target == base.Owner.Creature) return;
 
-        Flash();                              // 回血时闪光
-        await CreatureCmd.Heal(base.Owner.Creature, 2); // 回复等于遗物层数？这里遗物没有层数，固定回复1点。
+        Flash();
+        await CreatureCmd.Heal(base.Owner.Creature, 2);
     }
     
     // 移除“休息”选项，让玩家无法选择
