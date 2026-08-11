@@ -31,7 +31,7 @@ public class Friendship : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         MyKeywords.MuscleMemory,
-        CardKeyword.Exhaust
+        //CardKeyword.Exhaust
     };
 
     public Friendship() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
