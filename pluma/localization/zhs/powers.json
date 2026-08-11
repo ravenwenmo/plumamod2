@@ -62,6 +62,9 @@
   "PLUMA_POWER_WIND_FEATHER_POWER.description": "每打出一张攻击牌，获得等量于层数的渐入佳境。",
   "PLUMA_POWER_WIND_FEATHER_POWER.smartDescription": "每打出攻击牌获得[blue]{Amount}[/blue]层渐入佳境。",
 
+  "PLUMA_POWER_PRECISION_REPETITION_POWER.title": "精准复击",
+  "PLUMA_POWER_PRECISION_REPETITION_POWER.description": "切割连击计数不会被非切割牌打断。",
+
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"

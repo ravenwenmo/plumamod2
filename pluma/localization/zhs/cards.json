@@ -163,6 +163,12 @@
 
   "PLUMA_CARD_FEATHER_STORM.title": "羽毛风暴",
   "PLUMA_CARD_FEATHER_STORM.description": "指定一名敌人，造成{Damage:diff()}点伤害并施加2层易伤，然后随机攻击{RandomHits:diff()}次。",
+
+  "PLUMA_CARD_PRECISION_REPETITION.title": "精准复击",
+  "PLUMA_CARD_PRECISION_REPETITION.description": "[gold]切割[/gold]连击计数不会被非[gold]切割[/gold]牌打断。",
+
+  "PLUMA_CARD_INTUITION.title": "感应",
+  "PLUMA_CARD_INTUITION.description": "抽1张牌，造成{Damage:diff()}点伤害。\n若抽到的牌拥有[gold]本能[/gold]，本次伤害+4。\n若抽到的牌拥有[gold]切割[/gold]，本次攻击段数+1。",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"

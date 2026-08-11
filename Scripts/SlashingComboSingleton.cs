@@ -43,7 +43,11 @@ public class SlashingComboSingleton : HookedSingletonModel
         }
         else
         {
-            _comboCounters.Remove(player);
+            // 拥有利刃形态时，非切割牌不会清零计数器
+            if (!player.Creature.HasPower<PrecisionRepetitionPower>())
+            {
+                _comboCounters.Remove(player);
+            }
         }
 
         return Task.CompletedTask;
