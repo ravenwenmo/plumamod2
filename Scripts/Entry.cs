@@ -4,9 +4,15 @@ using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
 using STS2RitsuLib.Interop;
 using STS2RitsuLib.RunData;
+using Godot;
+using Logger = MegaCrit.Sts2.Core.Logging.Logger;
+using  STS2RitsuLib.Scaffolding.Cards.HandOutline;
+using  STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.Entities.Cards; // 提供 CardType 枚举
 
 namespace Pluma.Scripts;
 
+    
 [ModInitializer(nameof(Init))]
 public class Entry
 {
@@ -41,6 +47,35 @@ public class Entry
                     SyncLobbyOnChange = true
                 });
         }
+
+
+        // 自动为所有攻击牌注册固定金色发光（条件：拥有切割关键词且连击数 > 0）
+        var shashingAssembly = Assembly.GetExecutingAssembly();
+        var attackCardTypes = shashingAssembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && typeof(ModCardTemplate).IsAssignableFrom(t))
+            .Where(t =>
+            {
+                try
+                {
+                    var instance = (ModCardTemplate)Activator.CreateInstance(t);
+                    return instance.Type == CardType.Attack;
+                }
+                catch { return false; }
+            });
+
+        foreach (var cardType in attackCardTypes)
+        {
+            ModCardHandOutlineRegistry.Register(
+                cardType,
+                ModCardHandOutlineRules.Fixed(
+                    card => card.Keywords.Contains(MyKeywords.Slashing) &&
+                            SlashingComboSingleton.GetPlayerComboCount(card.Owner) > 0,
+                    Colors.Gold,
+                    priority: 5
+                )
+            );
+        }
+
     }
 }
 

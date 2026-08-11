@@ -16,13 +16,18 @@ using STS2RitsuLib.Models;
 namespace Pluma.Scripts;
 
 [RegisterSingleton]
-public class TSlashingComboSingleton : HookedSingletonModel
+public class SlashingComboSingleton : HookedSingletonModel
 {
+    // 持有自身的静态实例，供外部静态调用
+    public static SlashingComboSingleton Instance { get; private set; }
+
     // 为每个玩家维护独立的连击计数器
     private readonly Dictionary<Player, int> _comboCounters = new();
 
-    public TSlashingComboSingleton() : base(HookType.Combat)
+    public SlashingComboSingleton() : base(HookType.Combat)
     {
+        // 每次构造时更新静态实例（理论上只会构造一次）
+        Instance = this;
     }
 
     // ===== 计数逻辑：卡牌打出时更新 =====
@@ -31,7 +36,6 @@ public class TSlashingComboSingleton : HookedSingletonModel
         var player = cardPlay.Card.Owner;
         if (player == null) return Task.CompletedTask;
 
-        // 如果这张牌是 Slashing ，计数 +1；否则清零
         if (cardPlay.Card.Keywords.Contains(MyKeywords.Slashing))
         {
             _comboCounters.TryGetValue(player, out int current);
@@ -39,7 +43,7 @@ public class TSlashingComboSingleton : HookedSingletonModel
         }
         else
         {
-            _comboCounters.Remove(player); // 清零
+            _comboCounters.Remove(player);
         }
 
         return Task.CompletedTask;
@@ -54,19 +58,15 @@ public class TSlashingComboSingleton : HookedSingletonModel
         Creature target,
         CardModel? cardSource)
     {
-        // 必须有卡牌来源，且卡牌 Slashing 
         if (cardSource == null || !cardSource.Keywords.Contains(MyKeywords.Slashing))
             return;
-        // 施加创伤...
 
         var player = cardSource.Owner;
         if (player == null) return;
 
-        // 获取该玩家当前的连击计数
         if (!_comboCounters.TryGetValue(player, out int count) || count <= 0)
             return;
 
-        // 给受伤的目标施加 count 层创伤
         await PowerCmd.Apply<OpenWoundPower>(
             choiceContext,
             target,
@@ -74,5 +74,18 @@ public class TSlashingComboSingleton : HookedSingletonModel
             dealer,
             cardSource
         );
+    }
+
+    // 实例方法：获取指定玩家的连击数
+    public int GetComboCount(Player player)
+    {
+        return _comboCounters.TryGetValue(player, out int count) ? count : 0;
+    }
+
+    // 静态方法：供发光规则等外部调用
+    public static int GetPlayerComboCount(Player? player)
+    {
+        if (player == null) return 0;
+        return Instance?.GetComboCount(player) ?? 0;
     }
 }
