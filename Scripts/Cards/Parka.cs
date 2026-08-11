@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
-
+// 绒衣
 // 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
@@ -40,7 +40,7 @@ public class Parka : ModCardTemplate
 
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<PlatingPower>(3m)
+        new PowerVar<PlatingPower>(4m)
     ];
     
     

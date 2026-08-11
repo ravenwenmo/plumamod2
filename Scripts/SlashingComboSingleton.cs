@@ -12,6 +12,8 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Models;
+using MegaCrit.Sts2.Core.Rooms; 
+
 
 namespace Pluma.Scripts;
 
@@ -31,6 +33,24 @@ public class SlashingComboSingleton : HookedSingletonModel
     }
 
     // ===== 计数逻辑：卡牌打出时更新 =====
+    
+    
+    // 进入战斗房间时清空所有连击计数
+    public override Task AfterRoomEntered(AbstractRoom room)
+    {
+        if (room is CombatRoom)
+        {
+            _comboCounters.Clear();
+        }
+        return Task.CompletedTask;
+    }
+    //两个都加还能清不干净你？？？
+    public override Task AfterCombatEnd(CombatRoom room)
+    {
+        _comboCounters.Clear();
+        return Task.CompletedTask;
+    }
+    
     public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;

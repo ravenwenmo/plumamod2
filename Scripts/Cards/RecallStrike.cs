@@ -27,9 +27,11 @@ public class RecallStrike : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Exhaust };
-
+    
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [
+        CardKeyword.Exhaust, // 添加原版关键词
+        MyKeywords.Slashing,
+    ];
     protected override IEnumerable<DynamicVar> CanonicalVars => new[] { new DamageVar(3m, ValueProp.Move) };
 
     public RecallStrike() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

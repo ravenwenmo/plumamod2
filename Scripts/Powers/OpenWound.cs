@@ -123,4 +123,35 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
     }
     */
     //我Chovy败给你了不要了
+    
+    /// <summary>
+    /// 连续触发多次创伤效果，伤害来源与正常创伤一致（无攻击者、无卡牌）。
+    /// </summary>
+    public async Task TriggerMultiple(PlayerChoiceContext choiceContext, int times)
+    {
+        for (int i = 0; i < times; i++)
+        {
+            if (this.Amount <= 0 || this.Owner == null) break;
+            if (_isApplying) break;
+            _isApplying = true;
+            if (i==0){await Cmd.Wait(0.2f);}
+            try
+            {
+                await CreatureCmd.Damage(
+                    choiceContext,
+                    base.Owner,
+                    base.Amount,
+                    ValueProp.Unpowered | ValueProp.Unblockable,
+                    null,   // 无攻击者
+                    null    // 无卡牌来源
+                );
+                await PowerCmd.Decrement(this);
+            }
+            finally
+            {
+                _isApplying = false;
+            }
+            //await Cmd.Wait(0.01f);
+        }
+    }
 }

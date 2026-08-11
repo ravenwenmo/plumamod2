@@ -16,7 +16,7 @@ using MegaCrit.Sts2.Core.Combat;          // 提供 CombatManager
 
 namespace Pluma.Scripts;
 
-
+// 上挑
 // 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
@@ -48,8 +48,10 @@ public class RisingSlash : ModCardTemplate
         new DamageVar(7m, ValueProp.Move),
         new CardsVar(1),
     ];
-    
 
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [
+        MyKeywords.Slashing,
+    ];
     
     public RisingSlash() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {

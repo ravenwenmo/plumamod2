@@ -11,11 +11,11 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 精密重复：3费，本能。获得精密重复能力（切割连击不被非切割牌打断）。
+// 利刃形态：3费，本能，每回合获得一张免费随机攻击牌并附带切割。升级后获得的牌是升级版。
 [RegisterCard(typeof(PlumaCardPool))]
-public class PrecisionRepetition : ModCardTemplate
+public class BladeForm : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 3;
     private const CardType type = CardType.Power;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.Self;
@@ -29,27 +29,42 @@ public class PrecisionRepetition : ModCardTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<PrecisionRepetitionPower>()
+        base.IsUpgraded
+            ? HoverTipFactory.FromPower<BladeFormUpgradedPower>()
+            : HoverTipFactory.FromPower<BladeFormPower>()
     };
 
-    public PrecisionRepetition() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public BladeForm() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<PrecisionRepetitionPower>(
-            choiceContext,
-            base.Owner.Creature,
-            1,
-            base.Owner.Creature,
-            this
-        );
+        if (base.IsUpgraded)
+        {
+            await PowerCmd.Apply<BladeFormUpgradedPower>(
+                choiceContext,
+                base.Owner.Creature,
+                1,
+                base.Owner.Creature,
+                this
+            );
+        }
+        else
+        {
+            await PowerCmd.Apply<BladeFormPower>(
+                choiceContext,
+                base.Owner.Creature,
+                1,
+                base.Owner.Creature,
+                this
+            );
+        }
     }
-
+    /*
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 1费 → 0费
-        // 可升级减费等，暂留空
+        // 效果在 OnPlay 中根据 IsUpgraded 选择能力
     }
+    */
 }

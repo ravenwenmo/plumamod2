@@ -65,6 +65,12 @@
   "PLUMA_POWER_PRECISION_REPETITION_POWER.title": "精准复击",
   "PLUMA_POWER_PRECISION_REPETITION_POWER.description": "切割连击计数不会被非切割牌打断。",
 
+  "PLUMA_POWER_BLADE_FORM_POWER.title": "利刃形态",
+  "PLUMA_POWER_BLADE_FORM_POWER.description": "每回合开始，获得一张随机攻击牌，该牌本回合免费且附带切割。",
+  
+  "PLUMA_POWER_BLADE_FORM_UPGRADED_POWER.title": "利刃形态+",
+  "PLUMA_POWER_BLADE_FORM_UPGRADED_POWER.description": "每回合开始，获得一张升级过的随机攻击牌，该牌本回合免费且附带切割。",
+
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"

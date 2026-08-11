@@ -6,11 +6,11 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-using MegaCrit.Sts2.Core.Models;
 
 namespace Pluma.Scripts;
 
@@ -20,7 +20,7 @@ public class Intuition : ModCardTemplate
 {
     private const int energyCost = 0;
     private const CardType type = CardType.Attack;
-    private const CardRarity rarity = CardRarity.Uncommon; // 可根据需要调整
+    private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.AnyEnemy;
     private const bool shouldShowInCardLibrary = true;
 
@@ -35,18 +35,10 @@ public class Intuition : ModCardTemplate
         new CardsVar(1)
     };
 
-    // 升级后卡牌自身获得本能与切割关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords
-    {
-        get
-        {
-            if (IsUpgraded)
-                return new[] { MyKeywords.MuscleMemory, MyKeywords.Slashing };
-            return Enumerable.Empty<CardKeyword>();
-        }
-    }
+    // 基础无关键词，升级后在 OnUpgrade 中添加
+    public override IEnumerable<CardKeyword> CanonicalKeywords => Enumerable.Empty<CardKeyword>();
 
-    // 悬浮提示：本能与切割关键词
+    // 悬浮提示：本能与切割关键词（无论是否升级都显示，方便玩家预览）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.MuscleMemory),
@@ -95,6 +87,7 @@ public class Intuition : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        // 关键词已通过 CanonicalKeywords 属性动态返回，无需额外操作
+        AddKeyword(MyKeywords.MuscleMemory);
+        AddKeyword(MyKeywords.Slashing);
     }
 }

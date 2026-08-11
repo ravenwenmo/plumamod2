@@ -34,7 +34,8 @@ public class FlawSense : ModCardTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<OpenWoundPower>()
+        HoverTipFactory.FromPower<OpenWoundPower>(),
+        HoverTipFactory.FromPower<FlawSensePower>()
     };
 
     public FlawSense() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

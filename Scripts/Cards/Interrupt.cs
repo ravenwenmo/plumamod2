@@ -28,6 +28,10 @@ public class Interrupt : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
+    
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [
+        MyKeywords.Slashing,
+    ];
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(7m, ValueProp.Move),

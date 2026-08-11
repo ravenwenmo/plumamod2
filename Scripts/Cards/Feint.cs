@@ -17,7 +17,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Feint : ModCardTemplate
 {
-    private const int energyCost = 1;
+    private const int energyCost = 0;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.AnyEnemy;
@@ -26,7 +26,10 @@ public class Feint : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
-
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        CardKeyword.Exhaust
+    };
     // 层数动态变量，升级后+1
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {

@@ -168,7 +168,17 @@
   "PLUMA_CARD_PRECISION_REPETITION.description": "[gold]切割[/gold]连击计数不会被非[gold]切割[/gold]牌打断。",
 
   "PLUMA_CARD_INTUITION.title": "感应",
-  "PLUMA_CARD_INTUITION.description": "抽1张牌，造成{Damage:diff()}点伤害。\n若抽到的牌拥有[gold]本能[/gold]，本次伤害+4。\n若抽到的牌拥有[gold]切割[/gold]，本次攻击段数+1。",
+  "PLUMA_CARD_INTUITION.description": "抽1张牌，造成{Damage:diff()}点伤害。\n若抽到的牌拥有[gold]本能[/gold]或[gold]切割[/gold]\n本次攻击分别伤害+4、段数+1。",
+
+  "PLUMA_CARD_BLADE_FORM.title": "利刃形态",
+  "PLUMA_CARD_BLADE_FORM.description": "每回合开始，获得一张{IfUpgraded:show:[gold]升级过[/gold]的|}本回合不消耗能量且附带[gold]切割[/gold]、[gold]消耗[/gold]的随机攻击牌。",
+
+  "PLUMA_CARD_HELM_BREAKER.title": "兜割",
+  "PLUMA_CARD_HELM_BREAKER.description": "造成{Damage:diff()}点伤害。立即触发目标创伤至多7次。",
+
+  "PLUMA_CARD_SCYTHE_UNITY.title": "人镰合一",
+  "PLUMA_CARD_SCYTHE_UNITY.description": "选择一张手牌，将其变为[gold]切割[/gold]。",
+  "PLUMA_CARD_SCYTHE_UNITY.selectPrompt": "选择一张手牌变为切割",
   
   "PLUMA_CARD_SLASHING.title": "切割",
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"
