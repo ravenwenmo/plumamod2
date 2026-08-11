@@ -50,8 +50,8 @@ public class Entry
 
 
         // 自动为所有攻击牌注册固定金色发光（条件：拥有切割关键词且连击数 > 0）
-        var shashingAssembly = Assembly.GetExecutingAssembly();
-        var attackCardTypes = shashingAssembly.GetTypes()
+        var slashingAssembly = Assembly.GetExecutingAssembly();
+        var attackCardTypes = slashingAssembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && typeof(ModCardTemplate).IsAssignableFrom(t))
             .Where(t =>
             {
@@ -67,10 +67,15 @@ public class Entry
         {
             ModCardHandOutlineRegistry.Register(
                 cardType,
-                ModCardHandOutlineRules.Fixed(
+                ModCardHandOutlineRules.Dynamic(
                     card => card.Keywords.Contains(MyKeywords.Slashing) &&
                             SlashingComboSingleton.GetPlayerComboCount(card.Owner) > 0,
-                    Colors.Gold,
+                    card =>
+                    {
+                        int combo = SlashingComboSingleton.GetPlayerComboCount(card.Owner);
+                        float factor = Math.Clamp((combo - 1) / 4f, 0f, 1f);
+                        return new Color(1f, 0.843f * (1f - factor), 0f);
+                    },
                     priority: 5
                 )
             );
