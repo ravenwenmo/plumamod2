@@ -188,5 +188,20 @@
   "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。",
 
   "PLUMA_CARD_GIN.title": "金酒",
-  "PLUMA_CARD_GIN.description": "造成1点攻击伤害，并施加1层虚弱。"
+  "PLUMA_CARD_GIN.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_TEQUILA.title": "龙舌兰",
+  "PLUMA_CARD_TEQUILA.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_WHISKEY.title": "威士忌",
+  "PLUMA_CARD_WHISKEY.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_RUM.title": "朗姆酒",
+  "PLUMA_CARD_RUM.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_VODKA.title": "伏特加",
+  "PLUMA_CARD_VODKA.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_BRANDY.title": "白兰地",
+  "PLUMA_CARD_BRANDY.description": "造成1点攻击伤害，并施加1层虚弱。"
 }

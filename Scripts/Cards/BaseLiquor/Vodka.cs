@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -18,10 +18,10 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 
 namespace Pluma.Scripts;
 
-// 金酒：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
+// 伏特加：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
 // 效果占位：对自己造成1点伤害并施加1层虚弱；对敌人造成1点伤害并施加1层虚弱；对友方造成1点伤害并施加1层虚弱。
 [RegisterCard(typeof(TokenCardPool))]
-public class Gin : ModCardTemplate, IModRightClickableCard
+public class Vodka : ModCardTemplate, IModRightClickableCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -72,7 +72,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard
     protected override bool ShouldGlowRedInternal => _mode == SpiritMode.Enemy;
     protected override bool ShouldGlowGoldInternal => _mode == SpiritMode.Ally;
 
-    public Gin() : base(energyCost, CardType.Skill, rarity, TargetType.Self, shouldShowInCardLibrary)
+    public Vodka() : base(energyCost, CardType.Skill, rarity, TargetType.Self, shouldShowInCardLibrary)
     {
     }
 
@@ -94,7 +94,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard
         if (NPlayerHand.Instance?.GetCardHolder(this) is NHandCardHolder holder)
         {
             holder.UpdateCard();
-            
+
             // 尝试刷新类型标签（技能/攻击）
             var cardNode = holder.CardNode;
             if (cardNode != null)
