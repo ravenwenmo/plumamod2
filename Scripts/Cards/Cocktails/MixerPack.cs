@@ -41,7 +41,11 @@ public class MixerPack : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Exhaust };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        CardKeyword.Exhaust,
+        MyKeywords.MuscleMemory
+    };
 
     public MixerPack() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
