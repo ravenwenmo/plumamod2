@@ -52,7 +52,7 @@ public class MixerPack : ModCardTemplate
     }
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(5m, ValueProp.Move)
+        new BlockVar(6m, ValueProp.Move)
     ];
     
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

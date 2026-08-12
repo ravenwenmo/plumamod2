@@ -62,7 +62,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
 
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(3m, ValueProp.Move)
+        new DamageVar(6m, ValueProp.Move)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

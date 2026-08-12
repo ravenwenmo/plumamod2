@@ -22,7 +22,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 namespace Pluma.Scripts;
 
 // 莫吉托：0费生成技能牌，鸡尾酒。右键循环切换模式：自己 -> 敌人 -> 友方。
-// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得5层渐入佳境。升级后伤害+3并获得保留。
+// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得6层渐入佳境。升级后伤害+3并获得保留。
 [RegisterCard(typeof(TokenCardPool))]
 public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 {
@@ -170,7 +170,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 5 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, 5,
+                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, 6,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对友方获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(cardPlay.Target!, 3m, ValueProp.Move, cardPlay);

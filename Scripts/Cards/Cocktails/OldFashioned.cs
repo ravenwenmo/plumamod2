@@ -22,7 +22,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 namespace Pluma.Scripts;
 
 // 古典鸡尾酒：0费生成技能牌，鸡尾酒。右键循环切换模式：自己 -> 敌人 -> 友方。
-// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得15点格挡。升级后伤害+3并获得保留。
+// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得20点格挡。升级后伤害+3并获得保留。
 [RegisterCard(typeof(TokenCardPool))]
 public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 {
@@ -149,7 +149,7 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 15 点格挡
-                await CreatureCmd.GainBlock(base.Owner.Creature, 15m, ValueProp.Move, cardPlay);
+                await CreatureCmd.GainBlock(base.Owner.Creature, 20m, ValueProp.Move, cardPlay);
                 // ---- 旧效果（对自己获得1层敏捷，已注释保留）----
                 // await PowerCmd.Apply<DexterityPower>(choiceContext, base.Owner.Creature, 1,
                 //     base.Owner.Creature, this);

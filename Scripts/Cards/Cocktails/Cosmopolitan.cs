@@ -22,7 +22,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 namespace Pluma.Scripts;
 
 // 大都会：0费生成技能牌，鸡尾酒。右键循环切换模式：自己 -> 敌人 -> 友方。
-// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得2点能量。升级后伤害+3并获得保留。
+// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得4点能量。升级后伤害+3并获得保留。
 [RegisterCard(typeof(TokenCardPool))]
 public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 {
@@ -70,7 +70,7 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
     // 伤害变量（基础10，升级+5）与能量变量（用于 {Energy:energyIcons()} 描述）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(10m, ValueProp.Move),
-        new EnergyVar(2)
+        new EnergyVar(4)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

@@ -234,21 +234,21 @@
   "PLUMA_CARD_GIN_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
   "PLUMA_CARD_GIN_ALLY_DESC": "使目标失去1点生命，然后获得3层临时力量。",
 
-  "PLUMA_CARD_TEQUILA_SELF_DESC": "失去1点生命，然后施加3层[gold]再生[/gold]。",
+  "PLUMA_CARD_TEQUILA_SELF_DESC": "失去1点生命，然后施加4层[gold]再生[/gold]。",
   "PLUMA_CARD_TEQUILA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_TEQUILA_ALLY_DESC": "使目标失去1点生命，然后施加3层[gold]再生[/gold]。",
+  "PLUMA_CARD_TEQUILA_ALLY_DESC": "使目标失去1点生命，然后施加4层[gold]再生[/gold]。",
 
-  "PLUMA_CARD_WHISKEY_SELF_DESC": "失去1点生命，然后获得3层[gold]覆甲[/gold]。",
+  "PLUMA_CARD_WHISKEY_SELF_DESC": "失去1点生命，然后获得5层[gold]覆甲[/gold]。",
   "PLUMA_CARD_WHISKEY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_WHISKEY_ALLY_DESC": "使目标失去1点生命，然后获得3层[gold]覆甲[/gold]。",
+  "PLUMA_CARD_WHISKEY_ALLY_DESC": "使目标失去1点生命，然后获得5层[gold]覆甲[/gold]。",
 
-  "PLUMA_CARD_RUM_SELF_DESC": "失去1点生命，然后获得2层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_RUM_SELF_DESC": "失去1点生命，然后获得3层[gold]渐入佳境[/gold]。",
   "PLUMA_CARD_RUM_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_RUM_ALLY_DESC": "使目标失去1点生命，然后获得2层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_RUM_ALLY_DESC": "使目标失去1点生命，然后获得3层[gold]渐入佳境[/gold]。",
 
-  "PLUMA_CARD_VODKA_SELF_DESC": "失去1点生命，然后获得1点能量。",
+  "PLUMA_CARD_VODKA_SELF_DESC": "失去1点生命，然后获得2点能量。",
   "PLUMA_CARD_VODKA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_VODKA_ALLY_DESC": "使目标失去1点生命，然后获得1点能量。",
+  "PLUMA_CARD_VODKA_ALLY_DESC": "使目标失去1点生命，然后获得2点能量。",
 
   "PLUMA_CARD_BRANDY_SELF_DESC": "失去1点生命，然后获得3层[gold]临时敏捷[/gold]。",
   "PLUMA_CARD_BRANDY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
@@ -262,13 +262,13 @@
   "PLUMA_CARD_MARGARITA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
   "PLUMA_CARD_MARGARITA_ALLY_DESC": "使目标失去1点生命，然后获得1层[gold]收割者[/gold]。",
 
-  "PLUMA_CARD_OLD_FASHIONED_SELF_DESC": "失去1点生命，然后获得15点[gold]格挡[/gold]。",
+  "PLUMA_CARD_OLD_FASHIONED_SELF_DESC": "失去1点生命，然后获得20点[gold]格挡[/gold]。",
   "PLUMA_CARD_OLD_FASHIONED_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_OLD_FASHIONED_ALLY_DESC": "使目标失去1点生命，然后获得15点[gold]格挡[/gold]。",
+  "PLUMA_CARD_OLD_FASHIONED_ALLY_DESC": "使目标失去1点生命，然后获得20点[gold]格挡[/gold]。",
 
-  "PLUMA_CARD_MOJITO_SELF_DESC": "失去1点生命，然后获得5层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_MOJITO_SELF_DESC": "失去1点生命，然后获得6层[gold]渐入佳境[/gold]。",
   "PLUMA_CARD_MOJITO_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_MOJITO_ALLY_DESC": "使目标失去1点生命，然后获得5层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_MOJITO_ALLY_DESC": "使目标失去1点生命，然后获得6层[gold]渐入佳境[/gold]。",
 
   "PLUMA_CARD_COSMOPOLITAN_SELF_DESC": "失去1点生命，然后获得{Energy:energyIcons()}。",
   "PLUMA_CARD_COSMOPOLITAN_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
@@ -276,5 +276,11 @@
 
   "PLUMA_CARD_SIDECAR_SELF_DESC": "失去1点生命，然后获得3层[gold]敏捷[/gold]。",
   "PLUMA_CARD_SIDECAR_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_SIDECAR_ALLY_DESC": "使目标失去1点生命，然后获得3层[gold]敏捷[/gold]。"
+  "PLUMA_CARD_SIDECAR_ALLY_DESC": "使目标失去1点生命，然后获得3层[gold]敏捷[/gold]。",
+
+  "PLUMA_CARD_DRINKS_FOR_TWO.title": "我喝两杯",
+  "PLUMA_CARD_DRINKS_FOR_TWO.description": "获得2张随机基酒。\n将1张辅料组合包分别放入抽牌堆和弃牌堆。",
+
+  "PLUMA_CARD_BARTENDERS_FLASK.title": "调酒师的小壶",
+  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有基酒，获得1张随机基酒 ；否则获得1张辅料组合包。"
 }
