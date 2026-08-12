@@ -208,7 +208,7 @@
   "PLUMA_CARD_GIN_TONIC.title": "金汤力",
   "PLUMA_CARD_GIN_TONIC.description": "造成1点攻击伤害，并施加1层虚弱。",
 
-  "PLUMA_CARD_MARGARITA.title": "玛格丽特",
+  "PLUMA_CARD_MARGARITA.title": "“水蓝色黎明”",
   "PLUMA_CARD_MARGARITA.description": "造成1点攻击伤害，并施加1层虚弱。",
 
   "PLUMA_CARD_OLD_FASHIONED.title": "古典鸡尾酒",
@@ -224,6 +224,9 @@
   "PLUMA_CARD_SIDECAR.description": "造成1点攻击伤害，并施加1层虚弱。",
 
   "PLUMA_CARD_MIXER_PACK.title": "辅料组合包",
-  "PLUMA_CARD_MIXER_PACK.description": "选择并消耗一张手牌中的基酒牌，将对应的鸡尾酒加入你的手牌。",
-  "PLUMA_CARD_MIXER_PACK.selectPrompt": "选择一张基酒牌"
+  "PLUMA_CARD_MIXER_PACK.description": "将手中的一份基酒调制成鸡尾酒。\n若无基酒获得{Block:diff()}点[gold]格挡[/gold]。",
+  "PLUMA_CARD_MIXER_PACK.selectPrompt": "选择一张基酒牌",
+
+  "PLUMA_CARD_RANDOM_MIXOLOGY_SET.title": "随机调酒组合",
+  "PLUMA_CARD_RANDOM_MIXOLOGY_SET.description": "获得1张随机基酒。\n将1张辅料组合包放入弃牌堆。"
 }

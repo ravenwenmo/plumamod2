@@ -41,7 +41,11 @@ public class GinTonic : ModCardTemplate, IModRightClickableCard
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.Cocktail };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.Cocktail,
+        CardKeyword.Exhaust
+    };
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
