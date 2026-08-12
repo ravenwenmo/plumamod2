@@ -48,7 +48,7 @@ public class Cocktail : ModCardTemplate
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        MyKeywords.MuscleMemory,
+        //MyKeywords.MuscleMemory,
         CardKeyword.Exhaust
     };
 // 悬浮提示：列出所有可能获得的增益（自定义 + 原版常见正面能力）
@@ -132,6 +132,14 @@ protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
         (ctx, owner, _, card) => PowerCmd.Apply<WindFeatherPower>(ctx, owner, 1, owner, card),
         // 切割连携：打出切割时抽牌
         (ctx, owner, _, card) => PowerCmd.Apply<SlashingDrawPower>(ctx, owner, 1, owner, card),
+        // 精准复击
+        (ctx, owner, _, card) => PowerCmd.Apply<PrecisionRepetitionPower>(ctx, owner, 1, owner, card),
+        // 利刃形态
+        (ctx, owner, _, card) => PowerCmd.Apply<BladeFormPower>(ctx, owner, 1, owner, card),
+        // 利刃形态+
+        (ctx, owner, _, card) => PowerCmd.Apply<BladeFormUpgradedPower>(ctx, owner, 1, owner, card),
+
+        
         // ---------- 原版常见正面能力 ----------
         (ctx, owner, _, card) => PowerCmd.Apply<StrengthPower>(ctx, owner, 1, owner, card),
         // 力量
@@ -236,7 +244,7 @@ protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
         // 乱战：回合开始时打出抽牌堆顶的牌
         (ctx, owner, _, card) => PowerCmd.Apply<NostalgiaPower>(ctx, owner, 1, owner, card),   
         // 怀旧：第一张攻击或技能牌放回抽牌堆顶
-        (ctx, owner, _, card) => PowerCmd.Apply<NightmarePower>(ctx, owner, 1, owner, card),  
+        //(ctx, owner, _, card) => PowerCmd.Apply<NightmarePower>(ctx, owner, 1, owner, card),  
         // 夜魇：下回合复制牌加入手牌
         (ctx, owner, _, card) => PowerCmd.Apply<PanachePower>(ctx, owner, 1, owner, card),     
         // 神气制胜：打出5张牌后造成伤害

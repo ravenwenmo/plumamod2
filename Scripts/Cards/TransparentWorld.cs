@@ -37,11 +37,13 @@ public class TransparentWorld : ModCardTemplate
         await PowerCmd.Apply<TransparentWorldPower>(
             choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this);
         // 2层混乱（抽牌-2）
+        /*
         await PowerCmd.Apply<MindRotPower>(
             choiceContext, base.Owner.Creature, 2, base.Owner.Creature, this);
         // 3层源源不断（每回合3层渐入佳境）
         await PowerCmd.Apply<ConstantFlowPower>(
             choiceContext, base.Owner.Creature, 3, base.Owner.Creature, this);
+        */
     }
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {

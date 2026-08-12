@@ -69,7 +69,7 @@
   "PLUMA_CARD_INTERRUPT.description": "造成{Damage:diff()}点伤害。\n如果敌人意图是攻击，给予{OpenWound:diff()}层[gold]创伤[/gold] 。",
 
   "PLUMA_CARD_TRANSPARENT_WORLD.title": "通透",
-  "PLUMA_CARD_TRANSPARENT_WORLD.description": "回合开始时少抽2张牌但获得3层[gold]渐入佳境[/gold]。\n[gold]渐入佳境[/gold]抽到的本能牌会被随机打出。",
+  "PLUMA_CARD_TRANSPARENT_WORLD.description": "[gold]渐入佳境[/gold]抽到的本能牌会被随机打出。",
 
   "PLUMA_CARD_REFORMATION.title": "改变思维",
   "PLUMA_CARD_REFORMATION.description": "获得5层[gold]源源不断[/gold]\n获得5层[gold]心灵腐化[/gold]。",
@@ -152,7 +152,7 @@
   "PLUMA_CARD_COCKTAIL.title": "鸡尾酒",
   "PLUMA_CARD_COCKTAIL.description": "获得3个随机增益。",
 
-  "PLUMA_CARD_LIBERI_VIGILANCE.title": "羽兽的警惕",
+  "PLUMA_CARD_LIBERI_VIGILANCE.title": "羽兽的警觉",
   "PLUMA_CARD_LIBERI_VIGILANCE.description": "对所有敌人施加{OpenWound:diff()}层创伤\n获得所有敌人总创伤层数的格挡。",
 
   "PLUMA_CARD_RECALL_STRIKE.title": "回钩",
@@ -179,7 +179,14 @@
   "PLUMA_CARD_SCYTHE_UNITY.title": "人镰合一",
   "PLUMA_CARD_SCYTHE_UNITY.description": "选择一张手牌，将其变为[gold]切割[/gold]。",
   "PLUMA_CARD_SCYTHE_UNITY.selectPrompt": "选择一张手牌变为切割",
+
+  "PLUMA_CARD_HINT.title": "暗示",
+  "PLUMA_CARD_HINT.description": "从抽牌堆选择1张牌，获得[gold]本能[/gold]。",
+  "PLUMA_CARD_HINT.selectPrompt": "选择一张牌添加本能",
   
   "PLUMA_CARD_SLASHING.title": "切割",
-  "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。"
+  "PLUMA_CARD_SLASHING.description": "对所有敌人造成{Damage:diff()}点伤害。",
+
+  "PLUMA_CARD_GIN.title": "金酒",
+  "PLUMA_CARD_GIN.description": "造成1点攻击伤害，并施加1层虚弱。"
 }

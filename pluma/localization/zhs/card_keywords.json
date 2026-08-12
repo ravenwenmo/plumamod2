@@ -3,6 +3,8 @@
   "PLUMA_KEYWORD_MUSCLE_MEMORY.title": "本能",
 
   "PLUMA_KEYWORD_SLASHING.description": "连续打出切割会额外施加越来越多的创伤",
-  "PLUMA_KEYWORD_SLASHING.title": "切割"
-  
+  "PLUMA_KEYWORD_SLASHING.title": "切割",
+
+  "PLUMA_KEYWORD_BASE_SPIRIT.title": "基酒",
+  "PLUMA_KEYWORD_BASE_SPIRIT.description": "基酒是调制鸡尾酒的基础，可以右键切换形态。"
 }
