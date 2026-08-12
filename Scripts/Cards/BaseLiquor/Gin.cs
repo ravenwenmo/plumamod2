@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -23,7 +24,7 @@ namespace Pluma.Scripts;
 // 金酒：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
 // 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得3层临时力量（回合结束失去等量力量）。
 [RegisterCard(typeof(TokenCardPool))]
-public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
+public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -38,6 +39,15 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
     }
 
     private SpiritMode _mode = SpiritMode.Self; // 默认对自己
+
+    // 当前模式的独立描述（供 SpiritModeDescriptionPatch 使用）
+    public LocString SpiritModeDescription => _mode switch
+    {
+        SpiritMode.Self  => new LocString("cards", "PLUMA_CARD_GIN_SELF_DESC"),
+        SpiritMode.Enemy => new LocString("cards", "PLUMA_CARD_GIN_ENEMY_DESC"),
+        SpiritMode.Ally  => new LocString("cards", "PLUMA_CARD_GIN_ALLY_DESC"),
+        _ => new LocString("cards", "PLUMA_CARD_GIN_SELF_DESC")
+    };
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
@@ -167,6 +177,6 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
 
     protected override void OnUpgrade()
     {
-        // Token牌无升级
+        DynamicVars.Damage.UpgradeValueBy(3m); // 伤害 3 → 6
     }
 }

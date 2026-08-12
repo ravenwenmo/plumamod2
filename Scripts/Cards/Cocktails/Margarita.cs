@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Models.CardPools;
@@ -21,9 +22,9 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 namespace Pluma.Scripts;
 
 // 玛格丽特：0费生成技能牌，鸡尾酒。右键循环切换模式：自己 -> 敌人 -> 友方。
-// 效果：对敌人造成6点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得1层收割者并施加1层虚弱。升级后伤害+3并获得保留。
+// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得1层收割者。升级后伤害+3并获得保留。
 [RegisterCard(typeof(TokenCardPool))]
-public class Margarita : ModCardTemplate, IModRightClickableCard
+public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -38,6 +39,15 @@ public class Margarita : ModCardTemplate, IModRightClickableCard
     }
 
     private SpiritMode _mode = SpiritMode.Self; // 默认对自己
+
+    // 当前模式的独立描述（供 SpiritModeDescriptionPatch 使用）
+    public LocString SpiritModeDescription => _mode switch
+    {
+        SpiritMode.Self  => new LocString("cards", "PLUMA_CARD_MARGARITA_SELF_DESC"),
+        SpiritMode.Enemy => new LocString("cards", "PLUMA_CARD_MARGARITA_ENEMY_DESC"),
+        SpiritMode.Ally  => new LocString("cards", "PLUMA_CARD_MARGARITA_ALLY_DESC"),
+        _ => new LocString("cards", "PLUMA_CARD_MARGARITA_SELF_DESC")
+    };
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
@@ -57,9 +67,9 @@ public class Margarita : ModCardTemplate, IModRightClickableCard
         }
     }
 
-    // 伤害变量（基础6，升级+3）
+    // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(6m, ValueProp.Move)
+        new DamageVar(10m, ValueProp.Move)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -138,11 +148,12 @@ public class Margarita : ModCardTemplate, IModRightClickableCard
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 1 层收割者，并施加 1 层虚弱
+                // 获得 1 层收割者
                 await PowerCmd.Apply<ReaperHealingPower>(choiceContext, base.Owner.Creature, 1,
                     base.Owner.Creature, this);
-                await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
-                    base.Owner.Creature, this);
+                // ---- 旧效果（对自己施加1层虚弱，已注释保留）----
+                // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
+                //     base.Owner.Creature, this);
                 break;
 
             case SpiritMode.Enemy:
@@ -159,17 +170,18 @@ public class Margarita : ModCardTemplate, IModRightClickableCard
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 1 层收割者，并施加 1 层虚弱
+                // 获得 1 层收割者
                 await PowerCmd.Apply<ReaperHealingPower>(choiceContext, cardPlay.Target, 1,
                     base.Owner.Creature, this);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
-                    base.Owner.Creature, this);
+                // ---- 旧效果（对友方施加1层虚弱，已注释保留）----
+                // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                //     base.Owner.Creature, this);
                 break;
         }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m); // 伤害 6 → 9
+        DynamicVars.Damage.UpgradeValueBy(5m); // 伤害 10 → 15
     }
 }

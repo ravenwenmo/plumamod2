@@ -81,6 +81,9 @@ public class Entry
             );
         }
 
+        // 三形态卡牌（基酒/鸡尾酒）按当前 SpiritMode 显示独立描述
+        SpiritModeDescriptionPatch.Apply();
+
     }
 }
 

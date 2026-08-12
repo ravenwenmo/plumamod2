@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -21,9 +22,9 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 namespace Pluma.Scripts;
 
 // 朗姆酒：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
-// 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得3层活力。
+// 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得2层渐入佳境。升级后伤害+3。
 [RegisterCard(typeof(TokenCardPool))]
-public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
+public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -38,6 +39,15 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
     }
 
     private SpiritMode _mode = SpiritMode.Self; // 默认对自己
+
+    // 当前模式的独立描述（供 SpiritModeDescriptionPatch 使用）
+    public LocString SpiritModeDescription => _mode switch
+    {
+        SpiritMode.Self  => new LocString("cards", "PLUMA_CARD_RUM_SELF_DESC"),
+        SpiritMode.Enemy => new LocString("cards", "PLUMA_CARD_RUM_ENEMY_DESC"),
+        SpiritMode.Ally  => new LocString("cards", "PLUMA_CARD_RUM_ALLY_DESC"),
+        _ => new LocString("cards", "PLUMA_CARD_RUM_SELF_DESC")
+    };
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
@@ -133,8 +143,8 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层活力
-                await PowerCmd.Apply<VigorPower>(choiceContext, base.Owner.Creature, 3,
+                // 获得 2 层渐入佳境
+                await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, 2,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
@@ -155,8 +165,8 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层活力
-                await PowerCmd.Apply<VigorPower>(choiceContext, cardPlay.Target, 3,
+                // 获得 2 层渐入佳境
+                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, 2,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
@@ -167,6 +177,6 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
 
     protected override void OnUpgrade()
     {
-        // Token牌无升级
+        DynamicVars.Damage.UpgradeValueBy(3m); // 伤害 3 → 6
     }
 }
