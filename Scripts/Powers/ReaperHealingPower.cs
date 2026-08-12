@@ -30,9 +30,8 @@ public class ReaperHealingPower : ModPowerTemplate
         // 只处理自己造成的伤害
         if (dealer != base.Owner) return;
 
-        // 只对敌人造成的伤害吸血（排除自伤、反伤等）
-        if (!base.Owner.CombatState.HittableEnemies.Contains(target)) return;
-
+        // 只要目标不是自己（避免自伤回血），就回血
+        if (target == base.Owner) return;
         // 回复 = 层数
         await CreatureCmd.Heal(base.Owner, base.Amount);
     }

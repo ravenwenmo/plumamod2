@@ -6,10 +6,12 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interactions.RightClick;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -19,7 +21,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 namespace Pluma.Scripts;
 
 // 威士忌：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
-// 效果占位：对自己造成1点伤害并施加1层虚弱；对敌人造成1点伤害并施加1层虚弱；对友方造成1点伤害并施加1层虚弱。
+// 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得5点格挡。
 [RegisterCard(typeof(TokenCardPool))]
 public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
 {
@@ -47,6 +49,11 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
         CardKeyword.Exhaust,
         CardKeyword.Retain
     };
+
+    // 伤害变量（基础3，无升级变化）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new DamageVar(3m, ValueProp.Move)
+    ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
@@ -123,16 +130,19 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
         switch (_mode)
         {
             case SpiritMode.Self:
-                // 对自己造成1点穿透伤害，并施加1层虚弱
+                // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
-                    base.Owner.Creature, this);
+                // 获得 5 点格挡
+                await CreatureCmd.GainBlock(base.Owner.Creature, 5m, ValueProp.Move, cardPlay);
+                // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
+                // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
+                //     base.Owner.Creature, this);
                 break;
 
             case SpiritMode.Enemy:
-                // 对敌人造成1点攻击伤害，并施加1层虚弱
-                await DamageCmd.Attack(1m)
+                // 对敌人造成 {Damage} 点攻击伤害，并施加 1 层虚弱
+                await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
@@ -141,11 +151,14 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard
                 break;
 
             case SpiritMode.Ally:
-                // 对友方造成1点穿透伤害，并施加1层虚弱
+                // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
-                    base.Owner.Creature, this);
+                // 获得 5 点格挡
+                await CreatureCmd.GainBlock(cardPlay.Target!, 5m, ValueProp.Move, cardPlay);
+                // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
+                // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                //     base.Owner.Creature, this);
                 break;
         }
     }
