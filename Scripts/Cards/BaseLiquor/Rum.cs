@@ -46,7 +46,9 @@ public class Rum : ModCardTemplate, IModRightClickableCard
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
-        HoverTipFactory.FromPower<WeakPower>()
+        HoverTipFactory.FromPower<WeakPower>(),
+        // 预览对应的鸡尾酒牌
+        HoverTipFactory.FromCard<Mojito>()
     };
 
     // 卡牌类型固定为技能

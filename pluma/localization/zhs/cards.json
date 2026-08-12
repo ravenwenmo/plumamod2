@@ -203,5 +203,27 @@
   "PLUMA_CARD_VODKA.description": "造成1点攻击伤害，并施加1层虚弱。",
 
   "PLUMA_CARD_BRANDY.title": "白兰地",
-  "PLUMA_CARD_BRANDY.description": "造成1点攻击伤害，并施加1层虚弱。"
+  "PLUMA_CARD_BRANDY.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_GIN_TONIC.title": "金汤力",
+  "PLUMA_CARD_GIN_TONIC.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_MARGARITA.title": "玛格丽特",
+  "PLUMA_CARD_MARGARITA.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_OLD_FASHIONED.title": "古典鸡尾酒",
+  "PLUMA_CARD_OLD_FASHIONED.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_MOJITO.title": "莫吉托",
+  "PLUMA_CARD_MOJITO.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_COSMOPOLITAN.title": "大都会",
+  "PLUMA_CARD_COSMOPOLITAN.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_SIDECAR.title": "边车",
+  "PLUMA_CARD_SIDECAR.description": "造成1点攻击伤害，并施加1层虚弱。",
+
+  "PLUMA_CARD_MIXER_PACK.title": "辅料组合包",
+  "PLUMA_CARD_MIXER_PACK.description": "选择并消耗一张手牌中的基酒牌，将对应的鸡尾酒加入你的手牌。",
+  "PLUMA_CARD_MIXER_PACK.selectPrompt": "选择一张基酒牌"
 }

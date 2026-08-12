@@ -18,10 +18,10 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 
 namespace Pluma.Scripts;
 
-// 龙舌兰：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
+// 玛格丽特：0费生成技能牌，鸡尾酒。右键循环切换模式：自己 -> 敌人 -> 友方。
 // 效果占位：对自己造成1点伤害并施加1层虚弱；对敌人造成1点伤害并施加1层虚弱；对友方造成1点伤害并施加1层虚弱。
 [RegisterCard(typeof(TokenCardPool))]
-public class Tequila : ModCardTemplate, IModRightClickableCard
+public class Margarita : ModCardTemplate, IModRightClickableCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -41,14 +41,12 @@ public class Tequila : ModCardTemplate, IModRightClickableCard
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.BaseSpirit };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.Cocktail };
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
-        HoverTipFactory.FromPower<WeakPower>(),
-        // 预览对应的鸡尾酒牌
-        HoverTipFactory.FromCard<Margarita>()
+        HoverTipFactory.FromKeyword(MyKeywords.Cocktail),
+        HoverTipFactory.FromPower<WeakPower>()
     };
 
     // 卡牌类型固定为技能
@@ -74,7 +72,7 @@ public class Tequila : ModCardTemplate, IModRightClickableCard
     protected override bool ShouldGlowRedInternal => _mode == SpiritMode.Enemy;
     protected override bool ShouldGlowGoldInternal => _mode == SpiritMode.Ally;
 
-    public Tequila() : base(energyCost, CardType.Skill, rarity, TargetType.Self, shouldShowInCardLibrary)
+    public Margarita() : base(energyCost, CardType.Skill, rarity, TargetType.Self, shouldShowInCardLibrary)
     {
     }
 
