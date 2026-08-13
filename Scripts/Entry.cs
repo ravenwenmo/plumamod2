@@ -10,8 +10,6 @@ using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 using  STS2RitsuLib.Scaffolding.Cards.HandOutline;
 using  STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Cards; // 提供 CardType 枚举
-using MegaCrit.Sts2.Core.Context;
-using MegaCrit.Sts2.Core.Entities.Players;
 
 namespace Pluma.Scripts;
 
@@ -63,6 +61,7 @@ public class Entry
         skinPatcher.RegisterPatch<PlumaStartRunLobbyCtorPatch>();
         skinPatcher.RegisterPatch<PlumaStartRunLobbyCleanUpPatch>();
         skinPatcher.RegisterPatch<PlumaCreatureVisualsContextPatch>();
+        skinPatcher.RegisterPatch<PlumaRunInitSkinPatch>();
         RitsuLibFramework.ApplyRequiredPatcher(
             skinPatcher,
             static () => { }, // 补丁失败不会禁用整个 mod，仅记录日志
@@ -72,43 +71,12 @@ public class Entry
         // 开局初始化时（RunSavedData 已导入/准备好之后）确保本地玩家在槽位中有皮肤值。
         // 多人模式下大厅暂存值会通过 payload 同步过来，这里只兜底写入本地玩家自己的值；
         // 单人模式下槽位为空，这里写入本地配置作为局内读取来源。
-        // 随后通过托管网络动作把本地玩家的皮肤广播到其他端（大厅暂存链路之外的兜底）。
+        // 注意：若多人模式下该事件未触发，PlumaRunInitSkinPatch 会在 InitializeNewRun 后
+        // 执行相同的幂等逻辑（见 PlumaSkinSyncAction.EnsureLocalSkinSynced）。
         RitsuLibFramework.SubscribeLifecycle<RunSavedDataPreparingEvent>(evt =>
         {
-            try
-            {
-                GD.Print($"[pluma] RunSavedDataPreparing event: multiplayer={evt.IsMultiplayer}");
-
-                Player? me = null;
-                try
-                {
-                    me = LocalContext.GetMe(evt.RunState);
-                }
-                catch
-                {
-                    // NetId 已设置但集合中找不到本地玩家等异常，走回退逻辑
-                }
-                me ??= evt.RunState.Players.FirstOrDefault(p => p.Character is PlumaCharacter);
-
-                if (me == null)
-                {
-                    GD.Print("[pluma] RunSavedDataPreparing: 未找到本地玩家，跳过皮肤处理");
-                    return;
-                }
-
-                if (!SkinData.TryGet(evt.RunState, me.NetId, out _))
-                {
-                    SkinData.Modify(me, wrapper => wrapper.Index = PlumaSkins.LocalIndex);
-                    GD.Print($"[pluma] RunSavedDataPreparing: 为本地玩家 {me.NetId} 写入皮肤 {PlumaSkins.LocalIndex}");
-                }
-
-                // 广播一次本地玩家的皮肤（所有端执行时写入该玩家的槽位）
-                PlumaSkinSyncAction.TrySyncLocalSkin(PlumaSkins.LocalIndex);
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("[pluma] RunSavedDataPreparing 皮肤兜底写入失败: " + ex.Message);
-            }
+            GD.Print($"[pluma] RunSavedDataPreparing event: multiplayer={evt.IsMultiplayer}");
+            PlumaSkinSyncAction.EnsureLocalSkinSynced(evt.RunState);
         });
 
 

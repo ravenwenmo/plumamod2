@@ -1,6 +1,8 @@
 using Godot;
 using MegaCrit.Sts2.Core.Multiplayer.Game;
 using MegaCrit.Sts2.Core.Multiplayer.Game.Lobby;
+using MegaCrit.Sts2.Core.Nodes.Screens.CharacterSelect;
+using MegaCrit.Sts2.Core.Nodes.Screens.CustomRun;
 
 namespace Pluma.Scripts;
 
@@ -32,10 +34,43 @@ public partial class SkinSelector : Control
         UpdateSelectedSkin();
     }
 
+    /// <summary>
+    /// 获取当前大厅。
+    /// 优先沿场景树向上查找角色选择/自定义局屏幕（NCharacterSelectScreen / NCustomRunScreen
+    /// 的 Lobby 属性为公开 API，不依赖任何补丁）；找不到时回退到大楼追踪注册表
+    /// （依赖 PlumaStartRunLobbyCtorPatch）。
+    /// </summary>
+    private StartRunLobby? FindLobby()
+    {
+        Node? node = this;
+        while (node != null)
+        {
+            switch (node)
+            {
+                case NCharacterSelectScreen selectScreen when selectScreen.Lobby != null:
+                    GD.Print($"[pluma] SkinSelector: 从场景树找到 NCharacterSelectScreen.Lobby (netType={selectScreen.Lobby.NetService.Type})");
+                    return selectScreen.Lobby;
+                case NCustomRunScreen customRunScreen when customRunScreen.Lobby != null:
+                    GD.Print($"[pluma] SkinSelector: 从场景树找到 NCustomRunScreen.Lobby (netType={customRunScreen.Lobby.NetService.Type})");
+                    return customRunScreen.Lobby;
+            }
+            node = node.GetParent();
+        }
+
+        var tracked = PlumaLobbyRegistry.TryGetCurrent();
+        if (tracked != null)
+        {
+            GD.Print($"[pluma] SkinSelector: 场景树未找到屏幕，回退到大厅追踪注册表 (netType={tracked.NetService.Type})");
+            return tracked;
+        }
+        GD.Print("[pluma] SkinSelector: 场景树与追踪注册表均未找到大厅");
+        return null;
+    }
+
     // 按当前环境选择写入方式：多人 → 大厅暂存槽（自动同步），单人 → 本地配置
     private void SelectSkin(int index)
     {
-        var lobby = PlumaLobbyRegistry.TryGetCurrent();
+        var lobby = FindLobby();
         if (lobby != null && lobby.NetService.Type.IsMultiplayer())
         {
             GD.Print($"[pluma] SkinSelector: 多人模式，写入大厅暂存槽 (netId={lobby.NetService.NetId}, index={index})");
@@ -52,17 +87,9 @@ public partial class SkinSelector : Control
     // 把本地皮肤推送到联机大厅（仅在多人模式下生效）
     private void PushLocalSkinToLobby()
     {
-        var lobby = PlumaLobbyRegistry.TryGetCurrent();
-        if (lobby == null)
-        {
-            GD.Print("[pluma] SkinSelector: 未找到当前大厅，跳过皮肤推送");
+        var lobby = FindLobby();
+        if (lobby == null || !lobby.NetService.Type.IsMultiplayer())
             return;
-        }
-        if (!lobby.NetService.Type.IsMultiplayer())
-        {
-            GD.Print($"[pluma] SkinSelector: 非多人模式 ({lobby.NetService.Type})，跳过皮肤推送");
-            return;
-        }
         GD.Print($"[pluma] SkinSelector: 推送本地皮肤到大厅 (netId={lobby.NetService.NetId}, index={PlumaSkins.LocalIndex})");
         PlumaSkins.SelectSkinInLobby(lobby, lobby.NetService.NetId, PlumaSkins.LocalIndex);
     }
@@ -71,7 +98,7 @@ public partial class SkinSelector : Control
     {
         // 多人模式下优先显示大厅暂存槽中的值，否则显示本地值
         int index = PlumaSkins.CurrentIndex;
-        var lobby = PlumaLobbyRegistry.TryGetCurrent();
+        var lobby = FindLobby();
         if (lobby != null && lobby.NetService.Type.IsMultiplayer() &&
             PlumaSkins.TryGetLobbySkinIndex(lobby, lobby.NetService.NetId, out int lobbyIndex))
         {
