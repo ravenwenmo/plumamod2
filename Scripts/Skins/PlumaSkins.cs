@@ -110,6 +110,7 @@ public static class PlumaSkins
     {
         skinIndex = Mathf.Clamp(skinIndex, 0, Skins.Count - 1);
         LocalIndex = skinIndex;
+        GD.Print($"[PlumaSkins] SelectSkinLocal: index={skinIndex}");
     }
 
     // 多人模式大厅切换（自动同步到其他玩家，同时更新本地偏好作为单人默认）

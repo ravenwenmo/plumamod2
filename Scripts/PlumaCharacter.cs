@@ -135,7 +135,9 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
         // 按"正在创建模型的玩家"读取皮肤（多人模式下从同步槽位读取对方选择的皮肤），
         // 无玩家上下文（如预览场景）时回退到本地皮肤。忽略 AssetProfile 中的静态路径。
         var player = PlumaSkins.ActiveVisualsPlayer;
-        string visualsPath = PlumaSkins.GetCurrentSkin(player).VisualsPath;
+        int skinIndex = PlumaSkins.GetSkinIndex(player);
+        GD.Print($"[PlumaSkins] TryCreateCreatureVisuals: player={(player != null ? player.NetId.ToString() : "null")} skin={skinIndex}");
+        string visualsPath = PlumaSkins.Skins[skinIndex].VisualsPath;
         return RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(visualsPath);
     }
     // 初始卡组，或者在卡牌类上用RegisterCharacterStarterCard就不用写这个

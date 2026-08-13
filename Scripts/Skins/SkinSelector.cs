@@ -38,10 +38,12 @@ public partial class SkinSelector : Control
         var lobby = PlumaLobbyRegistry.TryGetCurrent();
         if (lobby != null && lobby.NetService.Type.IsMultiplayer())
         {
+            GD.Print($"[pluma] SkinSelector: 多人模式，写入大厅暂存槽 (netId={lobby.NetService.NetId}, index={index})");
             PlumaSkins.SelectSkinInLobby(lobby, lobby.NetService.NetId, index);
         }
         else
         {
+            GD.Print($"[pluma] SkinSelector: 单人模式或无大厅 (lobby={(lobby != null ? lobby.NetService.Type.ToString() : "null")}), 写入本地配置 index={index}");
             PlumaSkins.SelectSkinLocal(index);
         }
         UpdateSelectedSkin();
@@ -51,8 +53,17 @@ public partial class SkinSelector : Control
     private void PushLocalSkinToLobby()
     {
         var lobby = PlumaLobbyRegistry.TryGetCurrent();
-        if (lobby == null || !lobby.NetService.Type.IsMultiplayer())
+        if (lobby == null)
+        {
+            GD.Print("[pluma] SkinSelector: 未找到当前大厅，跳过皮肤推送");
             return;
+        }
+        if (!lobby.NetService.Type.IsMultiplayer())
+        {
+            GD.Print($"[pluma] SkinSelector: 非多人模式 ({lobby.NetService.Type})，跳过皮肤推送");
+            return;
+        }
+        GD.Print($"[pluma] SkinSelector: 推送本地皮肤到大厅 (netId={lobby.NetService.NetId}, index={PlumaSkins.LocalIndex})");
         PlumaSkins.SelectSkinInLobby(lobby, lobby.NetService.NetId, PlumaSkins.LocalIndex);
     }
 
