@@ -132,8 +132,10 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
     //protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.Scenes!.VisualsPath!);
     protected override NCreatureVisuals? TryCreateCreatureVisuals()
     {
-        // 始终使用当前皮肤的模型路径，忽略 AssetProfile 中的静态路径
-        string visualsPath = PlumaSkins.Current.VisualsPath;
+        // 按"正在创建模型的玩家"读取皮肤（多人模式下从同步槽位读取对方选择的皮肤），
+        // 无玩家上下文（如预览场景）时回退到本地皮肤。忽略 AssetProfile 中的静态路径。
+        var player = PlumaSkins.ActiveVisualsPlayer;
+        string visualsPath = PlumaSkins.GetCurrentSkin(player).VisualsPath;
         return RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(visualsPath);
     }
     // 初始卡组，或者在卡牌类上用RegisterCharacterStarterCard就不用写这个

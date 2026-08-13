@@ -17,6 +17,20 @@ public static class PlumaSkins
     // 多人同步槽位（从 Entry 获取）
     private static PlayerRunSavedData<SkinIndexWrapper> Slot => Entry.SkinData;
 
+    // 正在为其创建战斗模型的玩家（环境上下文，由 PlumaCreatureVisualsContextPatch 压入/弹出）。
+    // 使用栈是因为模型场景内理论上还可能嵌套创建其他生物。
+    private static readonly Stack<Player> VisualsPlayers = new();
+
+    internal static Player? ActiveVisualsPlayer => VisualsPlayers.Count > 0 ? VisualsPlayers.Peek() : null;
+
+    internal static void PushVisualsPlayer(Player player) => VisualsPlayers.Push(player);
+
+    internal static void PopVisualsPlayer()
+    {
+        if (VisualsPlayers.Count > 0)
+            VisualsPlayers.Pop();
+    }
+
     public static readonly IReadOnlyList<SkinData> Skins = new List<SkinData>
     {
         new()
@@ -61,7 +75,7 @@ public static class PlumaSkins
         }
     }
 
-    // 获取玩家皮肤索引（局内从 RunState，否则回退本地）
+    // 获取玩家皮肤索引（局内优先从 RunState 的同步槽位读取，否则回退本地）
     public static int GetSkinIndex(Player? player = null)
     {
         if (player != null && Slot != null)
@@ -79,6 +93,18 @@ public static class PlumaSkins
     // 获取皮肤数据
     public static SkinData GetCurrentSkin(Player? player = null) => Skins[GetSkinIndex(player)];
 
+    // 读取大厅暂存槽中某个玩家的皮肤（用于大厅 UI 显示）；没有暂存值时返回 false
+    public static bool TryGetLobbySkinIndex(StartRunLobby lobby, ulong playerNetId, out int index)
+    {
+        index = 0;
+        if (Slot == null)
+            return false;
+        if (!Slot.Lobby.TryGet(lobby, playerNetId, out var wrapper))
+            return false;
+        index = Mathf.Clamp(wrapper.Index, 0, Skins.Count - 1);
+        return true;
+    }
+
     // 单人模式切换
     public static void SelectSkinLocal(int skinIndex)
     {
@@ -86,11 +112,13 @@ public static class PlumaSkins
         LocalIndex = skinIndex;
     }
 
-    // 多人模式大厅切换（自动同步）
+    // 多人模式大厅切换（自动同步到其他玩家，同时更新本地偏好作为单人默认）
     public static void SelectSkinInLobby(StartRunLobby lobby, ulong playerNetId, int skinIndex)
     {
         skinIndex = Mathf.Clamp(skinIndex, 0, Skins.Count - 1);
         Slot?.Lobby.Modify(lobby, playerNetId, wrapper => wrapper.Index = skinIndex);
+        LocalIndex = skinIndex;
+        GD.Print($"[pluma] SelectSkinInLobby: netId={playerNetId}, index={skinIndex}");
     }
 
     // 旧接口兼容

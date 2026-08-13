@@ -3,12 +3,15 @@ using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
 using STS2RitsuLib.Interop;
+using STS2RitsuLib.Patching.Core;
 using STS2RitsuLib.RunData;
 using Godot;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 using  STS2RitsuLib.Scaffolding.Cards.HandOutline;
 using  STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Cards; // 提供 CardType 枚举
+using MegaCrit.Sts2.Core.Context;
+using MegaCrit.Sts2.Core.Entities.Players;
 
 namespace Pluma.Scripts;
 
@@ -40,13 +43,60 @@ public class Entry
             var store = RitsuLibFramework.GetRunSavedDataStore(ModId);
             SkinData = store.RegisterPerPlayer(
                 key: "skin_index",
-                defaultFactory: () => new SkinIndexWrapper { Index = PlumaSkins.LocalIndex },
+                // 默认必须是确定性的 0，不能取 LocalIndex：
+                // 多人模式下某玩家从未在大厅选过皮肤时，各台机器都会用各自的
+                // defaultFactory 兜底，若取本机配置会导致每台机器渲染结果不一致。
+                // 本机玩家的皮肤由 RunSavedDataPreparingEvent 处理器写入槽位。
+                defaultFactory: () => new SkinIndexWrapper(),
                 options: new RunSavedDataOptions
                 {
                     WritePolicy = RunSavedDataWritePolicy.WhenSet,
                     SyncLobbyOnChange = true
                 });
         }
+
+        // 注册皮肤同步所需的补丁：追踪当前大厅、为战斗模型创建提供玩家上下文
+        var skinPatcher = RitsuLibFramework.CreatePatcher(ModId, "skin-sync");
+        skinPatcher.RegisterPatch<PlumaStartRunLobbyCtorPatch>();
+        skinPatcher.RegisterPatch<PlumaStartRunLobbyCleanUpPatch>();
+        skinPatcher.RegisterPatch<PlumaCreatureVisualsContextPatch>();
+        RitsuLibFramework.ApplyRequiredPatcher(
+            skinPatcher,
+            static () => { }, // 补丁失败不会禁用整个 mod，仅记录日志
+            "pluma 皮肤同步补丁应用失败");
+
+        // 开局初始化时（RunSavedData 已导入/准备好之后）确保本地玩家在槽位中有皮肤值。
+        // 多人模式下大厅暂存值会通过 payload 同步过来，这里只兜底写入本地玩家自己的值；
+        // 单人模式下槽位为空，这里写入本地配置作为局内读取来源。
+        RitsuLibFramework.SubscribeLifecycle<RunSavedDataPreparingEvent>(evt =>
+        {
+            try
+            {
+                Player? me = null;
+                try
+                {
+                    me = LocalContext.GetMe(evt.RunState);
+                }
+                catch
+                {
+                    // NetId 已设置但集合中找不到本地玩家等异常，走回退逻辑
+                }
+                me ??= evt.RunState.Players.FirstOrDefault(p => p.Character is PlumaCharacter);
+
+                if (me == null)
+                    return;
+
+                if (!SkinData.TryGet(evt.RunState, me.NetId, out _))
+                {
+                    SkinData.Modify(me, wrapper => wrapper.Index = PlumaSkins.LocalIndex);
+                    GD.Print($"[pluma] RunSavedDataPreparing: 为本地玩家 {me.NetId} 写入皮肤 {PlumaSkins.LocalIndex} (多人={evt.IsMultiplayer})");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("[pluma] RunSavedDataPreparing 皮肤兜底写入失败: " + ex.Message);
+            }
+        });
 
 
         // 自动为所有攻击牌注册固定金色发光（条件：拥有切割关键词且连击数 > 0）
