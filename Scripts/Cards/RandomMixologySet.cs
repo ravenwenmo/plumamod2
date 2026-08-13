@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -13,7 +14,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class RandomMixologySet : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 1;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Common;
     private const TargetType targetType = TargetType.Self;
@@ -26,6 +27,12 @@ public class RandomMixologySet : ModCardTemplate
     // 消耗关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Exhaust };
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        HoverTipFactory.FromCard<MixerPack>()
+    };
+    
     public RandomMixologySet() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
@@ -56,6 +63,6 @@ public class RandomMixologySet : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 2费 → 1费
+        base.EnergyCost.UpgradeBy(-1); // 1费 → 0费
     }
 }

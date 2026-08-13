@@ -29,7 +29,7 @@ public class RapidSlashing : ModCardTemplate
     // 卡牌稀有度
     private const CardRarity rarity = CardRarity.Basic;
     // 目标类型（AnyEnemy表示任意敌人）
-    private const TargetType targetType = TargetType.AnyEnemy;
+    private const TargetType targetType = TargetType.AllEnemies;
     // 是否在卡牌图鉴中显示
     private const bool shouldShowInCardLibrary = true;
     
@@ -47,7 +47,7 @@ public class RapidSlashing : ModCardTemplate
 
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(7m, ValueProp.Move),
+        new DamageVar(6m, ValueProp.Move),
         new IntVar("Threshold", 4m),   // 初始阈值 4 次
 
     ];
@@ -59,26 +59,36 @@ public class RapidSlashing : ModCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        // 基础伤害：对所有敌人造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this,cardPlay)    
-            // .FromCard(this, cardPlay) // 测试版
-            .Targeting(cardPlay.Target!)
+            .FromCard(this, cardPlay)
+            .TargetingAllOpponents(CombatState)   // 改为全体敌人
             .Execute(choiceContext);
-        PowerCmd.Apply<RapidSlashingStacks>(choiceContext,Owner.Creature,stacks, base.Owner.Creature, this);
+
+        // 施加一层高速切割叠加
+        await PowerCmd.Apply<RapidSlashingStacks>(choiceContext, Owner.Creature, stacks, base.Owner.Creature, this);
         var power = Owner.Creature.Powers.OfType<RapidSlashingStacks>().FirstOrDefault();
 
         if (power != null && power.Amount >= DynamicVars["Threshold"].BaseValue)
         {
-            // 移除
+            // 移除叠加
             await PowerCmd.Remove(power);
 
-            // 执行额外伤害
+            // 额外伤害：也对所有敌人造成伤害
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this,cardPlay)    
-                // .FromCard(this, cardPlay) // 测试版
-                .Targeting(cardPlay.Target!)
+                .FromCard(this, cardPlay)
+                .TargetingAllOpponents(CombatState)   // 改为全体敌人
                 .Execute(choiceContext);
         }
+
+        // 获得1层渐入佳境
+        await PowerCmd.Apply<FlowState>(
+            choiceContext,
+            base.Owner.Creature,
+            1,
+            base.Owner.Creature,
+            this
+        );
     }
 
     
@@ -87,7 +97,10 @@ public class RapidSlashing : ModCardTemplate
     {
         MyKeywords.Slashing
     };
-    
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {

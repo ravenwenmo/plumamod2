@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -28,7 +29,11 @@ public class DrinksForTwo : ModCardTemplate
         MyKeywords.MuscleMemory,
         CardKeyword.Exhaust
     };
-
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        HoverTipFactory.FromCard<MixerPack>()
+    };
     public DrinksForTwo() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }

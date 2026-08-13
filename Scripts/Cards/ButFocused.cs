@@ -33,7 +33,7 @@ public class ButFocused : ModCardTemplate
     {
         new CalculationBaseVar(14m),
         new ExtraDamageVar(14m),
-        ModCardVars.Int("Multiplier", 5),
+        ModCardVars.Int("Multiplier", 3),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
         {
             if (card == null) return 0m; // 预览时无加成
@@ -61,6 +61,6 @@ public class ButFocused : ModCardTemplate
     };
     protected override void OnUpgrade()
     {
-        DynamicVars["Multiplier"].UpgradeValueBy(5m); // 5 → 10
+        DynamicVars["Multiplier"].UpgradeValueBy(3m); // 5 → 10
     }
 }

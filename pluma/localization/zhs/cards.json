@@ -9,10 +9,10 @@
   "PLUMA_CARD_HARVEST.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害，并对半血以下的敌人额外造成50%的伤害。",
 
   "PLUMA_CARD_RAPID_SLASHING.title": "高速切割",
-  "PLUMA_CARD_RAPID_SLASHING.description": "造成{Damage:diff()}点伤害，每打出{Threshold:diff()}次可以额外造成一段伤害。",
+  "PLUMA_CARD_RAPID_SLASHING.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害，每打出{Threshold:diff()}次可以额外造成一段伤害。",
 
   "PLUMA_CARD_RAPID_SLASHING_MAX.title": "高速切割·专精",
-  "PLUMA_CARD_RAPID_SLASHING_MAX.description": "造成{Damage:diff()}点伤害。每打出{Threshold:diff()}次可以额外造成一段伤害。打出后回到抽牌堆。",
+  "PLUMA_CARD_RAPID_SLASHING_MAX.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害。每打出{Threshold:diff()}次可以额外造成一段伤害。打出后回到抽牌堆。",
 
   "PLUMA_CARD_DOUBLE_SLASH.title": "双重切割",
   "PLUMA_CARD_DOUBLE_SLASH.description": "造成{Damage:diff()}点伤害2次。",
@@ -57,7 +57,7 @@
   "PLUMA_CARD_EMPTY_MIND.description": "洗牌。失去所有[gold]渐入佳境[/gold]，每失去5层，获得{Energy:energyIcons()}。抽{Cards:diff()}张牌。",
 
   "PLUMA_CARD_THE_BEAT.title": "节奏感",
-  "PLUMA_CARD_THE_BEAT.description": "每当你打出一张[gold]本能[/gold]牌，获得{Energy:energyIcons()}。",
+  "PLUMA_CARD_THE_BEAT.description": "每当你打出两张[gold]本能[/gold]牌，获得{Energy:energyIcons()}。",
 
   "PLUMA_CARD_LACERATE.title": "划破",
   "PLUMA_CARD_LACERATE.description": "造成{Damage:diff()}点伤害。\n施加{OpenWound:diff()}层[gold]创伤[/gold] 。",
@@ -282,5 +282,6 @@
   "PLUMA_CARD_DRINKS_FOR_TWO.description": "获得2张随机基酒。\n将1张辅料组合包分别放入抽牌堆和弃牌堆。",
 
   "PLUMA_CARD_BARTENDERS_FLASK.title": "调酒师的小壶",
-  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有基酒，获得1张随机基酒 ；否则获得1张辅料组合包。"
+  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有基酒，\n获得1张{IfUpgraded:show:[gold]指定[/gold]}基酒；\n否则获得1张辅料组合包。",
+  "PLUMA_CARD_BARTENDERS_FLASK.selectPrompt": "选择一张基酒"
 }
