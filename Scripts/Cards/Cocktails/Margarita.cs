@@ -67,7 +67,9 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
 
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10m, ValueProp.Move)
+        new DamageVar(10m, ValueProp.Move),
+        ModCardVars.Int("ReaperHealingAmount", 1),
+        ModCardVars.Int("WeakAmount", 1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -124,7 +126,7 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 1 层收割者
-                await PowerCmd.Apply<ReaperHealingPower>(choiceContext, base.Owner.Creature, 1,
+                await PowerCmd.Apply<ReaperHealingPower>(choiceContext, base.Owner.Creature, DynamicVars["ReaperHealingAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对自己施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
@@ -137,7 +139,7 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
 
@@ -146,7 +148,7 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 1 层收割者
-                await PowerCmd.Apply<ReaperHealingPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<ReaperHealingPower>(choiceContext, cardPlay.Target, DynamicVars["ReaperHealingAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对友方施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,

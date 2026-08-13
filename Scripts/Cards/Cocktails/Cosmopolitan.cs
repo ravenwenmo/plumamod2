@@ -68,7 +68,8 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
     // 伤害变量（基础10，升级+5）与能量变量（用于 {Energy:energyIcons()} 描述）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(10m, ValueProp.Move),
-        new EnergyVar(4)
+        new EnergyVar(4),
+        ModCardVars.Int("WeakAmount", 1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -137,7 +138,7 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
 

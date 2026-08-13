@@ -67,7 +67,8 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
 
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10m, ValueProp.Move)
+        new DamageVar(10m, ValueProp.Move),
+        ModCardVars.Int("WeakAmount", 1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -136,7 +137,7 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
 

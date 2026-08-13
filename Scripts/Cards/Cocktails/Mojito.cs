@@ -67,7 +67,10 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10m, ValueProp.Move)
+        new DamageVar(10m, ValueProp.Move),
+        ModCardVars.Int("FlowSelfAmount", 5),
+        ModCardVars.Int("FlowAllyAmount", 6),
+        ModCardVars.Int("WeakAmount", 1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -124,7 +127,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 5 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, 5,
+                await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowSelfAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对自己获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(base.Owner.Creature, 3m, ValueProp.Move, cardPlay);
@@ -136,7 +139,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
 
@@ -145,7 +148,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 5 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, 6,
+                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAllyAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对友方获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(cardPlay.Target!, 3m, ValueProp.Move, cardPlay);

@@ -60,7 +60,9 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
 
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(6m, ValueProp.Move)
+        new DamageVar(6m, ValueProp.Move),
+        ModCardVars.Int("FlexAmount", 3),
+        ModCardVars.Int("WeakAmount", 1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -119,7 +121,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 3 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
-                await PowerCmd.Apply<FlexPotionPower>(choiceContext, base.Owner.Creature, 3,
+                await PowerCmd.Apply<FlexPotionPower>(choiceContext, base.Owner.Creature, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
@@ -132,7 +134,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
 
@@ -141,7 +143,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 3 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
-                await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, 3,
+                await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,

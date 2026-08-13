@@ -67,7 +67,9 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10m, ValueProp.Move)
+        new DamageVar(10m, ValueProp.Move),
+        ModCardVars.Int("DexterityAmount", 3),
+        ModCardVars.Int("WeakAmount", 1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -124,7 +126,7 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 3 层敏捷
-                await PowerCmd.Apply<DexterityPower>(choiceContext, base.Owner.Creature, 3,
+                await PowerCmd.Apply<DexterityPower>(choiceContext, base.Owner.Creature, DynamicVars["DexterityAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对自己获得1点能量，已注释保留）----
                 // await PlayerCmd.GainEnergy(1, base.Owner);
@@ -136,7 +138,7 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
-                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
+                await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
 
@@ -145,7 +147,7 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 3 层敏捷
-                await PowerCmd.Apply<DexterityPower>(choiceContext, cardPlay.Target, 3,
+                await PowerCmd.Apply<DexterityPower>(choiceContext, cardPlay.Target, DynamicVars["DexterityAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对友方获得1点能量，已注释保留）----
                 // await PlayerCmd.GainEnergy(1, cardPlay.Target!.Player);
