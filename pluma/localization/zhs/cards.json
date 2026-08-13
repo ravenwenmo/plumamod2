@@ -234,9 +234,9 @@
   "PLUMA_CARD_GIN_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
   "PLUMA_CARD_GIN_ALLY_DESC": "使目标失去1点生命，然后获得3层临时力量。",
 
-  "PLUMA_CARD_TEQUILA_SELF_DESC": "失去1点生命，然后施加4层[gold]再生[/gold]。",
+  "PLUMA_CARD_TEQUILA_SELF_DESC": "失去1点生命，然后获得4层[gold]再生[/gold]。",
   "PLUMA_CARD_TEQUILA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
-  "PLUMA_CARD_TEQUILA_ALLY_DESC": "使目标失去1点生命，然后施加4层[gold]再生[/gold]。",
+  "PLUMA_CARD_TEQUILA_ALLY_DESC": "使目标失去1点生命，然后获得4层[gold]再生[/gold]。",
 
   "PLUMA_CARD_WHISKEY_SELF_DESC": "失去1点生命，然后获得5层[gold]覆甲[/gold]。",
   "PLUMA_CARD_WHISKEY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加1层虚弱。",
