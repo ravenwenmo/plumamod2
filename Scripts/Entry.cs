@@ -31,6 +31,9 @@ public class Entry
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
 
+        // 注册自定义目标类型"任意单位"（基酒/鸡尾酒牌使用），须在内容注册前完成
+        _ = PlumaTargetTypes.AnyUnit;
+
         PlumaSettingsPage.Register();
 
         // 注册先古升级和遗物升级

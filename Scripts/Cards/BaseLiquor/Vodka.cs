@@ -16,12 +16,10 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interactions.RightClick;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-using System.Reflection; // 引入反射
-using MegaCrit.Sts2.Core.Nodes.Cards;
 
 namespace Pluma.Scripts;
 
-// 伏特加：0费生成技能牌，基酒。右键循环切换模式：自己 -> 敌人 -> 友方。
+// 伏特加：0费生成技能牌，基酒。目标为任意单位（敌人/自己/友方），实际效果由所选目标的阵营决定；右键仅在本机循环切换提示与光效，不影响实际效果。
 // 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得1点能量。
 [RegisterCard(typeof(TokenCardPool))]
 public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard
@@ -73,30 +71,15 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
         HoverTipFactory.FromCard<Cosmopolitan>()
     };
 
-    // 卡牌类型固定为技能
-    //public override CardType Type => CardType.Skill;
-    // 根据模式动态返回卡牌类型：对敌人为攻击牌，对自己/友方为技能牌
-    public override CardType Type => _mode == SpiritMode.Enemy ? CardType.Attack : CardType.Skill;
-    // 根据模式动态返回目标类型
-    public override TargetType TargetType
-    {
-        get
-        {
-            return _mode switch
-            {
-                SpiritMode.Self  => TargetType.Self,
-                SpiritMode.Enemy => TargetType.AnyEnemy,
-                SpiritMode.Ally  => TargetType.AnyAlly,
-                _ => TargetType.Self
-            };
-        }
-    }
+    // 卡牌类型固定为技能（不再随模式切换，避免多人模式下动作不同步）
+    // 目标类型固定为"任意单位"：敌人、自己或友方均可选择，实际效果由所选目标的阵营决定
+    public override TargetType TargetType => PlumaTargetTypes.AnyUnit;
 
     // 发光：敌人发红光，友方发金光，自己不发光（原版默认）
     protected override bool ShouldGlowRedInternal => _mode == SpiritMode.Enemy;
     protected override bool ShouldGlowGoldInternal => _mode == SpiritMode.Ally;
 
-    public Vodka() : base(energyCost, CardType.Skill, rarity, TargetType.Self, shouldShowInCardLibrary)
+    public Vodka() : base(energyCost, CardType.Skill, rarity, PlumaTargetTypes.AnyUnit, shouldShowInCardLibrary)
     {
     }
 
@@ -114,19 +97,11 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
             _ => SpiritMode.Self
         };
 
-        // 立即刷新发光：重跑原版 UpdateCard（含 ShouldGlowRed/GoldInternal 判定），RitsuLib 描边补丁会一并触发
+        // 立即刷新发光与描述：重跑原版 UpdateCard（含 ShouldGlowRed/GoldInternal 判定），
+        // 描述由 SpiritModeDescriptionPatch 按当前 _mode 替换。类型与目标类型已固定，无需刷新类型标签。
         if (NPlayerHand.Instance?.GetCardHolder(this) is NHandCardHolder holder)
         {
             holder.UpdateCard();
-
-            // 尝试刷新类型标签（技能/攻击）
-            var cardNode = holder.CardNode;
-            if (cardNode != null)
-            {
-                var method = typeof(NCard).GetMethod("UpdateTypePlaque",
-                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-                method?.Invoke(cardNode, null);
-            }
         }
 
         // 可选：弹出提示（如果 RitsuToastService 不可用，可删除或替换为 GD.Print）
@@ -137,9 +112,9 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        switch (_mode)
+        switch (SpiritTargeting.Resolve(cardPlay.Target, base.Owner.Creature))
         {
-            case SpiritMode.Self:
+            case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
@@ -150,7 +125,7 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
                 //     base.Owner.Creature, this);
                 break;
 
-            case SpiritMode.Enemy:
+            case SpiritTargetBranch.Enemy:
                 // 对敌人造成 {Damage} 点攻击伤害，并施加 1 层虚弱
                 await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                     .FromCard(this, cardPlay)
@@ -160,7 +135,7 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
                     base.Owner.Creature, this);
                 break;
 
-            case SpiritMode.Ally:
+            case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
