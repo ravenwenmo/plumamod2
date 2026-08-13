@@ -375,10 +375,25 @@ protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var owner = base.Owner.Creature;
-        var rng = new Random();
 
-        // 随机选择 3 个不同的增益并施加
-        var selected = BuffAppliers.OrderBy(_ => rng.Next()).Take(3).ToList();
+        // 多人同步：使用局内确定性随机源（由种子派生，各端同一序列）。
+        // 严禁使用 new Random()：本地时间种子会导致各端选出不同增益，破坏多人同步。
+        var rng = base.Owner.RunState.Rng.CombatCardSelection;
+
+        // 不放回地抽取 3 个不同的增益。
+        // BuffAppliers 的声明顺序在编译期固定，各端一致；每次只消耗固定次数的 rng.NextInt。
+        var remaining = new List<int>(BuffAppliers.Count);
+        for (int i = 0; i < BuffAppliers.Count; i++)
+            remaining.Add(i);
+
+        var selected = new List<Action<PlayerChoiceContext, Creature, Creature, CardModel>>(3);
+        for (int i = 0; i < 3 && remaining.Count > 0; i++)
+        {
+            int picked = rng.NextInt(remaining.Count);
+            selected.Add(BuffAppliers[remaining[picked]]);
+            remaining.RemoveAt(picked);
+        }
+
         foreach (var apply in selected)
         {
             apply(choiceContext, owner, owner, this);

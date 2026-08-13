@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -34,10 +33,11 @@ public class RandomMixologySet : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var player = base.Owner;
-        var rng = new Random();
+        // 多人同步：使用局内确定性随机源（各端同一序列），严禁 new Random()
+        var rng = base.Owner.RunState.Rng.CombatCardGeneration;
 
         // 随机选择一种基酒，并加入手牌
-        CardModel baseSpiritCard = rng.Next(6) switch
+        CardModel baseSpiritCard = rng.NextInt(6) switch
         {
             0 => base.CombatState.CreateCard<Gin>(player),
             1 => base.CombatState.CreateCard<Tequila>(player),

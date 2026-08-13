@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -13,11 +12,12 @@ namespace Pluma.Scripts;
 
 // 调酒师的小壶：1费罕见技能，本能。手牌中没有基酒时获得1张随机基酒，否则获得1张辅料组合包。
 [RegisterCard(typeof(PlumaCardPool))]
+[RegisterCharacterStarterCard(typeof(PlumaCharacter), 1)]
 public class BartendersFlask : ModCardTemplate
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Skill;
-    private const CardRarity rarity = CardRarity.Uncommon;
+    private const CardRarity rarity = CardRarity.Basic;
     private const TargetType targetType = TargetType.Self;
     private const bool shouldShowInCardLibrary = true;
 
@@ -45,8 +45,9 @@ public class BartendersFlask : ModCardTemplate
         if (!hasBaseSpirit)
         {
             // 随机获得一张基酒
-            var rng = new Random();
-            CardModel baseSpirit = rng.Next(6) switch
+            // 多人同步：使用局内确定性随机源（各端同一序列），严禁 new Random()
+            var rng = base.Owner.RunState.Rng.CombatCardGeneration;
+            CardModel baseSpirit = rng.NextInt(6) switch
             {
                 0 => base.CombatState.CreateCard<Gin>(player),
                 1 => base.CombatState.CreateCard<Tequila>(player),

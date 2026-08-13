@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -37,12 +36,14 @@ public class DrinksForTwo : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var player = base.Owner;
-        var rng = new Random();
+        // 多人同步：使用局内确定性随机源（各端同一序列），严禁 new Random()。
+        // rng 在循环外创建，循环内每次 NextInt 消耗一次，保证各端序列一致。
+        var rng = base.Owner.RunState.Rng.CombatCardGeneration;
 
         // 获得两张随机基酒
         for (int i = 0; i < 2; i++)
         {
-            CardModel baseSpirit = rng.Next(6) switch
+            CardModel baseSpirit = rng.NextInt(6) switch
             {
                 0 => base.CombatState.CreateCard<Gin>(player),
                 1 => base.CombatState.CreateCard<Tequila>(player),

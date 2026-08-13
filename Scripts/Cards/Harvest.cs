@@ -29,12 +29,12 @@ namespace Pluma.Scripts;
 
 // 收获：对所有敌人造成伤害，若敌人血量低于一半则伤害提升至1.5倍。获得1层渐入佳境。本能。
 [RegisterCard(typeof(PlumaCardPool))]
-[RegisterCharacterStarterCard(typeof(PlumaCharacter), 1)]
+//[RegisterCharacterStarterCard(typeof(PlumaCharacter), 1)]
 public class Harvest : ModCardTemplate
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Attack;
-    private const CardRarity rarity = CardRarity.Basic;
+    private const CardRarity rarity = CardRarity.Common;
     private const TargetType targetType = TargetType.AllEnemies;
     private const bool shouldShowInCardLibrary = true;
 
