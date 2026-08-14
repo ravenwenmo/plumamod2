@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)sts2.ritsulib\0.5.11\buildTransitive\STS2.RitsuLib.targets" Condition="Exists('$(NuGetPackageRoot)sts2.ritsulib\0.5.11\buildTransitive\STS2.RitsuLib.targets')" />
+  </ImportGroup>
+</Project>

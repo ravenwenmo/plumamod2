@@ -1,0 +1,14 @@
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.csproj.AssemblyReference.cache
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.GeneratedMSBuildEditorConfig.editorconfig
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.AssemblyInfoInputs.cache
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.AssemblyInfo.cs
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.csproj.CoreCompileInputs.cache
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.sourcelink.json
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\bin\Debug\pluma.deps.json
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\bin\Debug\pluma.dll
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\bin\Debug\pluma.pdb
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.dll
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\refint\pluma.dll
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.pdb
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\ref\pluma.dll
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.csproj.Up2Date
