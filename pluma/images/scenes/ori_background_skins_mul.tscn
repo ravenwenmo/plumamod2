@@ -1,0 +1,102 @@
+[gd_scene load_steps=7 format=3 uid="uid://d351ch126cypm"]
+
+[ext_resource type="Script" uid="uid://b3qn5rss6xq5f" path="res://Scripts/Skins/SkinSelector.cs" id="1_hbnih"]
+[ext_resource type="Texture2D" uid="uid://ba0hpvswj6jei" path="res://pluma/images/1img/char_late/character2.png" id="2_qgl5o"]
+[ext_resource type="Texture2D" uid="uid://ow5dxjrkq6x" path="res://pluma/images/1img/char/Character_Portrait.png" id="3_65juo"]
+[ext_resource type="Texture2D" uid="uid://bwdgrwwj1ovem" path="res://pluma/images/scenes/ori_icon.png" id="4_ann4s"]
+[ext_resource type="Texture2D" uid="uid://dyyjy1htf2548" path="res://pluma/images/scenes/sum_icon.png" id="5_4hb2n"]
+
+[sub_resource type="SystemFont" id="SystemFont_mk4u1"]
+
+[node name="ori_background" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 39.99997
+offset_bottom = 40.0
+script = ExtResource("1_hbnih")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+clip_contents = true
+layout_mode = 0
+offset_left = 53.0
+offset_top = -592.0
+offset_right = 1095.0
+offset_bottom = 797.1162
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_left = -1125.0
+offset_top = 51.0
+offset_right = -825.0
+offset_bottom = 351.0
+texture = ExtResource("2_qgl5o")
+
+[node name="立绘" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -3.0517578e-05
+offset_top = -1.5258789e-05
+offset_right = 2560.0
+offset_bottom = 1600.0
+scale = Vector2(0.845, 0.845)
+pivot_offset = Vector2(1280, 800)
+texture = ExtResource("3_65juo")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_right = 2560.0
+offset_bottom = 1600.0
+scale = Vector2(0.825, 0.825)
+pivot_offset = Vector2(1280, 800)
+color = Color(0.20940027, 0.6231234, 0.73380154, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 964.0
+offset_top = 314.0
+offset_right = 1406.0
+offset_bottom = 1174.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(33.735, 46.625)
+layout_mode = 2
+
+[node name="LeftButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+icon = ExtResource("4_ann4s")
+expand_icon = true
+
+[node name="RightButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+icon = ExtResource("5_4hb2n")
+expand_icon = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="SkinNameLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+size_flags_stretch_ratio = 0.0
+theme_override_colors/font_color = Color(0.80099994, 0.87195, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.35, 0.35, 1)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = SubResource("SystemFont_mk4u1")
+theme_override_font_sizes/font_size = 55
+text = "皮肤"
+horizontal_alignment = 1
+vertical_alignment = 1
