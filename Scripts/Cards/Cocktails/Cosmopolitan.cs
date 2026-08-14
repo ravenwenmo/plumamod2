@@ -119,6 +119,7 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await FlaskVfxHelper.PlaySimpleThrow(Owner.Creature, cardPlay.Target);
         switch (SpiritTargeting.Resolve(cardPlay.Target, base.Owner.Creature))
         {
             case SpiritTargetBranch.Self:

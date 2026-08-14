@@ -27,12 +27,12 @@ public class BartendersFlask : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
-
+    /*
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         MyKeywords.MuscleMemory
     };
-    
+    */
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),

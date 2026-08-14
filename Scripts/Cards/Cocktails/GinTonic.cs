@@ -68,7 +68,7 @@ public class GinTonic : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(10m, ValueProp.Move),
-        ModCardVars.Int("StrengthAmount", 3),
+        ModCardVars.Int("FlexAmount", 5),
         ModCardVars.Int("WeakAmount", 1)
     ];
 
@@ -119,14 +119,15 @@ public class GinTonic : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await FlaskVfxHelper.PlaySimpleThrow(Owner.Creature, cardPlay.Target);
         switch (SpiritTargeting.Resolve(cardPlay.Target, base.Owner.Creature))
         {
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层力量
-                await PowerCmd.Apply<StrengthPower>(choiceContext, base.Owner.Creature, DynamicVars["StrengthAmount"].BaseValue,
+                // 获得 5 层力量
+                await PowerCmd.Apply<FlexPotionPower>(choiceContext, base.Owner.Creature, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
@@ -147,8 +148,8 @@ public class GinTonic : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层力量
-                await PowerCmd.Apply<StrengthPower>(choiceContext, cardPlay.Target, DynamicVars["StrengthAmount"].BaseValue,
+                // 获得 5 层力量
+                await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,

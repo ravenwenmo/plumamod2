@@ -61,7 +61,7 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("FlowAmount", 3),
+        ModCardVars.Int("FlowAmount", 2),
         ModCardVars.Int("WeakAmount", 1)
     ];
 
@@ -114,6 +114,7 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await FlaskVfxHelper.PlaySimpleThrow(Owner.Creature, cardPlay.Target);
         switch (SpiritTargeting.Resolve(cardPlay.Target, base.Owner.Creature))
         {
             case SpiritTargetBranch.Self:

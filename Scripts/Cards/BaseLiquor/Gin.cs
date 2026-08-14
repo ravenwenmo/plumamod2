@@ -61,7 +61,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("FlexAmount", 3),
+        ModCardVars.Int("FlexAmount", 2),
         ModCardVars.Int("WeakAmount", 1)
     ];
 
@@ -114,13 +114,14 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await FlaskVfxHelper.PlaySimpleThrow(Owner.Creature, cardPlay.Target);
         switch (SpiritTargeting.Resolve(cardPlay.Target, base.Owner.Creature))
         {
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
+                // 获得 2 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
                 await PowerCmd.Apply<FlexPotionPower>(choiceContext, base.Owner.Creature, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
@@ -142,7 +143,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
+                // 获得 2 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
                 await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----

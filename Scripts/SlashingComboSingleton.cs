@@ -59,7 +59,12 @@ public class SlashingComboSingleton : HookedSingletonModel
         if (cardPlay.Card.Keywords.Contains(MyKeywords.Slashing))
         {
             _comboCounters.TryGetValue(player, out int current);
-            _comboCounters[player] = current + 1;
+
+            // 连击层数上限为 5，达到上限后不再增加
+            if (current < 5)
+            {
+                _comboCounters[player] = current + 1;
+            }
         }
         else
         {

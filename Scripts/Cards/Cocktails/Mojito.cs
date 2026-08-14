@@ -68,7 +68,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(10m, ValueProp.Move),
-        ModCardVars.Int("FlowSelfAmount", 5),
+        ModCardVars.Int("FlowSelfAmount", 6),
         ModCardVars.Int("FlowAllyAmount", 6),
         ModCardVars.Int("WeakAmount", 1)
     ];
@@ -120,6 +120,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await FlaskVfxHelper.PlaySimpleThrow(Owner.Creature, cardPlay.Target);
         switch (SpiritTargeting.Resolve(cardPlay.Target, base.Owner.Creature))
         {
             case SpiritTargetBranch.Self:

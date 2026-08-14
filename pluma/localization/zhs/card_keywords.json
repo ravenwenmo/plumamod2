@@ -2,7 +2,7 @@
   "PLUMA_KEYWORD_MUSCLE_MEMORY.description": "可以被渐入佳境抽到，被渐入佳境抽到时费用减1",
   "PLUMA_KEYWORD_MUSCLE_MEMORY.title": "本能",
 
-  "PLUMA_KEYWORD_SLASHING.description": "连续打出切割会额外施加越来越多的创伤",
+  "PLUMA_KEYWORD_SLASHING.description": "连续打出会附着连续打出数量的创伤（第6张达到最高5层）",
   "PLUMA_KEYWORD_SLASHING.title": "切割",
 
   "PLUMA_KEYWORD_BASE_SPIRIT.title": "基酒",

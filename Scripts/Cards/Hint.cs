@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+
 namespace Pluma.Scripts;
 
 // 暗示：1费稀有技能，本能，从抽牌堆选择1张牌添加本能。升级后费用减1。
@@ -39,7 +40,7 @@ public class Hint : ModCardTemplate
         var drawPile = PileType.Draw.GetPile(player);
         if (drawPile.IsEmpty) return;
 
-        // 从抽牌堆选择一张牌
+        // 从抽牌堆选择一张牌，过滤掉已经拥有本能关键词的牌
         var selected = await CardSelectCmd.FromCombatPile(
             prefs: new CardSelectorPrefs(
                 new LocString("cards", "PLUMA_CARD_HINT.selectPrompt"),
@@ -48,7 +49,7 @@ public class Hint : ModCardTemplate
             context: choiceContext,
             pile: drawPile,
             player: player,
-            filter: null
+            filter: card => !card.Keywords.Contains(MyKeywords.MuscleMemory)  // 排除已有本能的牌
         );
 
         var targetCard = selected.FirstOrDefault();

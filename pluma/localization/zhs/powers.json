@@ -71,6 +71,19 @@
   "PLUMA_POWER_BLADE_FORM_UPGRADED_POWER.title": "利刃形态+",
   "PLUMA_POWER_BLADE_FORM_UPGRADED_POWER.description": "每回合开始，获得一张升级过的随机攻击牌，该牌本回合免费且附带切割。",
 
+  "PLUMA_POWER_INSTANT_PAIR_POWER.title": "即时搭配",
+  "PLUMA_POWER_INSTANT_PAIR_POWER.description": "每当获得一张基酒牌时，将1张辅料组合包加入抽牌堆。",
+  "PLUMA_POWER_INSTANT_PAIR_UPGRADED_POWER.title": "即时搭配+",
+  "PLUMA_POWER_INSTANT_PAIR_UPGRADED_POWER.description": "每当获得一张基酒牌时，将1张升级过的辅料组合包加入抽牌堆。",
+
+  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.title": "专业吧台",
+  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.description": "每两个回合，获得 1 张 辅料组合包 。",
+  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.smartDescription": "每两个回合获得 1 张 辅料组合包 。",
+
+  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.title": "专业吧台+",
+  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.description": "每两个回合，获得 1 张 升级过的辅料组合包 。",
+  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.smartDescription": "每两个回合，获得 1 张 升级过的辅料组合包 。",
+
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"

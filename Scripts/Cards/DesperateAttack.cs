@@ -39,7 +39,7 @@ public class DesperateAttack : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
         new DamageVar(2m, ValueProp.Move),
-        ModCardVars.Int("Hits", 7)
+        ModCardVars.Int("Hits", 6)
     };
 
     public DesperateAttack() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -74,6 +74,6 @@ public class DesperateAttack : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Hits"].UpgradeValueBy(3); // 7 → 10
+        DynamicVars["Hits"].UpgradeValueBy(2); // 6 → 8
     }
 }
