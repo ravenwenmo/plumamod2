@@ -4,7 +4,6 @@ using MegaCrit.Sts2.Core.Multiplayer.Game.Lobby;
 using MegaCrit.Sts2.Core.Nodes.Screens.CharacterSelect;
 using MegaCrit.Sts2.Core.Nodes.Screens.CustomRun;
 
-
 namespace Pluma.Scripts;
 
 public partial class SkinSelector : Control
