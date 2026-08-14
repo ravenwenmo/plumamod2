@@ -12,7 +12,7 @@
   "PLUMA_CARD_RAPID_SLASHING.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害，每打出{Threshold:diff()}次可以额外造成一段伤害。",
 
   "PLUMA_CARD_RAPID_SLASHING_MAX.title": "高速切割·专精",
-  "PLUMA_CARD_RAPID_SLASHING_MAX.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害。每打出{Threshold:diff()}次可以额外造成一段伤害。打出后回到抽牌堆。",
+  "PLUMA_CARD_RAPID_SLASHING_MAX.description": "[gold]渐入佳境[/gold]1\n对所有敌人造成{Damage:diff()}点伤害。每打出{Threshold:diff()}次可以额外造成一段伤害。将这张放入抽牌堆。",
 
   "PLUMA_CARD_DOUBLE_SLASH.title": "双重切割",
   "PLUMA_CARD_DOUBLE_SLASH.description": "造成{Damage:diff()}点伤害2次。",

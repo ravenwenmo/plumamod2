@@ -81,9 +81,6 @@ public class RapidSlashingMax : ModCardTemplate
                 .Execute(choiceContext);
         }
 
-        //把自己放入抽牌堆，不知道是否会冲突
-        await CardPileCmd.Add(this, PileType.Draw, CardPilePosition.Top);
-
         // 获得1层渐入佳境
         await PowerCmd.Apply<FlowState>(
             choiceContext,
@@ -94,6 +91,16 @@ public class RapidSlashingMax : ModCardTemplate
         );
     }
     
+    protected override CardLocation GetResultLocationForCardPlay()
+	{
+		CardLocation resultLocationForCardPlay = base.GetResultLocationForCardPlay();
+		if (resultLocationForCardPlay.pileType == PileType.Discard)
+		{
+			resultLocationForCardPlay.pileType = PileType.Draw;
+			resultLocationForCardPlay.position = CardPilePosition.Random;
+		}
+		return resultLocationForCardPlay;
+	}
 
     
     // 切割关键词
