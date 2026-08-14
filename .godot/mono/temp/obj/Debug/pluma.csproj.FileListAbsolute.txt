@@ -1,0 +1,6 @@
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.csproj.AssemblyReference.cache
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.GeneratedMSBuildEditorConfig.editorconfig
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.AssemblyInfoInputs.cache
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.AssemblyInfo.cs
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.csproj.CoreCompileInputs.cache
+D:\Godot_v4.5.1-stable_mono_win64\plumamod2\.godot\mono\temp\obj\Debug\pluma.sourcelink.json
