@@ -1,0 +1,11 @@
+﻿# Godot 4+ specific ignores
+.godot/
+.vscode/
+bin/
+/android/
+pluma/images/cards/先古模板.sai2
+pluma/images/cards/普通模板.sai2
+pluma.csproj
+pluma.json
+pluma.pckgit
+*.uid
