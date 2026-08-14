@@ -304,5 +304,8 @@
   "PLUMA_CARD_RHODES_ISLAND_BAR.description": "你手中的[gold]基酒[/gold]和[gold]鸡尾酒[/gold]都不会占用手牌数量。",
 
   "PLUMA_CARD_DRINK_SOMETHING.title": "随便喝点啥",
-  "PLUMA_CARD_DRINK_SOMETHING.description": "获得1张随机基酒。\n抽{Cards:diff()}张牌。"
+  "PLUMA_CARD_DRINK_SOMETHING.description": "获得1张随机基酒。\n抽{Cards:diff()}张牌。",
+
+  "PLUMA_CARD_RESTOCK_CALL.title": "补货联络",
+  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张辅料组合包。\n在接下来的两个回合开始时，各获得1张随机基酒。"
 }
