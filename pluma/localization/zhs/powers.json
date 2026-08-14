@@ -84,6 +84,18 @@
   "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.description": "每两个回合，获得 1 张 升级过的辅料组合包 。",
   "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.smartDescription": "每两个回合，获得 1 张 升级过的辅料组合包 。",
 
+  "PLUMA_POWER_MAKE_USE_OF_EVERYTHING_POWER.title": "物尽其用",
+  "PLUMA_POWER_MAKE_USE_OF_EVERYTHING_POWER.description": "每当你打出一张辅料组合包时，获得等同于层数的额外格挡。",
+  "PLUMA_POWER_MAKE_USE_OF_EVERYTHING_POWER.smartDescription": "打出辅料组合包时，获得 [blue]{Amount}[/blue] 点额外格挡。",
+
+  "PLUMA_POWER_BARTENDER_RHYME_POWER.title": "调酒之韵",
+  "PLUMA_POWER_BARTENDER_RHYME_POWER.description": "每当你打出一张辅料组合包时，抽1张牌。",
+  "PLUMA_POWER_BARTENDER_RHYME_POWER.smartDescription": "打出辅料组合包时，抽1张牌。",
+
+  "PLUMA_POWER_COCKTAIL_GUIDE_POWER.title": "《多索雷斯调酒指南》",
+  "PLUMA_POWER_COCKTAIL_GUIDE_POWER.description": "每当一张鸡尾酒牌对自己或友方单位释放时，使目标额外获得1点能量。",
+  "PLUMA_POWER_COCKTAIL_GUIDE_POWER.smartDescription": "鸡尾酒对自己或友方释放时，目标获得1点能量。",
+
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
   "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"

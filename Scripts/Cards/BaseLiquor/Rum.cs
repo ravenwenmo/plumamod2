@@ -61,8 +61,9 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("FlowAmount", 2),
-        ModCardVars.Int("WeakAmount", 1)
+        //ModCardVars.Int("FlowAmount", 2),
+        ModCardVars.Int("WeakAmount", 1),
+        new CardsVar(2)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -122,8 +123,10 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 2 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowAmount"].BaseValue,
-                    base.Owner.Creature, this);
+                //await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowAmount"].BaseValue, base.Owner.Creature, this);
+                // 抽牌
+                await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
+
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
                 //     base.Owner.Creature, this);
@@ -144,8 +147,14 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 2 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAmount"].BaseValue,
-                    base.Owner.Creature, this);
+                //await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAmount"].BaseValue,base.Owner.Creature, this);
+                // 抽牌
+                await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(
+                    choiceContext,
+                    base.DynamicVars.Cards.BaseValue,
+                    cardPlay.Target.Player,
+                    this
+                );
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
                 //     base.Owner.Creature, this);

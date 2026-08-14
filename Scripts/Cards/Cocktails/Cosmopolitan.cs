@@ -58,7 +58,7 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
             yield return MyKeywords.Cocktail;
             yield return CardKeyword.Exhaust;
             // 升级后获得保留
-            if (base.IsUpgraded)
+            //if (base.IsUpgraded)
             {
                 yield return CardKeyword.Retain;
             }
@@ -67,7 +67,7 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
 
     // 伤害变量（基础10，升级+5）与能量变量（用于 {Energy:energyIcons()} 描述）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10m, ValueProp.Move),
+        new DamageVar(12m, ValueProp.Move),
         new EnergyVar(4),
         ModCardVars.Int("WeakAmount", 1)
     ];
@@ -124,8 +124,8 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
         {
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
-                await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                //await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
+                //    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 2 点能量
                 await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, base.Owner);
                 // ---- 旧效果（对自己施加1层易伤，已注释保留）----
@@ -145,8 +145,8 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
 
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
-                await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
+                //    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 2 点能量
                 await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, cardPlay.Target!.Player);
                 // ---- 旧效果（对友方施加1层易伤，已注释保留）----
@@ -158,6 +158,6 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(5m); // 伤害 10 → 15
+        DynamicVars.Damage.UpgradeValueBy(6m); // 伤害 12 → 18
     }
 }

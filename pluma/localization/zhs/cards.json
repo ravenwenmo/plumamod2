@@ -242,9 +242,9 @@
   "PLUMA_CARD_WHISKEY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
   "PLUMA_CARD_WHISKEY_ALLY_DESC": "使目标失去1点生命，然后获得{PlatingAmount:diff()}层[gold]覆甲[/gold]。",
 
-  "PLUMA_CARD_RUM_SELF_DESC": "失去1点生命，然后获得{FlowAmount:diff()}层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_RUM_SELF_DESC": "失去1点生命，然后抽{Cards:diff()}张牌。",
   "PLUMA_CARD_RUM_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_RUM_ALLY_DESC": "使目标失去1点生命，然后获得{FlowAmount:diff()}层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_RUM_ALLY_DESC": "使目标失去1点生命，然后抽{Cards:diff()}张牌。。",
 
   "PLUMA_CARD_VODKA_SELF_DESC": "失去1点生命，然后获得2点能量。",
   "PLUMA_CARD_VODKA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
@@ -288,6 +288,15 @@
   "PLUMA_CARD_INSTANT_PAIR.title": "即时搭配",
   "PLUMA_CARD_INSTANT_PAIR.description": "每当获得一张[gold]基酒[/gold]时，将1张辅料组合包{IfUpgraded:show:+}加入抽牌堆。",
 
+  "PLUMA_CARD_MAKE_USE_OF_EVERYTHING.title": "物尽其用",
+  "PLUMA_CARD_MAKE_USE_OF_EVERYTHING.description": "从“辅料组合包”中额外获得 {BlockAmount:diff()} 点格挡。",
+
+  "PLUMA_CARD_BARTENDER_RHYME.title": "调酒之韵",
+  "PLUMA_CARD_BARTENDER_RHYME.description": "每当你打出一张辅料组合包时，抽1张牌。",
+
+  "PLUMA_CARD_COCKTAIL_GUIDE.title": "《多索雷斯调酒指南》",
+  "PLUMA_CARD_COCKTAIL_GUIDE.description": "[gold]鸡尾酒[/gold]会使友方额外获得 1 点能量。",
+  
   "PLUMA_CARD_PROFESSIONAL_BAR.title": "专业吧台",
   "PLUMA_CARD_PROFESSIONAL_BAR.description": "每两个回合，获得1张辅料组合包{IfUpgraded:show:+}。"
 }

@@ -58,7 +58,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
             yield return MyKeywords.Cocktail;
             yield return CardKeyword.Exhaust;
             // 升级后获得保留
-            if (base.IsUpgraded)
+            //if (base.IsUpgraded)
             {
                 yield return CardKeyword.Retain;
             }
@@ -67,9 +67,10 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10m, ValueProp.Move),
-        ModCardVars.Int("FlowSelfAmount", 6),
-        ModCardVars.Int("FlowAllyAmount", 6),
+        new DamageVar(12m, ValueProp.Move),
+        //ModCardVars.Int("FlowSelfAmount", 6),
+        //ModCardVars.Int("FlowAllyAmount", 6),
+        new CardsVar(6),
         ModCardVars.Int("WeakAmount", 1)
     ];
 
@@ -128,8 +129,10 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 5 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowSelfAmount"].BaseValue,
-                    base.Owner.Creature, this);
+                //await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowSelfAmount"].BaseValue, base.Owner.Creature, this);
+                
+                await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
+                
                 // ---- 旧效果（对自己获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(base.Owner.Creature, 3m, ValueProp.Move, cardPlay);
                 break;
@@ -146,11 +149,18 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
-                await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 5 层渐入佳境
-                await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAllyAmount"].BaseValue,
-                    base.Owner.Creature, this);
+                //await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAllyAmount"].BaseValue, base.Owner.Creature, this);
+                
+                // 抽牌
+                await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(
+                    choiceContext,
+                    base.DynamicVars.Cards.BaseValue,
+                    cardPlay.Target.Player,
+                    this
+                );
+                
                 // ---- 旧效果（对友方获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(cardPlay.Target!, 3m, ValueProp.Move, cardPlay);
                 break;
@@ -159,6 +169,6 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(5m); // 伤害 10 → 15
+        DynamicVars.Damage.UpgradeValueBy(6m); // 伤害 10 → 15
     }
 }
