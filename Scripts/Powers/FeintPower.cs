@@ -25,8 +25,12 @@ public class FeintPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/Feint.png"
     );
 
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
+
+    public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants,
+        ICombatState combatState)
     {
+        // 只在敌方回合开始时触发
+        if (side != CombatSide.Enemy) return;
         if (!participants.Contains(base.Owner)) return;
 
         var wound = base.Owner.Powers.OfType<OpenWoundPower>().FirstOrDefault();
@@ -45,8 +49,9 @@ public class FeintPower : ModPowerTemplate
             wound = base.Owner.Powers.OfType<OpenWoundPower>().FirstOrDefault();
             if (wound == null || wound.Amount <= 0) break;
 
+            // 使用 ThrowingPlayerChoiceContext 代替 choiceContext
             await CreatureCmd.Damage(
-                choiceContext,
+                new ThrowingPlayerChoiceContext(),
                 base.Owner,
                 wound.Amount,
                 ValueProp.Unblockable | ValueProp.Unpowered,

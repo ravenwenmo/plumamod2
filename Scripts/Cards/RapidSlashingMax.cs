@@ -82,7 +82,8 @@ public class RapidSlashingMax : ModCardTemplate
         }
 
         //把自己放入抽牌堆，不知道是否会冲突
-        await CardPileCmd.Add(this, PileType.Draw, CardPilePosition.Top);
+        //真的会有bug，已换成更好的实现
+        //await CardPileCmd.Add(this, PileType.Draw, CardPilePosition.Random);
 
         // 获得1层渐入佳境
         await PowerCmd.Apply<FlowState>(
@@ -93,9 +94,18 @@ public class RapidSlashingMax : ModCardTemplate
             this
         );
     }
-    
 
-    
+    protected override CardLocation GetResultLocationForCardPlay()
+    {
+        CardLocation resultLocationForCardPlay = base.GetResultLocationForCardPlay();
+        if (resultLocationForCardPlay.pileType == PileType.Discard)
+        {
+            resultLocationForCardPlay.pileType = PileType.Draw;
+            resultLocationForCardPlay.position = CardPilePosition.Random;
+        }
+        return resultLocationForCardPlay;
+    }
+
     // 切割关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {

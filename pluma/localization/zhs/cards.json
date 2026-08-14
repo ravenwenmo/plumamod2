@@ -254,29 +254,29 @@
   "PLUMA_CARD_BRANDY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
   "PLUMA_CARD_BRANDY_ALLY_DESC": "使目标失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。",
 
-  "PLUMA_CARD_GIN_TONIC_SELF_DESC": "失去1点生命，然后获得{FlexAmount:diff()}层[gold]力量[/gold]。",
+  "PLUMA_CARD_GIN_TONIC_SELF_DESC": "获得{FlexAmount:diff()}层[gold]力量[/gold]。",
   "PLUMA_CARD_GIN_TONIC_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_GIN_TONIC_ALLY_DESC": "使目标失去1点生命，然后获得{FlexAmount:diff()}层[gold]力量[/gold]。",
+  "PLUMA_CARD_GIN_TONIC_ALLY_DESC": "获得{FlexAmount:diff()}层[gold]力量[/gold]。",
 
-  "PLUMA_CARD_MARGARITA_SELF_DESC": "失去1点生命，然后获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
+  "PLUMA_CARD_MARGARITA_SELF_DESC": "获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
   "PLUMA_CARD_MARGARITA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_MARGARITA_ALLY_DESC": "使目标失去1点生命，然后获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
+  "PLUMA_CARD_MARGARITA_ALLY_DESC": "获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
 
-  "PLUMA_CARD_OLD_FASHIONED_SELF_DESC": "失去1点生命，然后获得20点[gold]格挡[/gold]。",
+  "PLUMA_CARD_OLD_FASHIONED_SELF_DESC": "获得20点[gold]格挡[/gold]。",
   "PLUMA_CARD_OLD_FASHIONED_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_OLD_FASHIONED_ALLY_DESC": "使目标失去1点生命，然后获得15点[gold]格挡[/gold]。",
+  "PLUMA_CARD_OLD_FASHIONED_ALLY_DESC": "获得20点[gold]格挡[/gold]。",
 
-  "PLUMA_CARD_MOJITO_SELF_DESC": "失去1点生命，然后获得{FlowSelfAmount:diff()}层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_MOJITO_SELF_DESC": "抽{Cards:diff()}张牌",
   "PLUMA_CARD_MOJITO_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_MOJITO_ALLY_DESC": "使目标失去1点生命，然后获得{FlowAllyAmount:diff()}层[gold]渐入佳境[/gold]。",
+  "PLUMA_CARD_MOJITO_ALLY_DESC": "抽{Cards:diff()}张牌",
 
-  "PLUMA_CARD_COSMOPOLITAN_SELF_DESC": "失去1点生命，然后获得{Energy:energyIcons()}。",
+  "PLUMA_CARD_COSMOPOLITAN_SELF_DESC": "获得{Energy:energyIcons()}。",
   "PLUMA_CARD_COSMOPOLITAN_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_COSMOPOLITAN_ALLY_DESC": "使目标失去1点生命，然后获得{Energy:energyIcons()}。",
+  "PLUMA_CARD_COSMOPOLITAN_ALLY_DESC": "获得{Energy:energyIcons()}。",
 
-  "PLUMA_CARD_SIDECAR_SELF_DESC": "失去1点生命，然后获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
+  "PLUMA_CARD_SIDECAR_SELF_DESC": "获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
   "PLUMA_CARD_SIDECAR_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_SIDECAR_ALLY_DESC": "使目标失去1点生命，然后获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
+  "PLUMA_CARD_SIDECAR_ALLY_DESC": "获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
 
   "PLUMA_CARD_DRINKS_FOR_TWO.title": "我喝两杯",
   "PLUMA_CARD_DRINKS_FOR_TWO.description": "获得2张随机基酒。\n将1张辅料组合包分别放入抽牌堆和弃牌堆。",
@@ -307,5 +307,9 @@
   "PLUMA_CARD_DRINK_SOMETHING.description": "获得1张随机基酒。\n抽{Cards:diff()}张牌。",
 
   "PLUMA_CARD_RESTOCK_CALL.title": "补货联络",
-  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张辅料组合包。\n在接下来的两个回合开始时，各获得1张随机基酒。"
+  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张辅料组合包。\n在接下来的两个回合开始时，各获得1张随机基酒。",
+
+  "PLUMA_CARD_REPEAT.title": "复读",
+  "PLUMA_CARD_REPEAT.description": "选择一张手牌，复制它并给复制品添加[gold]本能[/gold]。",
+  "PLUMA_CARD_REPEAT.selectPrompt": "选择一张手牌进行复制"
 }
