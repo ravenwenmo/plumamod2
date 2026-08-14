@@ -36,12 +36,12 @@
   <ItemGroup>
     <Folder Include="pluma\images\cards\" />
     <Folder Include="pluma\images\relics\" />
-    <Folder Include="pluma\images\scenes\" />
     <Folder Include="pluma\images\spineAni\ori\" />
     <Folder Include="Scripts\Test\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="pluma\images\scenes\spine_sprite.gd" />
     <Content Include="pluma\localization\zhs\ancients.json" />
     <Content Include="pluma\localization\zhs\cards.json" />
     <Content Include="pluma\localization\zhs\card_keywords.json" />
