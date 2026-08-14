@@ -98,5 +98,9 @@
 
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
   "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
-  "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。"
+  "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。",
+
+  "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.title": "罗德岛酒吧",
+  "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.description": "你手中每有一张[gold]鸡尾酒[/gold]，手牌上限额外+1。",
+  "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.smartDescription": "手中的鸡尾酒使手牌上限额外+1。"
 }

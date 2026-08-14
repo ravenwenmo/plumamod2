@@ -1,25 +1,23 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
-using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 风中之羽：1费能力牌，每打出一张攻击牌获得1点渐入佳境，渐入佳境无法抽牌。升级后获得2点。
+// 罗德岛酒吧：1费稀有能力牌。获得罗德岛酒吧能力。升级后固有。
 [RegisterCard(typeof(PlumaCardPool))]
-public class WindFeather : ModCardTemplate
+public class RhodesIslandBar : ModCardTemplate
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Power;
-    private const CardRarity rarity = CardRarity.Uncommon;
+    private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.Self;
     private const bool shouldShowInCardLibrary = true;
 
@@ -27,26 +25,24 @@ public class WindFeather : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => new[]
-    {
-        ModCardVars.Int("Stacks", 1) // 基础1层
-    };
-
+    // 悬浮提示：基酒关键词、鸡尾酒关键词、能力效果
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<FlowState>()
+        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        HoverTipFactory.FromKeyword(MyKeywords.Cocktail),
+        HoverTipFactory.FromPower<RhodesIslandBarPower>()
     };
 
-    public WindFeather() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public RhodesIslandBar() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<WindFeatherPower>(
+        await PowerCmd.Apply<RhodesIslandBarPower>(
             choiceContext,
             base.Owner.Creature,
-            DynamicVars["Stacks"].IntValue,
+            1,
             base.Owner.Creature,
             this
         );
@@ -54,6 +50,6 @@ public class WindFeather : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Stacks"].UpgradeValueBy(1m); // 1 → 2
+        AddKeyword(CardKeyword.Innate); // 固有
     }
 }

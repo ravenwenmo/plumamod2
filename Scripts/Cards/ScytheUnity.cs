@@ -28,7 +28,11 @@ public class ScytheUnity : ModCardTemplate
     );
 
     // 本能关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.MuscleMemory };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        CardKeyword.Exhaust, // 添加原版关键词
+        MyKeywords.MuscleMemory
+    };
 
     // 悬浮提示：预览切割牌的效果
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

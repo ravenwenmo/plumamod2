@@ -26,7 +26,7 @@ public class DrinksForTwo : ModCardTemplate
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        MyKeywords.MuscleMemory,
+        //MyKeywords.MuscleMemory,
         CardKeyword.Exhaust
     };
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

@@ -28,6 +28,7 @@ public class SlashingMaster : ModCardTemplate
     // 关键词（消耗）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [
         CardKeyword.Exhaust, // 添加原版关键词
+        MyKeywords.MuscleMemory 
     ];
 
     // 生成数量，升级后 +1

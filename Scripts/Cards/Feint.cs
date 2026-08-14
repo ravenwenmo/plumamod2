@@ -28,7 +28,8 @@ public class Feint : ModCardTemplate
     );
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        CardKeyword.Exhaust
+        CardKeyword.Exhaust,
+        MyKeywords.MuscleMemory
     };
     // 层数动态变量，升级后+1
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]

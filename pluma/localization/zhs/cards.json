@@ -298,5 +298,11 @@
   "PLUMA_CARD_COCKTAIL_GUIDE.description": "[gold]鸡尾酒[/gold]会使友方额外获得 1 点能量。",
   
   "PLUMA_CARD_PROFESSIONAL_BAR.title": "专业吧台",
-  "PLUMA_CARD_PROFESSIONAL_BAR.description": "每两个回合，获得1张辅料组合包{IfUpgraded:show:+}。"
+  "PLUMA_CARD_PROFESSIONAL_BAR.description": "每两个回合，获得1张辅料组合包{IfUpgraded:show:+}。",
+
+  "PLUMA_CARD_RHODES_ISLAND_BAR.title": "罗德岛酒吧",
+  "PLUMA_CARD_RHODES_ISLAND_BAR.description": "你手中的[gold]基酒[/gold]和[gold]鸡尾酒[/gold]都不会占用手牌数量。",
+
+  "PLUMA_CARD_DRINK_SOMETHING.title": "随便喝点啥",
+  "PLUMA_CARD_DRINK_SOMETHING.description": "获得1张随机基酒。\n抽{Cards:diff()}张牌。"
 }

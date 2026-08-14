@@ -36,6 +36,10 @@ public class LiberiVigilance : ModCardTemplate
     {
         ModCardVars.Int("OpenWound", 2)
     };
+    
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [
+        MyKeywords.MuscleMemory,
+    ];
 
     public LiberiVigilance() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
