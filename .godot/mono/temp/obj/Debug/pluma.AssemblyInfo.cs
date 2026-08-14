@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pluma")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc7958770a9c6738916682d465ae996e9f91f2c2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c4f6d124119e9088374f3080c64fd763d2e066a")]
 [assembly: System.Reflection.AssemblyProductAttribute("pluma")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pluma")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

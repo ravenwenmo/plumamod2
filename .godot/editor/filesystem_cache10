@@ -1,11 +1,11 @@
 cb68465a049d370e5dc715e0fed1d1f8
-::res://::1786687463
+::res://::1786695458
 export_presets.cfg::TextFile::-1::1786625251::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::6955155404795982846::1786625251::1786625331::1::::<><><>0<>0<>a6204149936c876d546712d932862077<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-pluma.json::JSON::-1::1786625251::0::1::::<><><>0<>0<><>::
+pluma.json::JSON::-1::1786691978::0::1::::<><><>0<>0<><>::
 ::res://bin/::1786625251
 spine_godot_extension.gdextension::GDExtension::5565143294701487325::1786625251::0::1::::<><><>0<>0<><>::
-::res://bin/windows/::1786687457
+::res://bin/windows/::1786695453
 ::res://pluma/::1786625252
 ::res://pluma/images/::1786625331
 energy_test.png::CompressedTexture2D::660537771257108684::1786625252::1786625331::1::::<><><>0<>0<>382ce4d8c156b22e0e480c5466900931<>res://.godot/imported/energy_test.png-9d820459ea8133f90f44513f6654e41c.ctex::
@@ -148,11 +148,12 @@ TheBeatPower.png::CompressedTexture2D::1178457079651476693::1786625252::17866253
 TransparentWorldPower.png::CompressedTexture2D::824674601824778325::1786625252::1786625331::1::::<><><>0<>0<>29b24d2e13f7c026a91874ef88836e0a<>res://.godot/imported/TransparentWorldPower.png-016e88495f3ed074d5a2e8fde2843d9a.ctex::
 ::res://pluma/images/relics/::1786625331
 ReaperBadge.png::CompressedTexture2D::3510934602747372767::1786625252::1786625331::1::::<><><>0<>0<>44a4002a99b62991cb01727ff5e894c5<>res://.godot/imported/ReaperBadge.png-2381f5b6e86661c757eb01516e466b40.ctex::
-::res://pluma/images/scenes/::1786687420
+::res://pluma/images/scenes/::1786692801
 energytest.tscn::PackedScene::3917759996144904384::1786625252::0::1::::<><><>0<>0<><>::uid://cdabdw0tdwg6a::::res://pluma/images/1img/UI/orb/vfx.png<>uid://b2a7ckbmdp4jh::::res://pluma/images/1img/UI/orb/layer1.png<>uid://bq58sld0ap3is::::res://pluma/images/1img/UI/orb/layer3.png<>uid://doc3bgqb07sui::::res://pluma/images/1img/UI/orb/layer3d.png<>uid://bpenhinsaxb70::::res://pluma/images/1img/UI/orb/layer2.png<>uid://bkssl6dgjwlt::::res://pluma/images/1img/UI/orb/layer6.png<>uid://d2xed3dqaojm7::::res://pluma/images/1img/UI/orb/layer5.png<>uid://enejfvltyjm5::::res://pluma/images/1img/UI/orb/layer4.png
 image21.webp::CompressedTexture2D::9008540389368856294::1786625252::1786625331::1::::<><><>0<>0<>84b26bfa3198ac6e67984e9709d08a8a<>res://.godot/imported/image21.webp-ddaeb76be7d930a9a83ce17a28dd1bf1.ctex::
 ori_background.tscn::PackedScene::2034467613469480055::1786625252::0::1::::<><><>0<>0<><>::uid://ow5dxjrkq6x::::res://pluma/images/1img/char/Character_Portrait.png<>uid://ba0hpvswj6jei::::res://pluma/images/1img/char_late/character2.png
-ori_background_skins.tscn::PackedScene::1672328749727472047::1786687420::0::1::::<><><>0<>0<><>::uid://ba0hpvswj6jei::::res://pluma/images/1img/char_late/character2.png<>uid://b3qn5rss6xq5f::::res://Scripts/Skins/SkinSelector.cs<>uid://ow5dxjrkq6x::::res://pluma/images/1img/char/Character_Portrait.png<>uid://c64gkkkmmelgf::::res://pluma/images/spineAni/ori/new_spine_skeleton_data_resource.tres<>uid://bj22rfwtg1ed8::::res://pluma/images/spineAni/sum/new_spine_skeleton_data_resource.tres
+ori_background_skins.tscn::PackedScene::1672328749727472047::1786692795::0::1::::<><><>0<>0<><>::uid://ba0hpvswj6jei::::res://pluma/images/1img/char_late/character2.png<>uid://b3qn5rss6xq5f::::res://Scripts/Skins/SkinSelector.cs<>uid://ow5dxjrkq6x::::res://pluma/images/1img/char/Character_Portrait.png<>uid://c64gkkkmmelgf::::res://pluma/images/spineAni/ori/new_spine_skeleton_data_resource.tres<>uid://bj22rfwtg1ed8::::res://pluma/images/spineAni/sum/new_spine_skeleton_data_resource.tres
+ori_background_skins_mul.tscn::PackedScene::620737645441437483::1786692801::0::1::::<><><>0<>0<><>::uid://b3qn5rss6xq5f::::res://Scripts/Skins/SkinSelector.cs<>uid://ba0hpvswj6jei::::res://pluma/images/1img/char_late/character2.png<>uid://ow5dxjrkq6x::::res://pluma/images/1img/char/Character_Portrait.png<>uid://c64gkkkmmelgf::::res://pluma/images/spineAni/ori/new_spine_skeleton_data_resource.tres
 ori_icon.png::CompressedTexture2D::3937164227388613400::1786625252::1786625331::1::::<><><>0<>0<>f2cbe0022b7f87969c0a9586e35a5cbb<>res://.godot/imported/ori_icon.png-c71e6a97cf2a288fd6df2fbc1f7e2ca1.ctex::
 ori_icon_bg.tres::StyleBoxTexture::5380671580782177732::1786625252::0::1::::<><><>0<>0<><>::uid://bwdgrwwj1ovem::::res://pluma/images/scenes/ori_icon.png
 PlumaByWenmo.png::CompressedTexture2D::8684746885378268296::1786625252::1786625332::1::::<><><>0<>0<>45811961e288b0ea7a36dd59422941f5<>res://.godot/imported/PlumaByWenmo.png-2914c1cc42aef352a0170de4f756844d.ctex::
@@ -198,7 +199,7 @@ events.json::JSON::-1::1786625252::0::1::::<><><>0<>0<><>::
 powers.json::JSON::-1::1786687395::0::1::::<><><>0<>0<><>::
 relics.json::JSON::-1::1786625252::0::1::::<><><>0<>0<><>::
 static_hover_tips.json::JSON::-1::1786625252::0::1::::<><><>0<>0<><>::
-::res://Scripts/::1786687395
+::res://Scripts/::1786687463
 BaseSpiritHandSizeSingleton.cs::CSharpScript::4838090998283225787::1786625251::0::1::::<><><>0<>0<><>::
 Entry.cs::CSharpScript::5325778456541904433::1786687395::0::1::::<><><>0<>0<><>::
 IBaseSpiritCard.cs::CSharpScript::4657940928210962408::1786625251::0::1::::<><><>0<>0<><>::
@@ -213,7 +214,7 @@ SlashingComboSingleton.cs::CSharpScript::3245449585355385537::1786687395::0::1::
 SpiritMode.cs::CSharpScript::8601168821256941551::1786625251::0::1::::<><><>0<>0<><>::
 SpiritModeDescriptionPatch.cs::CSharpScript::2317024020077278904::1786687395::0::1::::<><><>0<>0<><>::
 SpiritTargeting.cs::CSharpScript::2798686945465506236::1786687395::0::1::::<><><>0<>0<><>::
-::res://Scripts/Cards/::1786687395
+::res://Scripts/Cards/::1786687463
 BartendersFlask.cs::CSharpScript::1065956179679817673::1786687395::0::1::::<><><>0<>0<><>::
 BladeForm.cs::CSharpScript::8285999229430057687::1786625251::0::1::::<><><>0<>0<><>::
 ButFocused.cs::CSharpScript::2597010625535549470::1786687395::0::1::::<><><>0<>0<><>::
@@ -297,9 +298,9 @@ OldFashioned.cs::CSharpScript::8022595866442667545::1786687395::0::1::::<><><>0<
 Sidecar.cs::CSharpScript::7935914262551154416::1786687395::0::1::::<><><>0<>0<><>::
 ::res://Scripts/Keywords/::1786625251
 MyKeywords.cs::CSharpScript::4790424229957456643::1786625251::0::1::::<><><>0<>0<><>::
-::res://Scripts/Others/::1786687395
+::res://Scripts/Others/::1786687463
 FlaskVfxHelper.cs::CSharpScript::7280265029032809551::1786687395::0::1::::<><><>0<>0<><>::
-::res://Scripts/Powers/::1786687395
+::res://Scripts/Powers/::1786687463
 BladeFormPower.cs::CSharpScript::6508523134701424311::1786625251::0::1::::<><><>0<>0<><>::
 BladeFormUpgradedPower.cs::CSharpScript::6418357538019452126::1786625251::0::1::::<><><>0<>0<><>::
 ChargingPower.cs::CSharpScript::5588422559525846269::1786625251::0::1::::<><><>0<>0<><>::
@@ -332,7 +333,7 @@ ModShared.cs::CSharpScript::8616582678050818311::1786625251::0::1::::<><><>0<>0<
 PrimaRegola.cs::CSharpScript::1893162955807884743::1786625251::0::1::::<><><>0<>0<><>::
 ReaperBadge.cs::CSharpScript::6342020167469483941::1786625251::0::1::::<><><>0<>0<><>::
 SpinachCan.cs::CSharpScript::8533539477301828305::1786625251::0::1::::<><><>0<>0<><>::
-::res://Scripts/Skins/::1786687395
+::res://Scripts/Skins/::1786687463
 PlumaCreatureVisualsContextPatch.cs::CSharpScript::5475515215021426623::1786687395::0::1::::<><><>0<>0<><>::
 PlumaLobbyRegistry.cs::CSharpScript::3074242192108534206::1786687395::0::1::::<><><>0<>0<><>::
 PlumaRunData.cs::CSharpScript::5854559203840793568::1786625251::0::1::::<><><>0<>0<><>::
@@ -341,4 +342,4 @@ PlumaSettings.cs::CSharpScript::1164149485157412692::1786625251::0::1::::<><><>0
 PlumaSkins.cs::CSharpScript::2230248048056361584::1786687395::0::1::::<><><>0<>0<><>::
 PlumaSkinSyncAction.cs::CSharpScript::6692376477907006114::1786687395::0::1::::<><><>0<>0<><>::
 PlumaStartRunLobbyPatch.cs::CSharpScript::8173706715258589128::1786687395::0::1::::<><><>0<>0<><>::
-SkinSelector.cs::CSharpScript::4385582165909694633::1786687395::0::1::::<><><>0<>0<><>::
+SkinSelector.cs::CSharpScript::4385582165909694633::1786687395::0::1::::<>Control<><>0<>0<><>::
