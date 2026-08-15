@@ -38,7 +38,7 @@ namespace Pluma.Scripts;
 public class QuickDraw : ModCardTemplate
 {
     // 基础耗能
-    private const int energyCost = 2;
+    private const int energyCost = 1;
     // 卡牌类型
     private const CardType type = CardType.Attack;
     // 卡牌稀有度
@@ -62,8 +62,8 @@ public class QuickDraw : ModCardTemplate
 
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CalculationBaseVar(5m),      // 基础伤害
-        new ExtraDamageVar(15m),          // 额外伤害（触发时加一次）
+        new CalculationBaseVar(6m),      // 基础伤害
+        new ExtraDamageVar(10m),          // 额外伤害（触发时加一次）
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((CardModel card, Creature? target) =>
         {
             // 获取当前战斗中的所有敌方单位（可攻击的敌人）
@@ -104,8 +104,8 @@ public class QuickDraw : ModCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
-        base.DynamicVars.ExtraDamage.UpgradeValueBy(2m);
-        base.DynamicVars.CalculatedDamage.UpgradeValueBy(2m);
+        //EnergyCost.UpgradeBy(-1);
+        base.DynamicVars.ExtraDamage.UpgradeValueBy(4m);
+        //base.DynamicVars.CalculatedDamage.UpgradeValueBy(2m);
     }
 } 

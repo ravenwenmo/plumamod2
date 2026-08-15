@@ -254,17 +254,17 @@
   "PLUMA_CARD_BRANDY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
   "PLUMA_CARD_BRANDY_ALLY_DESC": "使目标失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。",
 
-  "PLUMA_CARD_GIN_TONIC_SELF_DESC": "获得{FlexAmount:diff()}层[gold]力量[/gold]。",
+  "PLUMA_CARD_GIN_TONIC_SELF_DESC": "获得{FlexAmount:diff()}层[gold]临时力量[/gold]。",
   "PLUMA_CARD_GIN_TONIC_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_GIN_TONIC_ALLY_DESC": "获得{FlexAmount:diff()}层[gold]力量[/gold]。",
+  "PLUMA_CARD_GIN_TONIC_ALLY_DESC": "获得{FlexAmount:diff()}层[gold]临时力量[/gold]。",
 
   "PLUMA_CARD_MARGARITA_SELF_DESC": "获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
   "PLUMA_CARD_MARGARITA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
   "PLUMA_CARD_MARGARITA_ALLY_DESC": "获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
 
-  "PLUMA_CARD_OLD_FASHIONED_SELF_DESC": "获得20点[gold]格挡[/gold]。",
+  "PLUMA_CARD_OLD_FASHIONED_SELF_DESC": "获得{Block:diff()}点[gold]格挡[/gold]。",
   "PLUMA_CARD_OLD_FASHIONED_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_OLD_FASHIONED_ALLY_DESC": "获得20点[gold]格挡[/gold]。",
+  "PLUMA_CARD_OLD_FASHIONED_ALLY_DESC": "获得{Block:diff()}点[gold]格挡[/gold]。",
 
   "PLUMA_CARD_MOJITO_SELF_DESC": "抽{Cards:diff()}张牌",
   "PLUMA_CARD_MOJITO_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
