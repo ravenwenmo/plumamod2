@@ -1,6 +1,8 @@
 ﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -22,5 +24,24 @@ public class RapidSlashingStacks : ModPowerTemplate
         IconPath: "res://pluma/images/powers/RapidSlashingStacks.png",
         BigIconPath: "res://pluma/images/powers/RapidSlashingStacks.png"
     );
-    
+
+    // ===== run 内跨战斗持久化：层数变化/移除时同步到 run 数据槽 =====
+
+    // 层数变化（首次施加、叠层、削减）后把当前层数写入 run 数据槽。
+    public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
+    {
+        if (ReferenceEquals(power, this))
+        {
+            RapidSlashingStacksPersistence.Sync(this);
+        }
+        return Task.CompletedTask;
+    }
+
+    // 能力被正常移除（如达到阈值被消耗）时把槽位层数清零。
+    // 注意：战斗结束时的静默清能力（RemoveInternal）不会走到这里，槽位保留最后层数。
+    public override Task AfterRemoved(Creature oldOwner)
+    {
+        RapidSlashingStacksPersistence.Clear(oldOwner);
+        return Task.CompletedTask;
+    }
 }

@@ -23,6 +23,9 @@ public class Entry
     // 皮肤数据句柄（现在使用引用类型 SkinIndexWrapper）
     public static PlayerRunSavedData<SkinIndexWrapper> SkinData = null!;
 
+    // 高速切割层数数据句柄（run 内跨战斗保留，战斗外存档/读档恢复）
+    public static PlayerRunSavedData<RapidSlashingStacksSave> RapidSlashingStacksData = null!;
+
     public static void Init()
     {
         var assembly = Assembly.GetExecutingAssembly();
@@ -53,6 +56,15 @@ public class Entry
                 {
                     WritePolicy = RunSavedDataWritePolicy.WhenSet,
                     SyncLobbyOnChange = true
+                });
+
+            RapidSlashingStacksData = store.RegisterPerPlayer(
+                key: "rapid_slashing_stacks",
+                // 默认 0 层：新 run 槽位为空，不跨 run 继承层数
+                defaultFactory: () => new RapidSlashingStacksSave(),
+                options: new RunSavedDataOptions
+                {
+                    WritePolicy = RunSavedDataWritePolicy.WhenSet
                 });
         }
 
