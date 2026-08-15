@@ -156,7 +156,7 @@
   "PLUMA_CARD_LIBERI_VIGILANCE.description": "对所有敌人施加{OpenWound:diff()}层创伤\n获得所有敌人总创伤层数的格挡。",
 
   "PLUMA_CARD_RECALL_STRIKE.title": "回钩",
-  "PLUMA_CARD_RECALL_STRIKE.description": "造成{Damage:diff()}点伤害。\n将上一张打出的牌放回手牌。",
+  "PLUMA_CARD_RECALL_STRIKE.description": "造成{Damage:diff()}点伤害。\n无论何处，将上一张打出的牌放回手牌。",
 
   "PLUMA_CARD_CONCESSION.title": "让步",
   "PLUMA_CARD_CONCESSION.description": "获得{Block:diff()}点格挡。\n对自己施加1层虚弱。",
