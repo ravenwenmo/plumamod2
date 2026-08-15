@@ -24,7 +24,7 @@ public class CrampedScrap : ModCardTemplate
     // 卡牌类型
     private const CardType type = CardType.Attack;
     // 卡牌稀有度
-    private const CardRarity rarity = CardRarity.Common;
+    private const CardRarity rarity = CardRarity.Uncommon;
     // 目标类型（AnyEnemy表示任意敌人）
     private const TargetType targetType = TargetType.AnyEnemy;
     // 是否在卡牌图鉴中显示
@@ -42,7 +42,7 @@ public class CrampedScrap : ModCardTemplate
 
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HpLossVar(2m),
+        new HpLossVar(3m),
         new DamageVar(4m, ValueProp.Move)
     ];
     
@@ -61,22 +61,23 @@ public class CrampedScrap : ModCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this,cardPlay)
+            // .FromCard(this, cardPlay) // 测试版
+            .Targeting(cardPlay.Target!)
+            .Execute(choiceContext);
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this,cardPlay)
+            // .FromCard(this, cardPlay) // 测试版
+            .Targeting(cardPlay.Target!)
+            .Execute(choiceContext);
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this,cardPlay)
+            // .FromCard(this, cardPlay) // 测试版
+            .Targeting(cardPlay.Target!)
+            .Execute(choiceContext);
         await CreatureCmd.Damage(choiceContext, base.Owner.Creature, base.DynamicVars.HpLoss.BaseValue, ValueProp.Unblockable | ValueProp.Unpowered | ValueProp.Move, this, cardPlay);
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this,cardPlay)
-            // .FromCard(this, cardPlay) // 测试版
-            .Targeting(cardPlay.Target!)
-            .Execute(choiceContext);
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this,cardPlay)
-            // .FromCard(this, cardPlay) // 测试版
-            .Targeting(cardPlay.Target!)
-            .Execute(choiceContext);
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this,cardPlay)
-            // .FromCard(this, cardPlay) // 测试版
-            .Targeting(cardPlay.Target!)
-            .Execute(choiceContext);
+
     }
 
     // 升级后的效果逻辑

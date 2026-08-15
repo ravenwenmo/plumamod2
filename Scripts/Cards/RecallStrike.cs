@@ -62,5 +62,6 @@ public class RecallStrike : ModCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(2m); // 3 → 5
+        RemoveKeyword(CardKeyword.Exhaust);
     }
 }

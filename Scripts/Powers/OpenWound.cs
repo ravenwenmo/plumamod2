@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -28,10 +29,11 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         BigIconPath: "res://pluma/images/powers/OpenWoundPower.png"
     );
 
-    public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props,
-        Creature target, CardModel? cardSource)
+
+    public override async Task AfterAttack(PlayerChoiceContext choiceContext, AttackCommand command)
     {
-        if (dealer != base.Owner || _isApplying) return;
+        // 只处理持有者发起的攻击，且不是创伤自身造成的伤害
+        if (command.Attacker != base.Owner || _isApplying) return;
 
         _isApplying = true;
         try
