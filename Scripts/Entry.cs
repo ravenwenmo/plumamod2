@@ -10,6 +10,7 @@ using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 using  STS2RitsuLib.Scaffolding.Cards.HandOutline;
 using  STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Cards; // 提供 CardType 枚举
+using HarmonyLib;
 
 namespace Pluma.Scripts;
 
@@ -67,6 +68,9 @@ public class Entry
                     WritePolicy = RunSavedDataWritePolicy.WhenSet
                 });
         }
+
+        var harmony = new Harmony("com.lapluma.patch"); // patch的ID，和别人写的不一致防撞车
+        harmony.PatchAll();
 
         // 注册皮肤同步所需的补丁：追踪当前大厅、为战斗模型创建提供玩家上下文
         var skinPatcher = RitsuLibFramework.CreatePatcher(ModId, "skin-sync");

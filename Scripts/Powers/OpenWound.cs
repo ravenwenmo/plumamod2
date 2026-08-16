@@ -14,6 +14,9 @@ using STS2RitsuLib.Combat.HealthBars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using HarmonyLib;
+using MegaCrit.Sts2.Core.Entities.Cards;
+
 namespace Pluma.Scripts;
 
 // 创伤：持有者造成伤害时，先受到等量于层数的伤害，然后层数-1。
@@ -31,28 +34,28 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
     );
 
 
-    public override async Task AfterAttack(PlayerChoiceContext choiceContext, AttackCommand command)
-    {
-        // 只处理持有者发起的攻击，且不是创伤自身造成的伤害
-        if (command.Attacker != base.Owner || _isApplying) return;
+    // public override async Task AfterAttack(PlayerChoiceContext choiceContext, AttackCommand command)
+    // {
+    //     // 只处理持有者发起的攻击，且不是创伤自身造成的伤害
+    //     if (command.Attacker != base.Owner || _isApplying) return;
 
-        // 多段攻击（如 3x3）是一个 AttackCommand 内部循环执行多段，
-        // Results 中每个内层列表对应实际执行的一段攻击；
-        // AOE 攻击每段只产生一个内层列表（多目标伤害都在同一个列表内）。
-        // 因此按列表数触发：多段按段数触发，AOE 不会因命中多个玩家而重复触发。
-        int hitCount = command.Results.Count();
-        if (hitCount <= 0) return;
+    //     // 多段攻击（如 3x3）是一个 AttackCommand 内部循环执行多段，
+    //     // Results 中每个内层列表对应实际执行的一段攻击；
+    //     // AOE 攻击每段只产生一个内层列表（多目标伤害都在同一个列表内）。
+    //     // 因此按列表数触发：多段按段数触发，AOE 不会因命中多个玩家而重复触发。
+    //     int hitCount = command.Results.Count();
+    //     if (hitCount <= 0) return;
 
-        await TriggerMultiple(choiceContext, hitCount);
-    }
-    
+    //     await TriggerMultiple(choiceContext, hitCount);
+    // }
+
     public IEnumerable<HealthBarForecastSegment> GetHealthBarForecastSegments(HealthBarForecastContext context)
     {
         if (context.Creature != base.Owner || base.Amount <= 0)
             return Enumerable.Empty<HealthBarForecastSegment>();
 
         Color lightRed = new Color(1f, 0.6f, 0.6f);   // 浅红（左侧，对应短段）
-        Color darkRed  = new Color(0.6f, 0.05f, 0.05f); // 深红（右侧，对应长段）
+        Color darkRed = new Color(0.6f, 0.05f, 0.05f); // 深红（右侧，对应长段）
 
         // 敌人持有创伤时，合并所有触发源的递减预测。
         // 每个触发源都按"造成当前层数伤害，再减 1 层"结算，因此合并后
@@ -116,7 +119,7 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         return fallbackSegments;
     }
     //效果意外还行的渐变颜色条，备选
-    
+
     /*
     public IEnumerable<HealthBarForecastSegment> GetHealthBarForecastSegments(HealthBarForecastContext context)
     {
@@ -150,7 +153,7 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
     }
     */
     //我Chovy败给你了不要了
-    
+
     /// <summary>
     /// 获取持有者下一次攻击意图的总段数（多个攻击意图的段数之和）。
     /// 持有者不是敌人（玩家）或当前没有攻击意图时返回 0。
@@ -180,6 +183,52 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         return base.Owner.Powers.OfType<FeintPower>().Sum(power => (int)power.Amount);
     }
 
+    [HarmonyPatch(
+        typeof(CreatureCmd),
+        nameof(CreatureCmd.Damage),
+        [
+            typeof(PlayerChoiceContext),
+            typeof(IEnumerable<Creature>),
+            typeof(decimal),
+            typeof(ValueProp),
+            typeof(Creature),
+            typeof(CardModel),
+            typeof(CardPlay)
+        ]
+    )]
+    public class OpenWoundPower_CreatureCmd_Damage_Patch
+    {
+        private static async Task TriggerWound(PlayerChoiceContext choiceContext, Creature? dealer)
+        {
+            if (dealer == null) return;
+            if (dealer.HasPower<OpenWoundPower>())
+            {
+                OpenWoundPower woundPower = dealer.GetPower<OpenWoundPower>();
+                if (woundPower != null && !woundPower._isApplying)
+                {
+                    await woundPower.TriggerMultiple(choiceContext, 1);
+                }
+            }
+        }
+
+        [HarmonyPostfix]
+        private static async Task<IEnumerable<DamageResult>> Postfix(
+        Task<IEnumerable<DamageResult>> __result,
+        PlayerChoiceContext choiceContext,
+        Creature? dealer)
+        {
+            // 等待原本的 Damage 完整执行
+            IEnumerable<DamageResult> results = await __result;
+            GD.Print($"OpenWoundPower_CreatureCmd_Damage_Patch.Postfix: dealer={dealer?.Name}, results.Count={results.Count()}");
+
+            // Damage 完成之后执行
+            await TriggerWound(choiceContext, dealer);
+
+            // 保留原始 Damage 返回值
+            return results;
+        }
+    }
+
     /// <summary>
     /// 连续触发多次创伤效果，伤害来源与正常创伤一致（无攻击者、无卡牌）。
     /// </summary>
@@ -190,7 +239,7 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
             if (this.Amount <= 0 || this.Owner == null) break;
             if (_isApplying) break;
             _isApplying = true;
-            if (i==0){await Cmd.Wait(0.2f);}
+            if (i == 0) { await Cmd.Wait(0.2f); }
             try
             {
                 await CreatureCmd.Damage(
