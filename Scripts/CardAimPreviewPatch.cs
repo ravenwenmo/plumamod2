@@ -71,15 +71,19 @@ public static class CardAimPreviewPatch
     {
         // 只在真正的选目标阶段生效，避免出牌队列等其它路径设置预览目标时误触发
         if (!_targetingActive) return;
-        // 只追踪与瞄准预览相关的牌：兜割（血条预测）与基酒/鸡尾酒（描述切换）
+        // 只追踪与瞄准预览相关的牌：兜割（血条预测）与基酒/鸡尾酒（描述+光效切换）
         if (__instance.Model is not (HelmBreaker or ISpiritModeCard)) return;
 
         CardAimPreview.SetAim(__instance.Model, creature);
 
-        // 基酒/鸡尾酒：按瞄准目标刷新卡牌描述。
+        // 基酒/鸡尾酒：按瞄准目标刷新描述与发光边框。
         // 原版 SetPreviewTarget 内的 UpdateVisuals 在我们的状态更新之前执行，
-        // 因此这里再刷一次，拿到新状态下的描述。
-        if (__instance.Model is ISpiritModeCard)
-            __instance.UpdateVisuals(__instance.DisplayingPile, CardPreviewMode.Normal);
+        // 因此这里用与右键切换相同的 holder.UpdateCard() 再刷一次
+        // （UpdateCard = UpdateVisuals 描述刷新 + CardHighlight 红/金发光判定）。
+        if (__instance.Model is ISpiritModeCard &&
+            NPlayerHand.Instance?.GetCardHolder(__instance.Model) is NHandCardHolder holder)
+        {
+            holder.UpdateCard();
+        }
     }
 }

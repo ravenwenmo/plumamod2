@@ -93,9 +93,16 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
     // 目标类型固定为"任意单位"：敌人、自己或友方均可选择，实际效果由所选目标的阵营决定
     public override TargetType TargetType => PlumaTargetTypes.AnyUnit;
 
-    // 发光：敌人发红光，友方发金光，自己不发光（原版默认）
-    protected override bool ShouldGlowRedInternal => _mode == SpiritMode.Enemy;
-    protected override bool ShouldGlowGoldInternal => _mode == SpiritMode.Ally;
+    // 发光：瞄准预览时按目标阵营发光（敌人红光、友方金光、自己无特殊光），
+    // 未瞄准时按右键 SpiritMode 发光
+    protected override bool ShouldGlowRedInternal =>
+        CardAimPreview.GetAimBranchFor(this) is SpiritTargetBranch aim
+            ? aim == SpiritTargetBranch.Enemy
+            : _mode == SpiritMode.Enemy;
+    protected override bool ShouldGlowGoldInternal =>
+        CardAimPreview.GetAimBranchFor(this) is SpiritTargetBranch aim
+            ? aim == SpiritTargetBranch.Ally
+            : _mode == SpiritMode.Ally;
 
     public Margarita() : base(energyCost, CardType.Skill, rarity, PlumaTargetTypes.AnyUnit, shouldShowInCardLibrary)
     {
