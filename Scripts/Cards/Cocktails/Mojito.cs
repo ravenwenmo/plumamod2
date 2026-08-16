@@ -145,7 +145,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 5 层渐入佳境
                 //await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowSelfAmount"].BaseValue, base.Owner.Creature, this);
                 

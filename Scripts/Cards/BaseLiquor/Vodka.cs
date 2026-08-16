@@ -137,7 +137,7 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 1 点能量
                 await PlayerCmd.GainEnergy(2, base.Owner);
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
@@ -158,7 +158,7 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 1 点能量
                 await PlayerCmd.GainEnergy(2, cardPlay.Target!.Player);
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----

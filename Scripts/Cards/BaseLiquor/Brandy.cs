@@ -138,7 +138,7 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 3 层临时敏捷（直接使用速度药水的 SpeedPotionPower，回合结束失去等量敏捷）
                 await PowerCmd.Apply<SpeedPotionPower>(choiceContext, base.Owner.Creature, DynamicVars["SpeedPotionAmount"].BaseValue,
                     base.Owner.Creature, this);
@@ -160,7 +160,7 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 3 层临时敏捷（直接使用速度药水的 SpeedPotionPower，回合结束失去等量敏捷）
                 await PowerCmd.Apply<SpeedPotionPower>(choiceContext, cardPlay.Target, DynamicVars["SpeedPotionAmount"].BaseValue,
                     base.Owner.Creature, this);

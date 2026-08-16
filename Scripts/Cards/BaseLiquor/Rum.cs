@@ -139,7 +139,7 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 2 层渐入佳境
                 //await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowAmount"].BaseValue, base.Owner.Creature, this);
                 // 抽牌
@@ -163,7 +163,7 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 2 层渐入佳境
                 //await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAmount"].BaseValue,base.Owner.Creature, this);
                 // 抽牌

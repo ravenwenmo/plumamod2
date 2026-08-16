@@ -138,7 +138,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 2 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
                 await PowerCmd.Apply<FlexPotionPower>(choiceContext, base.Owner.Creature, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);
@@ -160,7 +160,7 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 2 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
                 await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);

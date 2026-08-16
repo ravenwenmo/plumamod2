@@ -50,13 +50,15 @@ public class FeintPower : ModPowerTemplate
             if (wound == null || wound.Amount <= 0) break;
 
             // 使用 ThrowingPlayerChoiceContext 代替 choiceContext
+            // 伤害来源设为持有者自身：dealer 传 null 会让原版 LeadershipPower 等能力
+            // 在 ModifyDamage 中空引用（先解引用 dealer 再检查 Unpowered），
+            // 异常会杀死敌方回合循环导致多人客户端卡死。
             await CreatureCmd.Damage(
                 new ThrowingPlayerChoiceContext(),
                 base.Owner,
                 wound.Amount,
                 ValueProp.Unblockable | ValueProp.Unpowered,
-                null,
-                null
+                base.Owner
             );
             await PowerCmd.Decrement(wound);
         }

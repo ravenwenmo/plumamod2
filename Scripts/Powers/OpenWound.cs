@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -201,6 +202,8 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         private static async Task TriggerWound(PlayerChoiceContext choiceContext, Creature? dealer)
         {
             if (dealer == null) return;
+            // 战斗结束/结算中不再触发，避免 Cmd.Wait 因战斗拆除被取消而抛异常
+            if (dealer.CombatState?.IsLiveCombat() != true) return;
             if (dealer.HasPower<OpenWoundPower>())
             {
                 OpenWoundPower woundPower = dealer.GetPower<OpenWoundPower>();
@@ -213,16 +216,24 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
 
         [HarmonyPostfix]
         private static async Task<IEnumerable<DamageResult>> Postfix(
-        Task<IEnumerable<DamageResult>> __result,
-        PlayerChoiceContext choiceContext,
-        Creature? dealer)
+            Task<IEnumerable<DamageResult>> __result,
+            PlayerChoiceContext choiceContext,
+            Creature? dealer)
         {
-            // 等待原本的 Damage 完整执行
+            // 等待原本的 Damage 完整执行（原任务异常照常传播，保证多人状态一致）
             IEnumerable<DamageResult> results = await __result;
-            GD.Print($"OpenWoundPower_CreatureCmd_Damage_Patch.Postfix: dealer={dealer?.Name}, results.Count={results.Count()}");
 
-            // Damage 完成之后执行
-            await TriggerWound(choiceContext, dealer);
+            // 创伤触发是附加效果：任何异常只记录并忽略，
+            // 绝不能让它故障化 Damage 任务——调用方是敌方回合链，
+            // 异常会杀死整个回合循环导致客户端卡死（见多人卡死根因报告）。
+            try
+            {
+                await TriggerWound(choiceContext, dealer);
+            }
+            catch (Exception ex)
+            {
+                Entry.Logger.Warn($"创伤触发失败（已忽略，避免打断回合流程）: dealer={dealer?.Name} ex={ex}");
+            }
 
             // 保留原始 Damage 返回值
             return results;
@@ -242,13 +253,16 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
             if (i == 0) { await Cmd.Wait(0.2f); }
             try
             {
+                // 伤害来源设为持有者自身（与原版 ConstrictPower 等自伤能力惯例一致）：
+                // 原版部分能力（如 LeadershipPower）在 ModifyDamage 中先解引用 dealer 再检查
+                // Unpowered，dealer 传 null 会 NRE，异常沿 Damage 任务传播会杀死整个敌方
+                // 回合循环导致多人客户端卡死。
                 await CreatureCmd.Damage(
                     choiceContext,
                     base.Owner,
                     base.Amount,
                     ValueProp.Unpowered | ValueProp.Unblockable,
-                    null,   // 无攻击者
-                    null    // 无卡牌来源
+                    base.Owner
                 );
                 await PowerCmd.Decrement(this);
             }

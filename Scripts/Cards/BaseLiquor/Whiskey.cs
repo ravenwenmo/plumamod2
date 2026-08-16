@@ -138,7 +138,7 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
             case SpiritTargetBranch.Self:
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 3 层覆甲
                 await PowerCmd.Apply<PlatingPower>(choiceContext, base.Owner.Creature, DynamicVars["PlatingAmount"].BaseValue,
                     base.Owner.Creature, this);
@@ -160,7 +160,7 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
-                    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                    ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 // 获得 3 层覆甲
                 await PowerCmd.Apply<PlatingPower>(choiceContext, cardPlay.Target, DynamicVars["PlatingAmount"].BaseValue,
                     base.Owner.Creature, this);
