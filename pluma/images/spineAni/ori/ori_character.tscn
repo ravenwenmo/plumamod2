@@ -7,7 +7,7 @@
 [node name="Visuals" type="SpineSprite" parent="."]
 skeleton_data_res = ExtResource("1_klvby")
 preview_skin = "Default"
-preview_animation = "Idle"
+preview_animation = "low_health_loop"
 preview_frame = false
 preview_time = 0.0
 unique_name_in_owner = true
@@ -27,7 +27,4 @@ metadata/_edit_use_anchors_ = true
 unique_name_in_owner = true
 
 [node name="CenterPos" type="Marker2D" parent="."]
-unique_name_in_owner = true
-
-[node name="TalkPos" type="Marker2D" parent="."]
 unique_name_in_owner = true

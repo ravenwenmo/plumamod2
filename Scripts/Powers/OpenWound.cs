@@ -35,22 +35,14 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         // 只处理持有者发起的攻击，且不是创伤自身造成的伤害
         if (command.Attacker != base.Owner || _isApplying) return;
 
-        _isApplying = true;
-        try
-        {
-            await CreatureCmd.Damage(
-                choiceContext,
-                base.Owner,
-                base.Amount,
-                ValueProp.Unpowered | ValueProp.Unblockable,
-                null, null
-            );
-            await PowerCmd.Decrement(this);
-        }
-        finally
-        {
-            _isApplying = false;
-        }
+        // 多段攻击（如 3x3）是一个 AttackCommand 内部循环执行多段，
+        // Results 中每个内层列表对应实际执行的一段攻击；
+        // AOE 攻击每段只产生一个内层列表（多目标伤害都在同一个列表内）。
+        // 因此按列表数触发：多段按段数触发，AOE 不会因命中多个玩家而重复触发。
+        int hitCount = command.Results.Count();
+        if (hitCount <= 0) return;
+
+        await TriggerMultiple(choiceContext, hitCount);
     }
     
     public IEnumerable<HealthBarForecastSegment> GetHealthBarForecastSegments(HealthBarForecastContext context)

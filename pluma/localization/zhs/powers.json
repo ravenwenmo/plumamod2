@@ -1,6 +1,6 @@
 ﻿{
-  "PLUMA_POWER_RAPID_SLASHING_STACKS.description": "达到一定层数时再使用高速切割或额外进行一次高速切割",
-  "PLUMA_POWER_RAPID_SLASHING_STACKS.smartDescription": "达到一定层数时再使用高速切割或额外进行一次高速切割，已叠[blue]{Amount}层。",
+  "PLUMA_POWER_RAPID_SLASHING_STACKS.description": "达到一定层数时再使用高速切割会额外追加一段攻击，战斗结束不会清空该层数。",
+  "PLUMA_POWER_RAPID_SLASHING_STACKS.smartDescription": "达到一定层数时再使用高速切割会额外追加一段攻击，战斗结束不会清空该层数。已叠[blue]{Amount}层。",
   "PLUMA_POWER_RAPID_SLASHING_STACKS.title": "高速切割",
 
   "PLUMA_POWER_REAPER_HEALING_POWER.description": "造成伤害时恢复血量。",

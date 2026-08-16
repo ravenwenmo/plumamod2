@@ -177,8 +177,8 @@
   "PLUMA_CARD_HELM_BREAKER.description": "造成{Damage:diff()}点伤害。立即触发目标创伤至多7次。",
 
   "PLUMA_CARD_SCYTHE_UNITY.title": "人镰合一",
-  "PLUMA_CARD_SCYTHE_UNITY.description": "选择一张手牌，将其变为[gold]切割[/gold]。",
-  "PLUMA_CARD_SCYTHE_UNITY.selectPrompt": "选择一张手牌变为切割",
+  "PLUMA_CARD_SCYTHE_UNITY.description": "选择{CardsToConvert:diff()}张手牌，将其变为切割。",
+  "PLUMA_CARD_SCYTHE_UNITY.selectPrompt": "选择手牌变为切割",
 
   "PLUMA_CARD_HINT.title": "暗示",
   "PLUMA_CARD_HINT.description": "从抽牌堆选择1张牌，\n获得[gold]本能[/gold]。",

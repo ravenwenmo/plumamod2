@@ -28,6 +28,3 @@ unique_name_in_owner = true
 
 [node name="CenterPos" type="Marker2D" parent="."]
 unique_name_in_owner = true
-
-[node name="TalkPos" type="Marker2D" parent="."]
-unique_name_in_owner = true
