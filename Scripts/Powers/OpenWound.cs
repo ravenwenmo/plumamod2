@@ -58,7 +58,7 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         // 每个触发源都按"造成当前层数伤害，再减 1 层"结算，因此合并后
         // 整体为逐段递减序列；来源按触发先后排列：
         // 兜割预览（本回合出牌即触发）→ 假动作（敌方回合开始时触发）→ 攻击意图（敌方回合攻击时触发）。
-        int helmBreakerHits = HelmBreakerTargetPreview.IsAimingAt(base.Owner) ? HelmBreaker.TraumaTriggerCount : 0;
+        int helmBreakerHits = CardAimPreview.IsAimingWith<HelmBreaker>(base.Owner) ? HelmBreaker.TraumaTriggerCount : 0;
         int feintHits = GetFeintHitCount();
         int intentHits = GetEnemyAttackHitCount();
         int totalHits = helmBreakerHits + feintHits + intentHits;

@@ -39,7 +39,18 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
     private SpiritMode _mode = SpiritMode.Self; // 默认对自己
 
     // 当前模式的独立描述（供 SpiritModeDescriptionPatch 使用）
-    public LocString SpiritModeDescription => _mode switch
+    public LocString SpiritModeDescription => DescriptionForMode(_mode);
+
+    // 瞄准预览：按瞄准目标阵营返回对应分支描述（供 SpiritModeDescriptionPatch 使用）
+    public LocString GetSpiritDescriptionFor(SpiritTargetBranch branch) => branch switch
+    {
+        SpiritTargetBranch.Self  => DescriptionForMode(SpiritMode.Self),
+        SpiritTargetBranch.Enemy => DescriptionForMode(SpiritMode.Enemy),
+        SpiritTargetBranch.Ally  => DescriptionForMode(SpiritMode.Ally),
+        _ => DescriptionForMode(SpiritMode.Self)
+    };
+
+    private LocString DescriptionForMode(SpiritMode mode) => mode switch
     {
         SpiritMode.Self  => new LocString("cards", "PLUMA_CARD_OLD_FASHIONED_SELF_DESC"),
         SpiritMode.Enemy => new LocString("cards", "PLUMA_CARD_OLD_FASHIONED_ENEMY_DESC"),

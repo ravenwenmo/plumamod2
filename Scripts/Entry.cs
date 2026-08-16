@@ -127,8 +127,9 @@ public class Entry
         // 三形态卡牌（基酒/鸡尾酒）按当前 SpiritMode 显示独立描述
         SpiritModeDescriptionPatch.Apply();
 
-        // 追踪兜割的选目标过程，供创伤血条预测显示瞄准时的触发伤害
-        HelmBreakerTargetPreviewPatch.Apply();
+        // 追踪卡牌选目标过程：兜割瞄准时显示创伤血条预测，
+        // 基酒/鸡尾酒瞄准时按目标阵营切换卡牌描述
+        CardAimPreviewPatch.Apply();
 
     }
 }
