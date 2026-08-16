@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Combat.HealthBars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -50,28 +51,60 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         if (context.Creature != base.Owner || base.Amount <= 0)
             return Enumerable.Empty<HealthBarForecastSegment>();
 
-        int count = (int)base.Amount;
-        var segments = new List<HealthBarForecastSegment>();
-
         Color lightRed = new Color(1f, 0.6f, 0.6f);   // 浅红（左侧，对应短段）
         Color darkRed  = new Color(0.6f, 0.05f, 0.05f); // 深红（右侧，对应长段）
 
+        // 敌人持有创伤时，合并所有触发源的递减预测。
+        // 每个触发源都按"造成当前层数伤害，再减 1 层"结算，因此合并后
+        // 整体为逐段递减序列；来源按触发先后排列：
+        // 兜割预览（本回合出牌即触发）→ 假动作（敌方回合开始时触发）→ 攻击意图（敌方回合攻击时触发）。
+        int helmBreakerHits = HelmBreakerTargetPreview.IsAimingAt(base.Owner) ? HelmBreaker.TraumaTriggerCount : 0;
+        int feintHits = GetFeintHitCount();
+        int intentHits = GetEnemyAttackHitCount();
+        int totalHits = helmBreakerHits + feintHits + intentHits;
+        if (totalHits >= 1)
+        {
+            int amount = (int)base.Amount;
+            int segmentCount = totalHits < amount ? totalHits : amount;
+            var segments = new List<HealthBarForecastSegment>();
+            int order = 0; // order 越小越靠近右边缘，逐段向左累加
+            for (int i = 0; i < segmentCount; i++)
+            {
+                int segmentLength = amount - i;
+                float factor = (segmentCount == 1) ? 0f : (float)i / (segmentCount - 1);
+                // 右边缘（第一段、最长段）深红，越往左越浅，与原有风格一致
+                Color color = new Color(
+                    Mathf.Lerp(darkRed.R, lightRed.R, factor),
+                    Mathf.Lerp(darkRed.G, lightRed.G, factor),
+                    Mathf.Lerp(darkRed.B, lightRed.B, factor)
+                );
+
+                segments.Add(new HealthBarForecastSegment(
+                    segmentLength,                              // 该段长度 = 层数 - i
+                    color,
+                    HealthBarForecastGrowthDirection.FromRight,
+                    order,                                      // 排列顺序
+                    null                                        // material
+                ));
+                order += segmentLength;
+            }
+            return segments;
+        }
+
+        // 玩家持有 / 无任何触发源：保持原有单段显示
+        int count = (int)base.Amount;
+        var fallbackSegments = new List<HealthBarForecastSegment>();
         for (int i = 0; i < count; i++)
         {
             float factor = (count == 1) ? 0f : (float)i / (count - 1);
-            // 颜色从浅到深：i=0（最右边缘）→ 浅色，i=count-1（最左侧）→ 深色
-            // 但由于 order 越大越远离边缘（越靠左），所以 order=i 时：
-            // order 0（右边缘）为浅色，order 大（左侧）为深色 → 效果：左深右浅
-            // 若要左浅右深，可改为 order = count-1 - i，并保持颜色 lerp 方向不变
-            // 这里按你图示的“左浅右深”实现：order 从大到小，右侧浅
-            int order = count - 1 - i; // 反转：i=0 -> order 大（左侧），颜色浅
+            int order = count - 1 - i;
             Color color = new Color(
                 Mathf.Lerp(lightRed.R, darkRed.R, factor),
                 Mathf.Lerp(lightRed.G, darkRed.G, factor),
                 Mathf.Lerp(lightRed.B, darkRed.B, factor)
             );
 
-            segments.Add(new HealthBarForecastSegment(
+            fallbackSegments.Add(new HealthBarForecastSegment(
                 1,                                          // 长度 1
                 color,
                 HealthBarForecastGrowthDirection.FromRight,
@@ -80,7 +113,7 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
             ));
         }
 
-        return segments;
+        return fallbackSegments;
     }
     //效果意外还行的渐变颜色条，备选
     
@@ -118,6 +151,35 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
     */
     //我Chovy败给你了不要了
     
+    /// <summary>
+    /// 获取持有者下一次攻击意图的总段数（多个攻击意图的段数之和）。
+    /// 持有者不是敌人（玩家）或当前没有攻击意图时返回 0。
+    /// </summary>
+    private int GetEnemyAttackHitCount()
+    {
+        MonsterModel? monster = base.Owner?.Monster;
+        if (monster == null) return 0;
+
+        int hits = 0;
+        foreach (AbstractIntent intent in monster.NextMove.Intents)
+        {
+            if (intent is AttackIntent attackIntent)
+                hits += attackIntent.Repeats;
+        }
+        return hits;
+    }
+
+    /// <summary>
+    /// 获取持有者身上假动作（FeintPower）的总层数。
+    /// 只有敌人身上的假动作会触发创伤（敌方回合开始时），
+    /// 持有者是玩家或没有假动作时返回 0。
+    /// </summary>
+    private int GetFeintHitCount()
+    {
+        if (base.Owner?.IsMonster != true) return 0;
+        return base.Owner.Powers.OfType<FeintPower>().Sum(power => (int)power.Amount);
+    }
+
     /// <summary>
     /// 连续触发多次创伤效果，伤害来源与正常创伤一致（无攻击者、无卡牌）。
     /// </summary>

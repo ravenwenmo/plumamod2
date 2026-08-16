@@ -28,6 +28,9 @@ public class HelmBreaker : ModCardTemplate
     private const TargetType targetType = TargetType.AnyEnemy;
     private const bool shouldShowInCardLibrary = true;
 
+    // 兜割引爆创伤的触发次数上限（血条预测也读取此常量）
+    public const int TraumaTriggerCount = 7;
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
@@ -75,7 +78,7 @@ public class HelmBreaker : ModCardTemplate
 
             await UpdatePlayerPosition(playerNode, originalX - playerNode.GlobalPosition.X, originalY - playerNode.GlobalPosition.Y, 0.25f, false);
 
-            await wound.TriggerMultiple(choiceContext, 7);
+            await wound.TriggerMultiple(choiceContext, TraumaTriggerCount);
         } else {
             await UpdatePlayerPosition(playerNode, originalX - playerNode.GlobalPosition.X, originalY - playerNode.GlobalPosition.Y, 0.25f, false); // 回到原位
         }
