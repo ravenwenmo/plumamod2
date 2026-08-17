@@ -25,4 +25,6 @@ public class MyKeywords
     public static readonly CardKeyword BaseSpirit = ModContentRegistry.GetQualifiedKeywordId(Entry.ModId, nameof(BaseSpirit)).GetModCardKeyword(); // 新增
 
     public static readonly CardKeyword Cocktail = ModContentRegistry.GetQualifiedKeywordId(Entry.ModId, nameof(Cocktail)).GetModCardKeyword(); // 新增
+
+    public static readonly CardKeyword Tequila = ModContentRegistry.GetQualifiedKeywordId(Entry.ModId, nameof(Tequila)).GetModCardKeyword(); // 新增
 }

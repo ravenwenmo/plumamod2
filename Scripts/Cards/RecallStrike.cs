@@ -54,8 +54,12 @@ public class RecallStrike : ModCardTemplate
 
         if (previousCardPlay?.Card != null)
         {
-            // 3. 将那张牌放入手牌（参照 Headbutt 的用法）
-            await CardPileCmd.Add(previousCardPlay.Card, PileType.Hand);
+            if (previousCardPlay.Player == cardPlay.Player)
+            {
+                // 3. 将那张牌放入手牌（参照 Headbutt 的用法）
+                await CardPileCmd.Add(previousCardPlay.Card, PileType.Hand);
+            }
+            
         }
     }
 
