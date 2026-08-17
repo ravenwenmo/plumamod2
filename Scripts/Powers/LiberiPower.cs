@@ -38,7 +38,7 @@ public class LiberiPower : ModPowerTemplate
         await PowerCmd.Apply<OpenWoundPower>(
             choiceContext,
             target,
-            1,
+            base.Amount,
             base.Owner,
             cardSource
         );

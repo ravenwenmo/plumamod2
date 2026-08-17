@@ -65,7 +65,7 @@ public class FlowState : ModPowerTemplate
         if (cardSource is ButFocused)
             return 1m;
 
-        if (dealer == base.Owner && cardSource != null && cardSource.Type == CardType.Attack && base.Amount > 0)
+        if (dealer == base.Owner && cardSource != null && cardSource.Type == CardType.Attack && base.Amount > 0 && props.IsPoweredAttack())
         {
             return 1m + base.Amount * 3m / 100m;
         }

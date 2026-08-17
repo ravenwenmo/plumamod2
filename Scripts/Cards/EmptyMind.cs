@@ -54,7 +54,7 @@ public class EmptyMind : ModCardTemplate
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(1),
-        new CardsVar(2)
+        //new CardsVar(2)
     ];
 
     public EmptyMind() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -82,15 +82,15 @@ public class EmptyMind : ModCardTemplate
         // 3. 失去所有渐入佳境
         await PowerCmd.Remove<FlowState>(base.Owner.Creature);
 
-        // 4. 每失去5层，获得1点能量
-        int energyGain = lostFlowAmount / 5;
-        if (energyGain > 0)
+        // 4. 每失去1层，获得1点能量
+        int loseAmount = lostFlowAmount;
+        if (loseAmount > 0)
         {
-            await PlayerCmd.GainEnergy(energyGain, base.Owner);
+            await PlayerCmd.GainEnergy(loseAmount, base.Owner);
         }
 
         // 5. 抽牌（基础4张，升级后5张）
-        await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
+        await CardPileCmd.Draw(choiceContext,loseAmount, base.Owner);
     }
 
     // 悬浮提示：渐入佳境（方便查看效果）
@@ -101,6 +101,6 @@ public class EmptyMind : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Cards.UpgradeValueBy(1m); // 抽牌 2→3
+        base.EnergyCost.UpgradeBy(-1); // 1费 → 0费
     }
 }

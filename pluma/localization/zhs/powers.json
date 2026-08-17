@@ -102,5 +102,9 @@
 
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.title": "罗德岛酒吧",
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.description": "你手中每有一张[gold]鸡尾酒[/gold]，手牌上限额外+1。",
-  "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.smartDescription": "手中的鸡尾酒使手牌上限额外+1。"
+  "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.smartDescription": "手中的鸡尾酒使手牌上限额外+1。",
+
+  "PLUMA_POWER_PREMONITION_POWER.title": "预感",
+  "PLUMA_POWER_PREMONITION_POWER.description": "下个回合开始时，获得等同于层数的渐入佳境。",
+  "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。"
 }
