@@ -44,8 +44,8 @@ public class FullSpeedSlash : ModCardTemplate
 
         decimal baseDamage = DynamicVars.Damage.BaseValue;
 
-        // 基础两次攻击
-        for (int i = 0; i < 2; i++)
+        // 基础3次攻击
+        for (int i = 0; i < 3; i++)
         {
             await DamageCmd.Attack(baseDamage)
                 .FromCard(this, cardPlay)
