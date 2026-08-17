@@ -30,7 +30,7 @@ public static class TequilaCmd
             // 龙舌兰已存在，令龙舌兰回满生命值且意图变为攻击
             var tequila = summoner.Tequila()!;
             await CreatureCmd.Heal(tequila, tequila.MaxHp);
-            /* switch intent code */
+            (tequila.Monster as Monsters.Tequila)?.SwitchToAttackIntent();
             return new SummonResult(tequila, 0m);
         }
         else
@@ -43,9 +43,10 @@ public static class TequilaCmd
                 tequilaNode.Modulate = Colors.Transparent;
                 Tween tween = tequilaNode.CreateTween();
                 tween.TweenProperty(tequilaNode, "modulate", Colors.White, 0.3499999940395355).SetDelay(0.10000000149011612);
-                // tequilaNode.StartReviveAnim();
+                tequilaNode.StartSummonAnim();
             } 
             tequilaNode?.TrackBlockStatus(summoner.Creature);
+            
 
             int hp = Monsters.Tequila.INITIAL_HP;
             CombatManager.Instance.History.Summoned(combatState, hp, summoner);
