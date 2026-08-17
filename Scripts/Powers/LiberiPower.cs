@@ -27,7 +27,7 @@ public class LiberiPower : ModPowerTemplate
         Creature target, CardModel? cardSource)
     {
         // 只处理持有者造成的伤害，且目标存活，且不是创伤自身造成的伤害（防递归）
-        if (dealer != base.Owner || target == null || !target.IsAlive || target != base.Owner) return;
+        if (dealer != base.Owner || target == null || !target.IsAlive || target == base.Owner) return;
         // 自残（？）不会
         if (props.HasFlag(ValueProp.Unpowered) && props.HasFlag(ValueProp.Unblockable) && cardSource == null) return;
         
