@@ -311,5 +311,8 @@
 
   "PLUMA_CARD_REPEAT.title": "复读",
   "PLUMA_CARD_REPEAT.description": "选择一张手牌，复制它并给复制品添加[gold]本能[/gold]。",
-  "PLUMA_CARD_REPEAT.selectPrompt": "选择一张手牌进行复制"
+  "PLUMA_CARD_REPEAT.selectPrompt": "选择一张手牌进行复制",
+
+  "PLUMA_CARD_TEST_CARD.title": "龙舌兰",
+  "PLUMA_CARD_TEST_CARD.description": "[gold]龙舌兰支援[/gold]"
 }
