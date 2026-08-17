@@ -21,20 +21,4 @@ public class ExcellentMobilityPower : ModPowerTemplate
         IconPath: "res://pluma/images/powers/ExcellentMobility.png",
         BigIconPath: "res://pluma/images/powers/ExcellentMobility.png"
     );
-
-    public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
-    {
-        // 只响应渐入佳境层数变化，且目标是自己，且层数增加
-        if (power is FlowState && power.Owner == base.Owner && amount > 0)
-        {
-            // 每层能力提供1点格挡
-            await CreatureCmd.GainBlock(
-                base.Owner,
-                base.Amount,
-                ValueProp.Unpowered,
-                null,
-                fast: true
-            );
-        }
-    }
 }

@@ -49,6 +49,20 @@ public class FlowState : ModPowerTemplate
                 await modShard.CheckAndUpdateStrength();
             }
         }
+        
+        // 如果持有者拥有“优良机动”，则获得相应层数的格挡（在抽牌前触发）
+        var excellentMobility = base.Owner.Powers.OfType<ExcellentMobilityPower>().FirstOrDefault();
+        if (excellentMobility != null && excellentMobility.Amount > 0)
+        {
+            await CreatureCmd.GainBlock(
+                base.Owner,
+                excellentMobility.Amount,
+                ValueProp.Unpowered,
+                null,
+                fast: true
+            );
+        }
+        
         // 如果持有者拥有“风中之羽”，则不抽牌
         if (base.Owner.HasPower<WindFeatherPower>())
         {

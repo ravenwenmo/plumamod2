@@ -16,7 +16,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Kick : ModCardTemplate
 {
-    private const int energyCost = 1;
+    private const int energyCost = 2;
     private const CardType type = CardType.Attack;
     private const CardRarity rarity = CardRarity.Common; // 可根据需要调整
     private const TargetType targetType = TargetType.AnyEnemy;
@@ -35,7 +35,7 @@ public class Kick : ModCardTemplate
     // 动态变量：基础伤害8，抽牌数1
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(8m, ValueProp.Move),
+        new DamageVar(12m, ValueProp.Move),
         new CardsVar(1)
     };
 
@@ -57,7 +57,7 @@ public class Kick : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(1m);   // 伤害 8 → 9
+        DynamicVars.Damage.UpgradeValueBy(2m);   // 伤害 12 → 14
         DynamicVars.Cards.UpgradeValueBy(1m);    // 抽牌 1 → 2
     }
 }
