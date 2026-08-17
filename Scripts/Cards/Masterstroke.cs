@@ -18,7 +18,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Masterstroke : ModCardTemplate
 {
-    private const int energyCost = 3;
+    private const int energyCost = 2;
     private const CardType type = CardType.Attack;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.AnyEnemy;
@@ -36,6 +36,12 @@ public class Masterstroke : ModCardTemplate
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
             card?.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0
         )
+    };
+    
+    // 本能关键词
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.MuscleMemory
     };
 
     public Masterstroke() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
