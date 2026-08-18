@@ -47,13 +47,9 @@ public static class TequilaCmd
                 tequilaNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
             }
             await PowerCmd.Apply<TequilaSupportPower>(new ThrowingPlayerChoiceContext(), summoner.Creature, 1m, null, null);
-            int hp = Monsters.Tequila.INITIAL_HP;
-            await CreatureCmd.SetMaxHp(tequila, hp);
             tequilaNode?.TrackBlockStatus(summoner.Creature);
 
-            CombatManager.Instance.History.Summoned(combatState, hp, summoner);
-            await Hook.AfterSummon(combatState, choiceContext, summoner, hp);
-            return new SummonResult(summoner.Osty, hp);
+            return new SummonResult(tequila, tequila.CurrentHp);
         }
     }
 

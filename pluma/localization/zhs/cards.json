@@ -316,6 +316,6 @@
   "PLUMA_CARD_PREMONITION.title": "预感",
   "PLUMA_CARD_PREMONITION.description": "下回合开始时，获得{FlowStateAmount:diff()}层渐入佳境。",
   
-  "PLUMA_CARD_TEST_CARD.title": "龙舌兰",
-  "PLUMA_CARD_TEST_CARD.description": "[gold]龙舌兰支援[/gold]"
+  "PLUMA_CARD_TEST_TEQUILA.title": "龙舌兰",
+  "PLUMA_CARD_TEST_TEQUILA.description": "[gold]龙舌兰支援[/gold]"
 }

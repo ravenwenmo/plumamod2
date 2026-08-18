@@ -13,7 +13,7 @@ namespace Pluma.Scripts;
 public class TequilaPower : ModPowerTemplate
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Single;
+    public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/Tequila.png",

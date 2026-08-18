@@ -97,8 +97,8 @@
   "PLUMA_POWER_COCKTAIL_GUIDE_POWER.smartDescription": "鸡尾酒对自己或友方释放时，目标获得1点能量。",
 
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
-  "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加1层创伤。",
-  "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加1层 [gold]创伤[/gold] 。",
+  "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加创伤。",
+  "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加[blue]{Amount}[/blue]层[gold]创伤[/gold]。",
 
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.title": "罗德岛酒吧",
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.description": "你手中每有一张[gold]鸡尾酒[/gold]，手牌上限额外+1。",
@@ -106,5 +106,12 @@
 
   "PLUMA_POWER_PREMONITION_POWER.title": "预感",
   "PLUMA_POWER_PREMONITION_POWER.description": "下个回合开始时，获得等同于层数的渐入佳境。",
-  "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。"
+  "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
+
+  "PLUMA_POWER_TEQUILA_SUPPORT_POWER.title": "义兄妹の羁绊",
+  "PLUMA_POWER_TEQUILA_SUPPORT_POWER.description": "你的回合结束时，龙舌兰将采取行动；\n你的回合开始时，龙舌兰会切换意图；\n龙舌兰意图为攻击时，会吸收所有未被格挡的攻击伤害。",
+
+  "PLUMA_POWER_TEQUILA_POWER.title": "伺机而动",
+  "PLUMA_POWER_TEQUILA_POWER.description": "饮用基酒时，获得力量；饮用鸡尾酒时，增加攻击段数。",
+  "PLUMA_POWER_TEQUILA_POWER.smartDescription": "饮用基酒时，获得[blue]{Amount}[/blue]点[gold]力量[/gold]；\n饮用鸡尾酒时，增加[blue]{Amount}[/blue]段攻击。"
 }
