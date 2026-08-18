@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Rooms;
 using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -28,12 +29,13 @@ public class TequilaSupportPower : ModPowerTemplate
         if (Owner.Player == null)
         {
             throw new Exception("TequilaSupportPower: Only players can have TequilaSupportPower.");
-        } 
+        }
 
         if (!Owner.Player.IsTequilaAlive())
         {
             await PowerCmd.Remove<TequilaSupportPower>(Owner);
-        } else
+        }
+        else
         {
             await (Owner.Player.Tequila().Monster as Monsters.Tequila)?.Move();
         }
@@ -46,12 +48,13 @@ public class TequilaSupportPower : ModPowerTemplate
         if (Owner.Player == null)
         {
             throw new Exception("TequilaSupportPower: Only players can have TequilaSupportPower.");
-        } 
+        }
 
         if (!Owner.Player.IsTequilaAlive())
         {
             await PowerCmd.Remove<TequilaSupportPower>(Owner);
-        } else
+        }
+        else
         {
             await (Owner.Player.Tequila().Monster as Monsters.Tequila)?.SwitchIntent();
         }

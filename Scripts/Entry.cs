@@ -11,6 +11,7 @@ using  STS2RitsuLib.Scaffolding.Cards.HandOutline;
 using  STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Cards; // 提供 CardType 枚举
 using HarmonyLib;
+using Pluma.Scripts.Monsters;
 
 namespace Pluma.Scripts;
 
@@ -26,6 +27,9 @@ public class Entry
 
     // 高速切割层数数据句柄（run 内跨战斗保留，战斗外存档/读档恢复）
     public static PlayerRunSavedData<RapidSlashingStacksSave> RapidSlashingStacksData = null!;
+
+    // 龙舌兰状态存储
+    public static PlayerRunSavedData<TequilaState> TequilaStateData = null!;
 
     public static void Init()
     {
@@ -63,6 +67,14 @@ public class Entry
                 key: "rapid_slashing_stacks",
                 // 默认 0 层：新 run 槽位为空，不跨 run 继承层数
                 defaultFactory: () => new RapidSlashingStacksSave(),
+                options: new RunSavedDataOptions
+                {
+                    WritePolicy = RunSavedDataWritePolicy.WhenSet
+                });
+
+            TequilaStateData = store.RegisterPerPlayer(
+                key: "tequila_state",
+                defaultFactory: () => new TequilaState(),
                 options: new RunSavedDataOptions
                 {
                     WritePolicy = RunSavedDataWritePolicy.WhenSet

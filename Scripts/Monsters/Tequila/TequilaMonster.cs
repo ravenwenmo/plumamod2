@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
@@ -19,7 +20,7 @@ namespace Pluma.Scripts.Monsters;
 [RegisterMonster]
 public class Tequila : ModMonsterTemplate
 {
-    public const int INITIAL_HP = 20;
+    public const int INITIAL_HP = 40;
     public override int MinInitialHp => INITIAL_HP;
     public override int MaxInitialHp => INITIAL_HP;
     public static Vector2 MinOffset => new Vector2(10f, -10f);
@@ -41,7 +42,11 @@ public class Tequila : ModMonsterTemplate
 
     public override async Task AfterAddedToRoom()
     {
-        GD.Print($"[Tequila] Tequila added to room.");
+        await CreatureCmd.SetMaxHp(Creature, Math.Max(1, Entry.TequilaStateData.Get(Creature.PetOwner).MaxHp));
+        await CreatureCmd.SetCurrentHp(Creature, Math.Max(1, Entry.TequilaStateData.Get(Creature.PetOwner).Hp));
+        await PowerCmd.Apply<TequilaPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
+        GD.Print($"[Tequila] Tequila added to room. CurrentHp: {Creature.CurrentHp}, MaxHp: {Creature.MaxHp}");
+
         NCreature tequilaNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         tequilaNode?.ToggleIsInteractable(true);
         SetMoveImmediate(GetPowerUpIntent());
@@ -174,4 +179,17 @@ public class Tequila : ModMonsterTemplate
 		CreatureAnimator creatureAnimator = new CreatureAnimator(summonAnimState, controller);
 		return creatureAnimator;
 	}
+}
+
+public class TequilaState
+{
+    public int Hp { get; set; }
+
+    public int MaxHp { get; set; }
+
+    public TequilaState()
+    {
+        Hp = Tequila.INITIAL_HP;
+        MaxHp = Tequila.INITIAL_HP;
+    }
 }
