@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
@@ -31,6 +30,8 @@ public class Tequila : ModMonsterTemplate
     private static int PowerUpAmount => 3;
     // 意图2: 攻击
     private static int BasicDamage => 1;
+
+    public bool DieForYou { get; set; } = false;
 
     // 怪物场景
     public override MonsterAssetProfile AssetProfile => new(
@@ -120,12 +121,12 @@ public class Tequila : ModMonsterTemplate
         {
             SetMoveImmediate(GetPowerUpIntent());
             await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
-            await PowerCmd.Remove<DieForYouPower>(Creature);
+            DieForYou = false;
         } else
         {
             SetMoveImmediate(GetAttackIntent());
             await CreatureCmd.TriggerAnim(Creature, "Skill_1_Start", 0.3f);
-            await PowerCmd.Apply<DieForYouPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
+            DieForYou = true;
         }
     }
 
@@ -161,20 +162,17 @@ public class Tequila : ModMonsterTemplate
 		AnimState castAttackAnimState = new AnimState("Attack");
         AnimState castEndAnimState = new AnimState("Skill_1_End");
 		AnimState deadAnimState = new AnimState("Die");
-		AnimState hitAnimState = new AnimState("Die");
         summonAnimState.NextState = idleAnimState;
         idleAnimState.AddBranch("Dead", deadAnimState);
         idleAnimState.AddBranch("Skill_1_Start", castAnimState);
 		castAnimState.NextState = castIdleAnimState;
-        castIdleAnimState.AddBranch("Hit", hitAnimState);
         castIdleAnimState.AddBranch("Attack", castAttackAnimState);
         castIdleAnimState.AddBranch("Skill_1_End", castEndAnimState);
+        castIdleAnimState.AddBranch("Dead", deadAnimState);
         castAttackAnimState.AddBranch("Dead", deadAnimState);
 		castAttackAnimState.NextState = castIdleAnimState;
-        castAttackAnimState.AddBranch("Hit", hitAnimState);
         castAttackAnimState.AddBranch("Skill_1_End", castEndAnimState);
         castEndAnimState.AddBranch("Dead", deadAnimState);
-        hitAnimState.NextState = castIdleAnimState;
 		castEndAnimState.NextState = idleAnimState;
 		CreatureAnimator creatureAnimator = new CreatureAnimator(summonAnimState, controller);
 		return creatureAnimator;

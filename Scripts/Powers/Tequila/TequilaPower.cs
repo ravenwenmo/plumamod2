@@ -1,6 +1,7 @@
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
 using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -19,6 +20,31 @@ public class TequilaPower : ModPowerTemplate
         IconPath: "res://pluma/images/powers/Tequila.png",
         BigIconPath: "res://pluma/images/powers/Tequila.png"
     );
+
+    public override Creature ModifyUnblockedDamageTarget(Creature target, decimal _, ValueProp props, Creature? __)
+    {
+        if (!(Owner.Monster as Monsters.Tequila).DieForYou)
+        {
+            return target;
+        }
+
+        if (target != base.Owner.PetOwner?.Creature)
+        {
+            return target;
+        }
+
+        if (base.Owner.IsDead)
+        {
+            return target;
+        }
+
+        if (!props.IsPoweredAttack())
+        {
+            return target;
+        }
+
+        return base.Owner;
+    }
 
     public override async Task AfterCurrentHpChanged(Creature creature, decimal delta)
     {

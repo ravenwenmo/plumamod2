@@ -1,8 +1,10 @@
+using Godot;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
 using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -37,7 +39,13 @@ public class TequilaSupportPower : ModPowerTemplate
         }
         else
         {
-            await (Owner.Player.Tequila().Monster as Monsters.Tequila)?.Move();
+            Creature tequila = Owner.Player.Tequila();
+            await (tequila.Monster as Monsters.Tequila)?.Move();
+            foreach (PowerModel power in tequila.Powers.ToList())
+            {
+                GD.Print($"[TequilaSupportPower] BeforeSideTurnEnd: Calling BeforeSideTurnEnd for power {power.GetType().Name}");
+                await power.BeforeSideTurnEndEarly(choiceContext, side, [tequila]);
+            }
         }
     }
 
