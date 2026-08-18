@@ -1,7 +1,10 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Entities.RestSite;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using Pluma.Scripts.Commands;
+using Pluma.Scripts.Option;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -37,5 +40,16 @@ public class TestTequila : ModCardTemplate
 
     protected override void OnUpgrade()
     {
+    }
+
+    public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
+	{
+		if (player != base.Owner)
+		{
+			return false;
+		}
+
+        options.Add(new HealTequilaOption(player));
+        return true;
     }
 }

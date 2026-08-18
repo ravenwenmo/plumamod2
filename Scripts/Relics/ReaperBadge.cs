@@ -49,6 +49,8 @@ public class ReaperBadge : ModRelicTemplate
         Flash();
         await CreatureCmd.Heal(base.Owner.Creature, 1);
     }
+
+    private bool ban_heal = false;
     // 移除“休息”选项，让玩家无法选择
     public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
     {
@@ -64,16 +66,18 @@ public class ReaperBadge : ModRelicTemplate
         if (hasOtherEnabledOption)
         {
             options.Remove(healOption);
+            ban_heal = false;
             Flash();
             return true;
         }
+        ban_heal = true;
         return false;
     }
     
     // 让“休息”回血变为 0，选项保留，避免卡死
     public override decimal ModifyRestSiteHealAmount(Creature creature, decimal originalAmount)
     {
-        if (creature == base.Owner.Creature)
+        if (creature == base.Owner.Creature && ban_heal)
         {
             Flash();
             return 0;

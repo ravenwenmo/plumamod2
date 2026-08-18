@@ -50,11 +50,8 @@ public class TequilaPower : ModPowerTemplate
     {
         if (creature != Owner) return;
 
-        Entry.TequilaStateData.Modify(creature.PetOwner, state => {
-            state.Hp = Math.Max(1, creature.CurrentHp);
-            state.MaxHp = Math.Max(1, creature.MaxHp);
-            });
+        TequilaState.SetHp(creature.PetOwner, creature.CurrentHp, creature.MaxHp);
 
-        GD.Print($"[TequilaPower] TequilaStateDataChanged: Hp: {Entry.TequilaStateData.Get(creature.PetOwner).Hp}, MaxHp: {Entry.TequilaStateData.Get(creature.PetOwner).MaxHp}");
+        GD.Print($"[TequilaPower] TequilaStateDataChanged: Hp: {TequilaState.GetHp(creature.PetOwner)}, MaxHp: {TequilaState.GetMaxHp(creature.PetOwner)}");
     }    
 }

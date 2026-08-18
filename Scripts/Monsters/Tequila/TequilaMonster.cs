@@ -178,16 +178,3 @@ public class Tequila : ModMonsterTemplate
 		return creatureAnimator;
 	}
 }
-
-public class TequilaState
-{
-    public int Hp { get; set; }
-
-    public int MaxHp { get; set; }
-
-    public TequilaState()
-    {
-        Hp = Tequila.INITIAL_HP;
-        MaxHp = Tequila.INITIAL_HP;
-    }
-}
