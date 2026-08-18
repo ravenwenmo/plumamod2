@@ -13,7 +13,7 @@ namespace Pluma.Scripts;
 
 // 多索雷斯调酒指南：1费稀有能力牌。获得调酒指南能力。升级后固有。
 [RegisterCard(typeof(PlumaCardPool))]
-public class CocktailGuide : ModCardTemplate
+public class CocktailGuide : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Power;

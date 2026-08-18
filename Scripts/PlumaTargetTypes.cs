@@ -16,10 +16,12 @@ public static class PlumaTargetTypes
     private static TargetType? _anyUnit;
 
     /// <summary>
-    /// "任意单位"：允许选择任意存活且非宠物的单位（敌人、自己、友方玩家）。
+    /// "任意单位"：允许选择任意存活单位（敌人、自己、友方玩家、宠物如龙舌兰）。
+    /// 宠物（如龙舌兰）位于玩家侧，SpiritTargeting 会将其解析为 Ally 分支，
+    /// 享受与友方单位相同的效果。
     /// 卡牌打出后根据所选目标的阵营执行不同效果。
     /// </summary>
     public static TargetType AnyUnit => _anyUnit ??= RitsuLibFramework.RegisterSingleTargetType(
         Entry.ModId, "any_unit",
-        creature => creature != null && creature.IsAlive && !creature.IsPet);
+        creature => creature != null && creature.IsAlive);
 }

@@ -12,7 +12,7 @@ namespace Pluma.Scripts;
 
 // 随机调酒组合：2费普通技能牌，消耗。获得1张随机基酒到手牌，并将1张辅料组合包放入弃牌堆。升级后费用减1。
 [RegisterCard(typeof(PlumaCardPool))]
-public class RandomMixologySet : ModCardTemplate
+public class RandomMixologySet : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Skill;

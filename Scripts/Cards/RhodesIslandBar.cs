@@ -13,7 +13,7 @@ namespace Pluma.Scripts;
 
 // 罗德岛酒吧：1费稀有能力牌。获得罗德岛酒吧能力。升级后固有。
 [RegisterCard(typeof(PlumaCardPool))]
-public class RhodesIslandBar : ModCardTemplate
+public class RhodesIslandBar : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Power;

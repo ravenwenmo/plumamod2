@@ -28,8 +28,8 @@ public class Entry
     // 高速切割层数数据句柄（run 内跨战斗保留，战斗外存档/读档恢复）
     public static PlayerRunSavedData<RapidSlashingStacksSave> RapidSlashingStacksData = null!;
 
-    // 兄弟状态存储
-    public static PlayerRunSavedData<BrotherState> BrotherStateData = null!;
+    // 龙舌兰状态存储（力量、意图、剩余攻击回合、生命值）
+    public static PlayerRunSavedData<BrotherStateData> BrotherStateData = null!;
 
     public static void Init()
     {
@@ -74,7 +74,7 @@ public class Entry
 
             BrotherStateData = store.RegisterPerPlayer(
                 key: "brother_state",
-                defaultFactory: () => new BrotherState(),
+                defaultFactory: () => new BrotherStateData(),
                 options: new RunSavedDataOptions
                 {
                     WritePolicy = RunSavedDataWritePolicy.WhenSet
@@ -105,6 +105,8 @@ public class Entry
         {
             GD.Print($"[pluma] RunSavedDataPreparing event: multiplayer={evt.IsMultiplayer}");
             PlumaSkinSyncAction.EnsureLocalSkinSynced(evt.RunState);
+            // 新 run 开始时清空龙舌兰力量的内存镜像，避免跨 run 残留
+            Monsters.BrotherStateData.ClearMirror();
         });
 
 

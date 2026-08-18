@@ -12,7 +12,7 @@ namespace Pluma.Scripts;
 
 // 我喝两杯：2费罕见技能，本能，消耗。获得2张随机基酒，将1张辅料组合包放入抽牌堆和弃牌堆。升级后费用减1。
 [RegisterCard(typeof(PlumaCardPool))]
-public class DrinksForTwo : ModCardTemplate
+public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 2;
     private const CardType type = CardType.Skill;

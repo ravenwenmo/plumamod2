@@ -14,7 +14,7 @@ namespace Pluma.Scripts;
 
 // 补货联络：1费罕见技能牌。获得1张辅料组合包，并在接下来的两个回合开始时各获得1张随机基酒。升级后辅料组合包升级。
 [RegisterCard(typeof(PlumaCardPool))]
-public class RestockCall : ModCardTemplate
+public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Skill;

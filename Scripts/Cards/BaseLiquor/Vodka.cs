@@ -22,7 +22,7 @@ namespace Pluma.Scripts;
 // 伏特加：0费生成技能牌，基酒。目标为任意单位（敌人/自己/友方），实际效果由所选目标的阵营决定；右键仅在本机循环切换提示与光效，不影响实际效果。
 // 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得1点能量。
 [RegisterCard(typeof(TokenCardPool))]
-public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard
+public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard, IBaseSpiritRelatedCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -159,6 +159,11 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
+                // 宠物（如龙舌兰）无法获得能量，转为获得等量力量
+                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, 2, base.Owner.Creature, this))
+                {
+                    break;
+                }
                 // 获得 1 点能量
                 await PlayerCmd.GainEnergy(2, cardPlay.Target!.Player);
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----

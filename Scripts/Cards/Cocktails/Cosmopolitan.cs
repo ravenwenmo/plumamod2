@@ -22,7 +22,7 @@ namespace Pluma.Scripts;
 // 大都会：0费生成技能牌，鸡尾酒。目标为任意单位（敌人/自己/友方），实际效果由所选目标的阵营决定；右键仅在本机循环切换提示与光效，不影响实际效果。
 // 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得4点能量。升级后伤害+3并获得保留。
 [RegisterCard(typeof(TokenCardPool))]
-public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, ICocktailCard
+public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, ICocktailCard, IBaseSpiritRelatedCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -165,6 +165,11 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
                 // 先让目标失去 1 点生命（穿透伤害）
                 //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                 //    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                // 宠物（如龙舌兰）无法获得能量，转为获得等量力量
+                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, DynamicVars.Energy.BaseValue, base.Owner.Creature, this))
+                {
+                    break;
+                }
                 // 获得 2 点能量
                 await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, cardPlay.Target!.Player);
                 // ---- 旧效果（对友方施加1层易伤，已注释保留）----

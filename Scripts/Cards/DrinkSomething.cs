@@ -14,7 +14,7 @@ namespace Pluma.Scripts;
 
 // 随便喝点啥：1费罕见技能牌。获得1张随机基酒，并抽1张牌。升级后抽2张。
 [RegisterCard(typeof(PlumaCardPool))]
-public class DrinkSomething : ModCardTemplate
+public class DrinkSomething : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Skill;

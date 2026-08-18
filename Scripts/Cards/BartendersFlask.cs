@@ -16,7 +16,7 @@ namespace Pluma.Scripts;
 // 调酒师的小壶：1费罕见技能，本能。手牌中没有基酒时获得1张随机基酒，否则获得1张辅料组合包。
 [RegisterCard(typeof(PlumaCardPool))]
 [RegisterCharacterStarterCard(typeof(PlumaCharacter), 1)]
-public class BartendersFlask : ModCardTemplate
+public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Skill;

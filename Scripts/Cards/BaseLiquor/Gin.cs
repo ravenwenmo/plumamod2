@@ -22,7 +22,7 @@ namespace Pluma.Scripts;
 // 金酒：0费生成技能牌，基酒。目标为任意单位（敌人/自己/友方），实际效果由所选目标的阵营决定；右键仅在本机循环切换提示与光效，不影响实际效果。
 // 效果：对敌人造成3点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得3层临时力量（回合结束失去等量力量）。
 [RegisterCard(typeof(TokenCardPool))]
-public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard
+public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISpiritModeCard, IBaseSpiritRelatedCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;

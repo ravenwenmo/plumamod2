@@ -14,7 +14,7 @@ namespace Pluma.Scripts;
 
 // 即时搭配：1费罕见能力牌。每当获得一张基酒牌时，向抽牌堆加入1张辅料组合包。升级后加入的辅料包是升级过的。
 [RegisterCard(typeof(PlumaCardPool))]
-public class InstantPair : ModCardTemplate
+public class InstantPair : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Power;

@@ -109,9 +109,16 @@
   "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
 
   "PLUMA_POWER_BROTHER_SUPPORT_POWER.title": "义兄妹の羁绊",
-  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "你的回合结束时，兄弟将采取行动；\n你的回合开始时，兄弟会切换意图；\n兄弟意图为攻击时，会吸收所有未被格挡的攻击伤害。",
+  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "你的回合开始时，龙舌兰在强化循环意图下获得1点力量，力量达到10点后切换为攻击循环意图；\n你的回合结束时，龙舌兰在攻击循环意图下造成群体伤害；\n攻击循环持续3回合，结束后清空力量并回到强化循环。\n攻击循环意图期间，龙舌兰会吸收所有未被格挡的攻击伤害。",
 
   "PLUMA_POWER_BROTHER_POWER.title": "伺机而动",
   "PLUMA_POWER_BROTHER_POWER.description": "饮用基酒时，获得力量；饮用鸡尾酒时，增加攻击段数。",
-  "PLUMA_POWER_BROTHER_POWER.smartDescription": "饮用基酒时，获得[blue]{Amount}[/blue]点[gold]力量[/gold]；\n饮用鸡尾酒时，增加[blue]{Amount}[/blue]段攻击。"
+  "PLUMA_POWER_BROTHER_POWER.smartDescription": "饮用基酒时，获得[blue]{Amount}[/blue]点[gold]力量[/gold]；\n饮用鸡尾酒时，增加[blue]{Amount}[/blue]段攻击。",
+
+  "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.title": "多段斩",
+  "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰攻击循环意图的群体伤害段数增加等同于层数的次数。",
+
+  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.title": "攻击循环",
+  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.description": "龙舌兰处于攻击循环意图，剩余[blue]{Amount}[/blue]回合后回到强化循环。",
+  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.smartDescription": "剩余[blue]{Amount}[/blue]回合后回到强化循环。"
 }

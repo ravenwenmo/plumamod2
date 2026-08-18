@@ -1,4 +1,4 @@
 {
-    "OPTION_Pluma_HealBrother.description": "回复兄弟最大生命值的60%（{Heal}）。{ExtraText}",
+    "OPTION_Pluma_HealBrother.description": "回复龙舌兰最大生命值的60%（{Heal}）。{ExtraText}",
     "OPTION_Pluma_HealBrother.name": "休息"
 }

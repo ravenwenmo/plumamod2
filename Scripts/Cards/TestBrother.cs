@@ -10,7 +10,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 兄弟：兄弟支援（召唤20生命值的兄弟，若兄弟已存在则令其回满生命值并切换意图为攻击）
+// 龙舌兰：龙舌兰支援（召唤龙舌兰，若龙舌兰已存在则令其回满生命值并切换为攻击循环意图）
 // 仅作测试用
 [RegisterCard(typeof(TokenCardPool))]
 public class TestBrother : ModCardTemplate

@@ -22,7 +22,7 @@ namespace Pluma.Scripts;
 // 莫吉托：0费生成技能牌，鸡尾酒。目标为任意单位（敌人/自己/友方），实际效果由所选目标的阵营决定；右键仅在本机循环切换提示与光效，不影响实际效果。
 // 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得6层渐入佳境。升级后伤害+3并获得保留。
 [RegisterCard(typeof(TokenCardPool))]
-public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, ICocktailCard
+public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, ICocktailCard, IBaseSpiritRelatedCard
 {
     private const int energyCost = 0;
     private const CardRarity rarity = CardRarity.Token;
@@ -171,6 +171,11 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
                 // 获得 5 层渐入佳境
                 //await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAllyAmount"].BaseValue, base.Owner.Creature, this);
                 
+                // 宠物（如龙舌兰）无法抽牌，转为获得等量力量
+                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue, base.Owner.Creature, this))
+                {
+                    break;
+                }
                 // 抽牌
                 await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(
                     choiceContext,
