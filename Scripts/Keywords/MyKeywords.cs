@@ -13,6 +13,8 @@ namespace Pluma.Scripts;
 [RegisterOwnedCardKeyword(nameof(BaseSpirit), CardDescriptionPlacement = ModKeywordCardDescriptionPlacement.BeforeCardDescription)] // 新增基酒
 
 [RegisterOwnedCardKeyword(nameof(Cocktail), CardDescriptionPlacement = ModKeywordCardDescriptionPlacement.BeforeCardDescription)] // 新增鸡尾酒
+
+[RegisterOwnedCardKeyword(nameof(Tequila), CardDescriptionPlacement = ModKeywordCardDescriptionPlacement.BeforeCardDescription)]
 // [RegisterOwnedCardKeyword(nameof(Unique2), IconPath = "res://icon.svg")] // 如果要加更多关键词，添加特性
 // 由于写法和ritsulib标准不同，这里不能用static静态类！！
 public class MyKeywords

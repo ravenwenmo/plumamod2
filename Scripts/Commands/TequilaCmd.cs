@@ -30,9 +30,8 @@ public static class TequilaCmd
         Creature tequila = combatState.Allies.FirstOrDefault((Creature c) => c.Monster is Monsters.Tequila && c.PetOwner == summoner);
         if (summoner.IsTequilaAlive())
         {
-            // 龙舌兰已存在，令龙舌兰回满生命值且意图变为攻击
-            await CreatureCmd.Heal(tequila, tequila.MaxHp);
-            (tequila.Monster as Monsters.Tequila)?.SwitchToAttackIntent();
+            // 龙舌兰已存在，令龙舌兰执行行动并切换意图
+            (tequila.Monster as Monsters.Tequila)?.OrderTequila();
             return new SummonResult(tequila, 0m);
         }
         else
@@ -47,6 +46,7 @@ public static class TequilaCmd
                 tween.TweenProperty(tequilaNode, "position", tequilaNode.Position + GetTequilaOffsetFromPlayer(tequila), 0.3);
                 tequilaNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
             }
+            await PowerCmd.Apply<TequilaSupportPower>(new ThrowingPlayerChoiceContext(), summoner.Creature, 1m, null, null);
             int hp = Monsters.Tequila.INITIAL_HP;
             await CreatureCmd.SetMaxHp(tequila, hp);
             tequilaNode?.TrackBlockStatus(summoner.Creature);

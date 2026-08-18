@@ -42,24 +42,15 @@ public class Tequila : ModMonsterTemplate
     public override async Task AfterAddedToRoom()
     {
         GD.Print($"[Tequila] Tequila added to room.");
-        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, 2m, Creature, null);
         NCreature tequilaNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         tequilaNode?.ToggleIsInteractable(true);
         SetMoveImmediate(GetPowerUpIntent());
     }
 
-    public async Task SwitchToAttackIntent()
+    public async Task OrderTequila()
     {
-        if (!IntendsToAttack)
-        {
-            //MegaAnimationState megaAnimationState = (NCombatRoom.Instance?.GetCreatureNode(Creature))?.SpineAnimation.GetAnimationState();
-            await CreatureCmd.TriggerAnim(Creature, "Skill_1_Start", 0.3f);
-            SetMoveImmediate(GetAttackIntent());
-        } else
-        {
-            GD.Print("[Tequila] Already intends to attack, attack directly.");
-            await AttackMove();
-        }
+        await Move();
+        await SwitchIntent();
     }
 
     // 仅用作显示，召唤物不主动执行意图
@@ -104,6 +95,37 @@ public class Tequila : ModMonsterTemplate
 
     private async Task PowerUpMove(IReadOnlyList<Creature> targets)
     {
+        await PowerUpMove();
+    }
+
+    public async Task Move()
+    {
+        if (IntendsToAttack)
+        {
+            await AttackMove();
+        } else
+        {
+            await PowerUpMove();
+        }
+    }
+
+    public async Task SwitchIntent()
+    {
+        if (IntendsToAttack)
+        {
+            SetMoveImmediate(GetPowerUpIntent());
+            await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
+            await PowerCmd.Remove<DieForYouPower>(Creature);
+        } else
+        {
+            SetMoveImmediate(GetAttackIntent());
+            await CreatureCmd.TriggerAnim(Creature, "Skill_1_Start", 0.3f);
+            await PowerCmd.Apply<DieForYouPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
+        }
+    }
+
+    private async Task PowerUpMove()
+    {
         await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, PowerUpAmount, Creature, null);
     }
 
@@ -122,10 +144,6 @@ public class Tequila : ModMonsterTemplate
             .WithAttackerFx(null, AttackSfx)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(null);
-
-        SetMoveImmediate(GetPowerUpIntent());
-
-        await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
     }
 
     public override CreatureAnimator GenerateAnimator(MegaSprite controller)
