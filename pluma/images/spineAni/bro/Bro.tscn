@@ -7,7 +7,7 @@
 [node name="Visuals" type="SpineSprite" parent="."]
 skeleton_data_res = ExtResource("1_sh74w")
 preview_skin = "Default"
-preview_animation = "Idle"
+preview_animation = "Attack"
 preview_frame = false
 preview_time = 0.0
 unique_name_in_owner = true
@@ -25,6 +25,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="IntentPos" type="Marker2D" parent="."]
 unique_name_in_owner = true
+position = Vector2(0, -269)
 
 [node name="CenterPos" type="Marker2D" parent="."]
 unique_name_in_owner = true
