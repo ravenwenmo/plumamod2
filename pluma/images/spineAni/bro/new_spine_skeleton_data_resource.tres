@@ -1,7 +1,7 @@
 [gd_resource type="SpineSkeletonDataResource" load_steps=3 format=3 uid="uid://b2ihvn7hi13xk"]
 
 [ext_resource type="SpineAtlasResource" uid="uid://cdi7rqfq4l4s3" path="res://pluma/images/spineAni/bro/char_486_takila.atlas" id="1_npq8e"]
-[ext_resource type="SpineSkeletonFileResource" uid="uid://dk4jdkit627f0" path="res://pluma/images/spineAni/bro/char_486_takila.skel" id="2_brcmf"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://1c8xykslp4fu" path="res://pluma/images/spineAni/bro/char_486_takila.skel" id="2_brcmf"]
 
 [resource]
 atlas_res = ExtResource("1_npq8e")
