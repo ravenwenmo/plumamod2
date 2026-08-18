@@ -17,12 +17,12 @@ public static class DamageBlockInternalPatch
         if (__instance.Player == null)
             return;
         
-        if (!__instance.Player.IsTequilaAlive())
+        if (!__instance.Player.IsBrotherAlive())
             return;
 
-        Creature tequila = __instance.Player.Tequila();
+        Creature brother = __instance.Player.Brother();
 
-        if (!(tequila.Monster as Tequila).DieForYou)
+        if (!(brother.Monster as Brother).DieForYou)
             return;
 
         decimal remaining =
@@ -33,7 +33,7 @@ public static class DamageBlockInternalPatch
             return;
 
         decimal petBlocked =
-            tequila.DamageBlockInternal(
+            brother.DamageBlockInternal(
                 remaining,
                 props
             );

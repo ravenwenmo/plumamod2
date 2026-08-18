@@ -108,10 +108,10 @@
   "PLUMA_POWER_PREMONITION_POWER.description": "下个回合开始时，获得等同于层数的渐入佳境。",
   "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
 
-  "PLUMA_POWER_TEQUILA_SUPPORT_POWER.title": "义兄妹の羁绊",
-  "PLUMA_POWER_TEQUILA_SUPPORT_POWER.description": "你的回合结束时，龙舌兰将采取行动；\n你的回合开始时，龙舌兰会切换意图；\n龙舌兰意图为攻击时，会吸收所有未被格挡的攻击伤害。",
+  "PLUMA_POWER_BROTHER_SUPPORT_POWER.title": "义兄妹の羁绊",
+  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "你的回合结束时，兄弟将采取行动；\n你的回合开始时，兄弟会切换意图；\n兄弟意图为攻击时，会吸收所有未被格挡的攻击伤害。",
 
-  "PLUMA_POWER_TEQUILA_POWER.title": "伺机而动",
-  "PLUMA_POWER_TEQUILA_POWER.description": "饮用基酒时，获得力量；饮用鸡尾酒时，增加攻击段数。",
-  "PLUMA_POWER_TEQUILA_POWER.smartDescription": "饮用基酒时，获得[blue]{Amount}[/blue]点[gold]力量[/gold]；\n饮用鸡尾酒时，增加[blue]{Amount}[/blue]段攻击。"
+  "PLUMA_POWER_BROTHER_POWER.title": "伺机而动",
+  "PLUMA_POWER_BROTHER_POWER.description": "饮用基酒时，获得力量；饮用鸡尾酒时，增加攻击段数。",
+  "PLUMA_POWER_BROTHER_POWER.smartDescription": "饮用基酒时，获得[blue]{Amount}[/blue]点[gold]力量[/gold]；\n饮用鸡尾酒时，增加[blue]{Amount}[/blue]段攻击。"
 }

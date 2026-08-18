@@ -11,6 +11,6 @@
   "PLUMA_KEYWORD_COCKTAIL.title": "鸡尾酒",
   "PLUMA_KEYWORD_COCKTAIL.description": "鸡尾酒由基酒经过辅料调制，可以右键切换文字描述。",
 
-  "PLUMA_KEYWORD_TEQUILA.title": "龙舌兰支援",
-  "PLUMA_KEYWORD_TEQUILA.description": "召唤龙舌兰协助战斗，\n若龙舌兰已存在则令其执行行动并切换意图（蓄力/攻击）"
+  "PLUMA_KEYWORD_BROTHER.title": "兄弟支援",
+  "PLUMA_KEYWORD_BROTHER.description": "召唤兄弟协助战斗，\n若兄弟已存在则令其执行行动并切换意图（蓄力/攻击）"
 }
