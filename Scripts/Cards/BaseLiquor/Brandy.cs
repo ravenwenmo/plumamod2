@@ -161,6 +161,12 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
+                
+                // 若为龙舌兰
+                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue, base.Owner.Creature, this))
+                {
+                    break;
+                }
                 // 获得 3 层临时敏捷（直接使用速度药水的 SpeedPotionPower，回合结束失去等量敏捷）
                 await PowerCmd.Apply<SpeedPotionPower>(choiceContext, cardPlay.Target, DynamicVars["SpeedPotionAmount"].BaseValue,
                     base.Owner.Creature, this);

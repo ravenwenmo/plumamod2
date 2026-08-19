@@ -57,6 +57,14 @@ public static class BrotherCmd
             await brother.Monster.AfterAddedToRoom();
             await PowerCmd.Apply<BrotherSupportPower>(new ThrowingPlayerChoiceContext(), summoner.Creature, 1m, null, null);
             brotherNode?.TrackBlockStatus(summoner.Creature);
+            //额外增加一个被动
+            await PowerCmd.Apply<MarkerRecoveryPower>(
+                choiceContext,
+                summoner.Creature,
+                1m,
+                null,
+                null
+            );
 
             return new SummonResult(brother, brother.CurrentHp);
         }

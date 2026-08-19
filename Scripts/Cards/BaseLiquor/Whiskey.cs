@@ -72,7 +72,7 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("PlatingAmount", 5),
+        ModCardVars.Int("PlatingAmount", 4),
         ModCardVars.Int("WeakAmount", 1)
     ];
 
@@ -161,6 +161,13 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
+                
+                // 龙舌兰
+                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue+1, base.Owner.Creature, this))
+                {
+                    break;
+                }
+                
                 // 获得 3 层覆甲
                 await PowerCmd.Apply<PlatingPower>(choiceContext, cardPlay.Target, DynamicVars["PlatingAmount"].BaseValue,
                     base.Owner.Creature, this);

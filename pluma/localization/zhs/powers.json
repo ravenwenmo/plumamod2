@@ -123,10 +123,14 @@
   "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.smartDescription": "龙舌兰处于解放者（解放），[blue]{Amount}[/blue]回合后回到解放者（通常）。",
 
   "PLUMA_POWER_MARKER_RECOVERY_POWER.title": "标志物回收",
-  "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或辅料牌时，获得等于层数的力量。",
-  "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "每当消耗基酒牌或辅料牌时，获得 [blue]{Amount}[/blue] 点力量。",
+  "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得等于层数的力量或额外攻击段数。",
+  "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得[blue]{Amount}[/blue]点力量或额外攻击段数。",
 
   "PLUMA_POWER_DOUBLE_IDENTITY_POWER.title": "双重身份",
-  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入强化循环时，立即获得[blue]4[/blue]点力量，随后进入冷却；龙舌兰进入攻击循环后冷却刷新。",
-  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入强化循环时获得 [blue]4[/blue] 点力量，进入攻击循环后冷却刷新。"
+  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入解放者（通常）时，立即获得[blue]4[/blue]点力量，随后进入冷却；龙舌兰进入解放者（解放）后冷却刷新。",
+  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入解放者（通常）时获得 [blue]4[/blue] 点力量，进入解放者（解放）后冷却刷新。",
+
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.title": "伺机而动",
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.description": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，对伤害来源造成（龙舌兰基础攻击力+当前力量）×层数的伤害。",
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.smartDescription1": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，对伤害来源造成[blue]{Amount}%×基础攻击+力量[/blue]点伤害。"
 }

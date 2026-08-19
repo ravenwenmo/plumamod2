@@ -37,7 +37,7 @@ public class Brother : ModMonsterTemplate
     // 攻击基础段数（额外段数由 BrotherExtraHitsPower 层数提供）
     public const int ATTACK_BASE_HITS = 1;
     // 每段基础伤害
-    private const int BasicDamage = 4;
+    public  const int BasicDamage = 4;
 
     public override int MinInitialHp => INITIAL_HP;
     public override int MaxInitialHp => INITIAL_HP;
@@ -66,7 +66,14 @@ public class Brother : ModMonsterTemplate
         await PowerCmd.Apply<BrotherPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
         await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetAttackTurnsRemaining(Creature.PetOwner), null, null);
         await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetStrength(Creature.PetOwner), null, null);
-
+        //额外增加一个被动
+        await PowerCmd.Apply<MarkerRecoveryPower>(
+            new ThrowingPlayerChoiceContext(),
+            Creature,
+            1m,
+            null,
+            null
+        );
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         brotherNode?.ToggleIsInteractable(true);
     }

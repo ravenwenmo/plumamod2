@@ -12,7 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 伺机而动：力量达到一定层数时，进入数回合的攻击意图。
+// 解放：力量达到一定层数时，进入数回合的攻击意图。
 // 同时用于检测龙舌兰生命值增减并在BrotherStateData中更新；龙舌兰死亡时重置持久化状态
 [RegisterPower]
 public class BrotherPower : ModPowerTemplate

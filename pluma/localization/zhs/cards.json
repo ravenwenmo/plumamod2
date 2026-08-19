@@ -51,7 +51,7 @@
   "PLUMA_CARD_FLOW.description": "获得[gold]{FlowStateAmount}[/gold]层[gold]渐入佳境[/gold]。",
   
   "PLUMA_CARD_MOMENTUM.title": "势头",
-  "PLUMA_CARD_MOMENTUM.description": "获得{StrengthAmount:diff()}点[gold]力量[/gold]。",
+  "PLUMA_CARD_MOMENTUM.description": "你和龙舌兰都获得{StrengthAmount:diff()}点[gold]力量[/gold]。",
   
   "PLUMA_CARD_EMPTY_MIND.title": "放空",
   "PLUMA_CARD_EMPTY_MIND.description": "洗牌。失去所有[gold]渐入佳境[/gold]，每失去1层，获得{Energy:energyIcons()}并抽1张牌。",
@@ -308,8 +308,11 @@
   "PLUMA_CARD_TEST_BROTHER.description": "[gold]龙舌兰支援[/gold]",
 
   "PLUMA_CARD_MARKER_RECOVERY.title": "标志物回收",
-  "PLUMA_CARD_MARKER_RECOVERY.description": "若龙舌兰在场，每当你消耗基酒牌或辅料牌，龙舌兰获得 1 点力量；否则你获得 1 点力量。",
+  "PLUMA_CARD_MARKER_RECOVERY.description": "若龙舌兰在场，每当你消耗基酒牌或辅料牌，龙舌兰获得1点力量；否则你获得1点力量。",
 
   "PLUMA_CARD_DOUBLE_IDENTITY.title": "双重身份",
-  "PLUMA_CARD_DOUBLE_IDENTITY.description": "让龙舌兰获得能力「双重身份」：龙舌兰每次进入强化循环时，立即获得[blue]4[/blue]点力量，随后该能力进入冷却；龙舌兰进入攻击循环后冷却刷新。"
+  "PLUMA_CARD_DOUBLE_IDENTITY.description": "让龙舌兰获得能力「双重身份」：龙舌兰每次进入强化循环时，立即获得[blue]4[/blue]点力量，随后该能力进入冷却；龙舌兰进入攻击循环后冷却刷新。",
+
+  "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.title": "伺机而动",
+  "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.description": "龙舌兰处于解放者（通常）时，若龙舌兰或后方单位受到伤害，对伤害来源造成[blue]{Stacks:diff()}%[/blue]×[red]基础攻击+力量[/red]点伤害。"
 }

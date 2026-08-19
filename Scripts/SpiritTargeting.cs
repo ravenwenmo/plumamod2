@@ -48,4 +48,58 @@ public static class SpiritTargeting
         await PowerCmd.Apply<StrengthPower>(choiceContext, target, amount, applier, source);
         return true;
     }
+
+    /// <summary>
+    /// 目标为宠物时，将玩家专属增益转换为对宠物施加等量再生（Regen）。
+    /// </summary>
+    public static async Task<bool> ApplyRegenToPetInstead(
+        PlayerChoiceContext choiceContext,
+        Creature? target,
+        decimal amount,
+        Creature applier,
+        CardModel source)
+    {
+        if (target == null || !target.IsPet)
+        {
+            return false;
+        }
+        await PowerCmd.Apply<RegenPower>(choiceContext, target, amount, applier, source);
+        return true;
+    }
+
+    /// <summary>
+    /// 目标为宠物时，将玩家专属增益转换为对宠物施加等量覆甲（Plating）。
+    /// </summary>
+    public static async Task<bool> ApplyPlatingToPetInstead(
+        PlayerChoiceContext choiceContext,
+        Creature? target,
+        decimal amount,
+        Creature applier,
+        CardModel source)
+    {
+        if (target == null || !target.IsPet)
+        {
+            return false;
+        }
+        await PowerCmd.Apply<PlatingPower>(choiceContext, target, amount, applier, source);
+        return true;
+    }
+
+    /// <summary>
+    /// 目标为宠物时，将玩家专属回复效果转换为对宠物治疗等量生命值。
+    /// </summary>
+    public static async Task<bool> ApplyHealToPetInstead(
+        PlayerChoiceContext choiceContext,
+        Creature? target,
+        decimal amount,
+        Creature applier,
+        CardModel source)
+    {
+        if (target == null || !target.IsPet)
+        {
+            return false;
+        }
+        await CreatureCmd.Heal(target, amount);
+        return true;
+    }
 }

@@ -161,6 +161,13 @@ public class Tequila : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
+                
+                // 龙舌兰额外1层?
+                if (await SpiritTargeting.ApplyRegenToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue+1, base.Owner.Creature, this))
+                {
+                    break;
+                }
+                
                 // 施加 3 层再生
                 await PowerCmd.Apply<RegenPower>(choiceContext, cardPlay.Target, DynamicVars["RegenAmount"].BaseValue,
                     base.Owner.Creature, this);

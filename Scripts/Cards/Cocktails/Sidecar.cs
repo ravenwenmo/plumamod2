@@ -164,6 +164,13 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
                 // 先让目标失去 1 点生命（穿透伤害）
                 //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
                 // 获得 3 层敏捷
+                
+                // 龙舌兰
+                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue*2, base.Owner.Creature, this))
+                {
+                    break;
+                }
+                
                 await PowerCmd.Apply<DexterityPower>(choiceContext, cardPlay.Target, DynamicVars["DexterityAmount"].BaseValue,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对友方获得1点能量，已注释保留）----

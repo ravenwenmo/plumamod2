@@ -164,6 +164,13 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
+                
+                // 龙舌兰
+                if (await SpiritTargeting.ApplyHealToPetInstead(choiceContext, cardPlay.Target, 10, base.Owner.Creature, this))
+                {
+                    break;
+                }
+                
                 // 获得 1 层收割者
                 await PowerCmd.Apply<ReaperHealingPower>(choiceContext, cardPlay.Target, DynamicVars["ReaperHealingAmount"].BaseValue,
                     base.Owner.Creature, this);

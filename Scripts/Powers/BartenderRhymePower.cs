@@ -20,7 +20,7 @@ public class BartenderRhymePower : ModPowerTemplate
         IconPath: "res://pluma/images/powers/BartenderRhyme.png",
         BigIconPath: "res://pluma/images/powers/BartenderRhyme.png"
     );
-
+    
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 只处理持有者打出的辅料组合包

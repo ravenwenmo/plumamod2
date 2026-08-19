@@ -8,6 +8,8 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using Pluma.Scripts.Monsters;
 
 namespace Pluma.Scripts;
 //势头,获得力量
@@ -50,6 +52,17 @@ public class Momentum : ModCardTemplate
             base.Owner.Creature,
             this
         );
+        Creature brother = base.Owner.Brother();
+        Creature target = (brother != null && brother.IsAlive) ? brother : base.Owner.Creature;
+
+        await PowerCmd.Apply<StrengthPower>(
+            choiceContext,
+            target,
+            DynamicVars["StrengthAmount"].BaseValue,
+            base.Owner.Creature,
+            this
+        );
+        
     }
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
