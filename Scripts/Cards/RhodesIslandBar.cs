@@ -4,22 +4,23 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+
 
 namespace Pluma.Scripts;
 
 // 罗德岛酒吧：1费稀有能力牌。获得罗德岛酒吧能力。升级后固有。
-[RegisterCard(typeof(PlumaCardPool))]
+// 删了
+[RegisterCard(typeof(TokenCardPool))]
 public class RhodesIslandBar : ModCardTemplate, IBaseSpiritRelatedCard
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Power;
-    private const CardRarity rarity = CardRarity.Rare;
+    private const CardRarity rarity = CardRarity.Token;
     private const TargetType targetType = TargetType.Self;
-    private const bool shouldShowInCardLibrary = true;
+    private const bool shouldShowInCardLibrary = false;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"

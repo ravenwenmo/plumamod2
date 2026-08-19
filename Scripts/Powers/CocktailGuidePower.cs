@@ -28,6 +28,18 @@ public class CocktailGuidePower : ModPowerTemplate
 
         // 目标必须为友方（包含自己）
         if (cardPlay.Target.Side != card.Owner.Creature.Side) return;
+        
+        // 若为龙舌兰（宠物），将 1 点能量转换为 1 点力量
+        if (await SpiritTargeting.ApplyStrengthToPetInstead(
+                choiceContext,
+                cardPlay.Target,
+                1m,
+                card.Owner.Creature,
+                card))
+        {
+            return;
+        }
+        
         // 只处理玩家单位
         if (!cardPlay.Target.IsPlayer) return;
 

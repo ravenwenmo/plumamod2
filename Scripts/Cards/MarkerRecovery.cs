@@ -21,7 +21,7 @@ public class MarkerRecovery : ModCardTemplate
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Token;
     private const TargetType targetType = TargetType.None;
-    private const bool shouldShowInCardLibrary = true;
+    private const bool shouldShowInCardLibrary = false;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
