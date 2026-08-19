@@ -101,7 +101,7 @@ public class BrotherAutoSummonSingleton : HookedSingletonModel
 
             int strength = brother.GetPowerAmount<StrengthPower>();
             Entry.BrotherStateData.Modify(player, s => s.Strength = strength);
-            BrotherStateData.SyncStrength(player, strength);
+            //BrotherStateData.SyncStrength(player, strength);
             GD.Print($"[BrotherAutoSummon] Combat end snapshot for {player}: strength={strength}");
         }
     }

@@ -106,7 +106,7 @@ public class Entry
             GD.Print($"[pluma] RunSavedDataPreparing event: multiplayer={evt.IsMultiplayer}");
             PlumaSkinSyncAction.EnsureLocalSkinSynced(evt.RunState);
             // 新 run 开始时清空龙舌兰力量的内存镜像，避免跨 run 残留
-            Monsters.BrotherStateData.ClearMirror();
+            //Monsters.BrotherStateData.ClearMirror();
         });
 
 

@@ -42,7 +42,7 @@ public class BrotherSupportPower : ModPowerTemplate
         else
         {
             Creature brother = Owner.Player.Brother();
-            await (brother.Monster as Monsters.Brother)?.OnSideTurnEnd(choiceContext);
+            await (brother.Monster as Brother)?.TakeTurn(choiceContext);
             foreach (PowerModel power in brother.Powers.ToList())
             {
                 GD.Print($"[BrotherSupportPower] BeforeSideTurnEnd: Calling BeforeSideTurnEnd for power {power.GetType().Name}");
@@ -66,7 +66,7 @@ public class BrotherSupportPower : ModPowerTemplate
         }
         else
         {
-            await (Owner.Player.Brother().Monster as Monsters.Brother)?.OnSideTurnStart();
+            await (Owner.Player.Brother().Monster as Brother)?.PlayerTurnStart();
         }
     }
 }

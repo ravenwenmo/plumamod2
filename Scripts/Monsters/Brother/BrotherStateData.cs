@@ -1,5 +1,7 @@
 using Godot;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace Pluma.Scripts.Monsters;
 
@@ -38,8 +40,7 @@ public class BrotherStateData
         Hp = Brother.INITIAL_HP;
         MaxHp = Brother.INITIAL_HP;
         Strength = 0;
-        Intent = BrotherIntent.PowerUp;
-        AttackTurnsRemaining = Brother.ATTACK_INTENT_TURNS;
+        AttackTurnsRemaining = 0;
         HasBeenSummoned = false;
     }
 
@@ -58,6 +59,26 @@ public class BrotherStateData
         return Inst(player).MaxHp;
     }
 
+    public static int GetStrength(Player player)
+    {
+        return Inst(player).Strength;
+    }
+
+    public static int GetAttackTurnsRemaining(Player player)
+    {
+        return Inst(player).AttackTurnsRemaining;
+    }
+
+    public static void SetFromBrother(Player player, Brother bro)
+    {
+        Entry.BrotherStateData.Modify(player, state => {
+            state.Hp = Math.Max(1, bro.Creature.CurrentHp);
+            state.MaxHp = Math.Max(1, bro.Creature.MaxHp);
+            state.Strength = Math.Max(0, bro.Creature.GetPowerAmount<StrengthPower>());
+            state.AttackTurnsRemaining = Math.Max(0, bro.Creature.GetPowerAmount<BrotherAttackTurnsPower>());
+        });
+    }
+
     public static void SetHp(Player player, int hp)
     {
         Entry.BrotherStateData.Modify(player, state => state.Hp = Math.Max(1, hp));
@@ -71,10 +92,25 @@ public class BrotherStateData
         });
     }
 
+    public static void SetStrength(Player player, int strength)
+    {
+        Entry.BrotherStateData.Modify(player, state => state.Strength = Math.Max(0, strength));
+    }
+
+    public static void SetAttackTurnsRemaining(Player player, int turns)
+    {
+        Entry.BrotherStateData.Modify(player, state => state.AttackTurnsRemaining = Math.Max(0, turns));
+    }
+
     public static void Heal(Player player, int amount)
     {
         GD.Print($"Healing Brother for {amount} HP");
         Entry.BrotherStateData.Modify(player, state => state.Hp = Math.Min(state.MaxHp, state.Hp + amount));
+    }
+
+    public static void SetHasSummoned(Player player)
+    {
+        Entry.BrotherStateData.Modify(player, state => state.HasBeenSummoned = true);
     }
 
     // 龙舌兰死亡时重置为默认状态（生命值回满、0力量、强化意图、完整攻击回合数），
@@ -89,34 +125,5 @@ public class BrotherStateData
             state.Intent = BrotherIntent.PowerUp;
             state.AttackTurnsRemaining = Brother.ATTACK_INTENT_TURNS;
         });
-        SyncStrength(player, 0);
-    }
-
-    // ==== 内存镜像 ====
-    // 力量等高频字段在房间切换/结算期间可能被存档框架用旧快照覆盖
-    // （实测：战斗结束时力量 9，下一场战斗恢复时存档槽位变成了 1）。
-    // 镜像只由本类写入、仅存于本进程内存，不受框架影响；
-    // 恢复时以镜像为准并顺手修复槽位值。进程重启后镜像为空，自动回退为存档值。
-    private static readonly Dictionary<ulong, int> StrengthMirror = new();
-    private static readonly HashSet<ulong> StrengthMirrorInitialized = new();
-
-    // 同步力量到内存镜像（所有写入存档槽位的力量变更都应同步调用）
-    public static void SyncStrength(Player player, int strength)
-    {
-        StrengthMirror[player.NetId] = strength;
-        StrengthMirrorInitialized.Add(player.NetId);
-    }
-
-    // 新 run 开始时清空镜像，避免跨 run 残留
-    public static void ClearMirror()
-    {
-        StrengthMirror.Clear();
-        StrengthMirrorInitialized.Clear();
-    }
-
-    // 获取有效力量：镜像已初始化时以镜像为准，否则用存档槽位值
-    public static int GetEffectiveStrength(Player player, int bagStrength)
-    {
-        return StrengthMirrorInitialized.Contains(player.NetId) ? StrengthMirror[player.NetId] : bagStrength;
     }
 }

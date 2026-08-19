@@ -30,23 +30,21 @@ public static class BrotherCmd
     public static async Task<SummonResult> Summon(PlayerChoiceContext choiceContext, Player summoner, AbstractModel? source)
     {
         ICombatState combatState = summoner.Creature.CombatState;
-        Creature brother = combatState.Allies.FirstOrDefault((Creature c) => c.Monster is Monsters.Brother && c.PetOwner == summoner);
+        Creature brother = combatState.Allies.FirstOrDefault((Creature c) => c.Monster is Brother && c.PetOwner == summoner);
         if (summoner.IsBrotherAlive())
         {
             // 龙舌兰已存在，令龙舌兰回满生命值并切换为攻击循环意图
-            (brother.Monster as Monsters.Brother)?.OrderBrother();
-            Entry.BrotherStateData.Modify(summoner, s => s.HasBeenSummoned = true);
+            (brother.Monster as Brother)?.OrderBrother();
             return new SummonResult(brother, 0m);
         }
         else
         {
             // 龙舌兰不存在，生成龙舌兰
-            brother = await PlayerCmd.AddPet<Monsters.Brother>(summoner);
+            brother = await PlayerCmd.AddPet<Brother>(summoner);
             NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(brother);
-            await brother.Monster.AfterAddedToRoom();
             // 卡牌召唤（如测试卡 TestBrother）：此时战斗布局已完成，
             // 直接做入场滑入动画，与测试卡路径一致。
-            if (brotherNode != null && source is CardModel)
+            if (brotherNode != null)
             {
                 NCreature ownerNode = NCombatRoom.Instance?.GetCreatureNode(brother.PetOwner.Creature);
                 if (ownerNode != null)
@@ -56,11 +54,12 @@ public static class BrotherCmd
                     brotherNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
                 }
             }
+            await brother.Monster.AfterAddedToRoom();
             await PowerCmd.Apply<BrotherSupportPower>(new ThrowingPlayerChoiceContext(), summoner.Creature, 1m, null, null);
             brotherNode?.TrackBlockStatus(summoner.Creature);
 
             // 召唤成功，写入持久化标记
-            Entry.BrotherStateData.Modify(summoner, s => s.HasBeenSummoned = true);
+            BrotherStateData.SetHasSummoned(summoner);
 
             return new SummonResult(brother, brother.CurrentHp);
         }
@@ -74,27 +73,7 @@ public static class BrotherCmd
     /// <param name="summoner">生成龙舌兰的玩家</param>
     public static async Task AutoSummon(Player summoner)
     {
-        if (summoner.IsBrotherAlive())
-        {
-            return;
-        }
         await Summon(new ThrowingPlayerChoiceContext(), summoner, null);
-        // 自动召唤发生在战斗布局完成前，节点位置尚未就绪；
-        // 等待布局完成后补做与测试卡一致的入场滑入动画。
-        await Cmd.CustomScaledWait(0.4f, 0.6f, ignoreCombatEnd: false, CancellationToken.None);
-        Creature? brother = summoner.PlayerCombatState?.GetPet<Monsters.Brother>();
-        if (brother == null)
-        {
-            return;
-        }
-        NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(brother);
-        NCreature ownerNode = NCombatRoom.Instance?.GetCreatureNode(summoner.Creature);
-        if (brotherNode != null && ownerNode != null)
-        {
-            Tween tween = brotherNode.CreateTween().SetParallel();
-            tween.TweenProperty(brotherNode, "position", brotherNode.Position + GetBrotherOffsetFromPlayer(brother), 0.3);
-            brotherNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
-        }
     }
 
     private static Vector2 GetBrotherOffsetFromPlayer(Creature brother)
@@ -103,8 +82,8 @@ public static class BrotherCmd
         if (nCreature == null)
         {
             // 节点未就绪时兜底为固定偏移，避免空引用
-            return Monsters.Brother.MinOffset.Lerp(Monsters.Brother.MaxOffset, 1f);
+            return Brother.MinOffset.Lerp(Brother.MaxOffset, 1f);
         }
-        return Vector2.Right * nCreature.Hitbox.Size.X * 0.5f + Monsters.Brother.MinOffset.Lerp(Monsters.Brother.MaxOffset, 1f);
+        return Vector2.Right * nCreature.Hitbox.Size.X * 0.5f + Brother.MinOffset.Lerp(Brother.MaxOffset, 1f);
     }
 }
