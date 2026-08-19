@@ -25,9 +25,9 @@ public class BrotherPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/Brother.png"
     );
 
-    public override Creature ModifyUnblockedDamageTarget(Creature target, decimal _, ValueProp props, Creature? __)
+    public override Creature ModifyUnblockedDamageTarget(Creature target, decimal unblockedDamage, ValueProp props, Creature? _)
     {
-        if (!(Owner.Monster as Brother).DieForYou)
+        if (!(Owner.Monster as Brother).DieForYou && unblockedDamage < Owner.PetOwner.Creature.CurrentHp)
         {
             return target;
         }
@@ -56,8 +56,7 @@ public class BrotherPower : ModPowerTemplate
 
         if (!creature.IsAlive)
         {
-            // 龙舌兰死亡：重置持久化状态，下次召唤按默认状态（满血、0力量、强化意图）开始
-            BrotherStateData.ResetToDefault(creature.PetOwner);
+            BrotherStateData.SetDead(creature.PetOwner);
             return;
         }
 

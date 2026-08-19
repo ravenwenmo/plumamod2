@@ -25,9 +25,6 @@ public class BrotherStateData
     // 强化循环期间积累的力量
     public int Strength { get; set; }
 
-    // 当前意图类型（强化/攻击）
-    public BrotherIntent Intent { get; set; }
-
     // 攻击循环意图剩余回合数
     public int AttackTurnsRemaining { get; set; }
 
@@ -113,17 +110,12 @@ public class BrotherStateData
         Entry.BrotherStateData.Modify(player, state => state.HasBeenSummoned = true);
     }
 
-    // 龙舌兰死亡时重置为默认状态（生命值回满、0力量、强化意图、完整攻击回合数），
-    // 下次召唤按默认状态开始。注意：不重置 HasBeenSummoned，
-    // 死亡后下一场战斗仍会自动召唤（符合"一旦召唤过就一直出现"的设计）。
-    public static void ResetToDefault(Player player)
+    public static void SetDead(Player player)
     {
-        GD.Print("[BrotherStateData] Brother died, resetting state to default");
         Entry.BrotherStateData.Modify(player, state => {
-            state.Hp = state.MaxHp;
+            state.Hp = 1;
             state.Strength = 0;
-            state.Intent = BrotherIntent.PowerUp;
-            state.AttackTurnsRemaining = Brother.ATTACK_INTENT_TURNS;
+            state.AttackTurnsRemaining = 0;
         });
     }
 }

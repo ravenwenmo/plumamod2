@@ -109,11 +109,11 @@
   "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
 
   "PLUMA_POWER_BROTHER_SUPPORT_POWER.title": "义兄妹の羁绊",
-  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]攻击意图[/gold]时，龙舌兰将吸收所有未被格挡的伤害。\n你即将受到[gold]致命伤害[/gold]时，龙舌兰立即执行一次攻击并进入一回合的攻击意图。",
+  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]攻击意图[/gold]时，或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。",
 
   "PLUMA_POWER_BROTHER_POWER.title": "伺机而动",
-  "PLUMA_POWER_BROTHER_POWER.description": "力量达到一定层数时，进入数回合的攻击意图。\n龙舌兰的力量层数和攻击意图回合数可跨战斗保留。",
-  "PLUMA_POWER_BROTHER_POWER.smartDescription": "力量达到[blue]8[/blue]点时，进入[blue]3[/blue]回合的攻击意图。\n龙舌兰的力量层数和攻击意图回合数可跨战斗保留。",
+  "PLUMA_POWER_BROTHER_POWER.description": "力量达到一定层数时，进入数回合的攻击意图。",
+  "PLUMA_POWER_BROTHER_POWER.smartDescription": "力量达到[blue]8[/blue]点时，进入[blue]3[/blue]回合的攻击意图。",
 
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.title": "多段斩",
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰执行攻击意图时，额外造成[blue]{Amount}[/blue]段伤害。",
