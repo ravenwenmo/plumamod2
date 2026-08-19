@@ -28,9 +28,6 @@ public class Entry
     // 高速切割层数数据句柄（run 内跨战斗保留，战斗外存档/读档恢复）
     public static PlayerRunSavedData<RapidSlashingStacksSave> RapidSlashingStacksData = null!;
 
-    // 龙舌兰状态存储（力量、意图、剩余攻击回合、生命值）
-    public static PlayerRunSavedData<BrotherStateData> BrotherStateData = null!;
-
     public static void Init()
     {
         var assembly = Assembly.GetExecutingAssembly();
@@ -67,14 +64,6 @@ public class Entry
                 key: "rapid_slashing_stacks",
                 // 默认 0 层：新 run 槽位为空，不跨 run 继承层数
                 defaultFactory: () => new RapidSlashingStacksSave(),
-                options: new RunSavedDataOptions
-                {
-                    WritePolicy = RunSavedDataWritePolicy.WhenSet
-                });
-
-            BrotherStateData = store.RegisterPerPlayer(
-                key: "brother_state",
-                defaultFactory: () => new BrotherStateData(),
                 options: new RunSavedDataOptions
                 {
                     WritePolicy = RunSavedDataWritePolicy.WhenSet

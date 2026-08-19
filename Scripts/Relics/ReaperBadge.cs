@@ -13,7 +13,8 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-using MegaCrit.Sts2.Core.Entities.RestSite; // 提供 RestSiteOption
+using MegaCrit.Sts2.Core.Entities.RestSite;
+using MegaCrit.Sts2.Core.Rooms; // 提供 RestSiteOption
 
 namespace Pluma.Scripts;
 
@@ -31,6 +32,16 @@ public class ReaperBadge : ModRelicTemplate
         IconOutlinePath: $"res://pluma/images/relics/{GetType().Name}.png",
         BigIconPath: $"res://pluma/images/relics/{GetType().Name}.png"
     );
+
+    private bool _hasObtainedBrotherRelic = false;
+    public override async Task AfterRoomEntered(AbstractRoom room)
+    {
+        if (Owner.GetRelic<BrotherRelic>() == null && !_hasObtainedBrotherRelic)
+        {
+            await RelicCmd.Obtain<BrotherRelic>(Owner);
+            _hasObtainedBrotherRelic = true;
+        }
+    }
     
     public override async Task AfterDamageGiven(
         PlayerChoiceContext choiceContext,

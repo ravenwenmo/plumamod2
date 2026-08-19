@@ -75,7 +75,6 @@ public class Brother : ModMonsterTemplate
     public async Task OrderBrother()
     {
         await CreatureCmd.SetCurrentHp(Creature, Creature.MaxHp);
-        Entry.BrotherStateData.Modify(Creature.PetOwner, s => s.Hp = s.MaxHp);
         await SwitchToAttackIntent();
     }
 

@@ -60,15 +60,15 @@ public class BrotherPower : ModPowerTemplate
             return;
         }
 
-        BrotherStateData.SetFromBrother(creature.PetOwner, creature.Monster as Brother);
+        BrotherStateData.SetFromBrother(creature.PetOwner, creature);
 
         GD.Print($"[BrotherPower] BrotherStateDataChanged: Hp: {BrotherStateData.GetHp(creature.PetOwner)}, MaxHp: {BrotherStateData.GetMaxHp(creature.PetOwner)}");
     }
 
-    // 无需实时更新龙舌兰力量，战斗结束时更新即可
+    // 战斗结束时再次更新，确保保存的状态是最新的
     public override async Task AfterCombatVictory(CombatRoom combatRoom)
     {
-        BrotherStateData.SetFromBrother(Owner.PetOwner, Owner.Monster as Brother);
+        BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
     }
 
     public override async Task AfterPowerAmountChanged(
@@ -78,6 +78,11 @@ public class BrotherPower : ModPowerTemplate
         Creature? applier,
         CardModel? cardSource)
     {
+        // 实时更新力量与当机立断效果
+        if (power is StrengthPower || power is BrotherAttackTurnsPower)
+        {
+            BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
+        }
         // 只关心龙舌兰自身的力量变化
         if (power is not StrengthPower || power.Owner != Owner) return;
         if (Owner.Monster is Brother brother)

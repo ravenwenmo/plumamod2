@@ -1,7 +1,9 @@
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using STS2RitsuLib.Utils;
 
 namespace Pluma.Scripts.Monsters;
 
@@ -18,6 +20,10 @@ public enum BrotherIntent
 // 通过 Entry.BrotherStateData（PlayerRunSavedData）注册，随存档保存/恢复。
 public class BrotherStateData
 {
+    public static readonly SavedAttachedState<BrotherRelic, int> SavedHp = new("SavedHp", _ => Brother.INITIAL_HP);
+    public static readonly SavedAttachedState<BrotherRelic, int> SavedMaxHp = new("SavedMaxHp", _ => Brother.INITIAL_HP);
+    public static readonly SavedAttachedState<BrotherRelic, int> SavedStrength = new("SavedStrength", _ => 0);
+    public static readonly SavedAttachedState<BrotherRelic, int> SavedAttackTurnsRemaining = new("SavedAttackTurnsRemaining", _ => 0);
     public int Hp { get; set; }
 
     public int MaxHp { get; set; }
@@ -28,94 +34,77 @@ public class BrotherStateData
     // 攻击循环意图剩余回合数
     public int AttackTurnsRemaining { get; set; }
 
-    // 本局是否召唤过龙舌兰；召唤过一次后每场战斗开始自动出现（不再检查卡组条件）。
-    // 龙舌兰死亡不重置本标记（见 ResetToDefault）。
-    public bool HasBeenSummoned { get; set; }
-
     public BrotherStateData()
     {
         Hp = Brother.INITIAL_HP;
         MaxHp = Brother.INITIAL_HP;
         Strength = 0;
         AttackTurnsRemaining = 0;
-        HasBeenSummoned = false;
-    }
-
-    public static BrotherStateData Inst(Player player)
-    {
-        return Entry.BrotherStateData.Get(player);
     }
 
     public static int GetHp(Player player)
     {
-        return Inst(player).Hp;
+        BrotherRelic relic = player.GetRelic<BrotherRelic>();
+        return SavedHp[relic];
     }
 
     public static int GetMaxHp(Player player)
     {
-        return Inst(player).MaxHp;
+        BrotherRelic relic = player.GetRelic<BrotherRelic>();
+        return SavedMaxHp[relic];
     }
 
     public static int GetStrength(Player player)
     {
-        return Inst(player).Strength;
+        BrotherRelic relic = player.GetRelic<BrotherRelic>();
+        return SavedStrength[relic];
     }
 
     public static int GetAttackTurnsRemaining(Player player)
     {
-        return Inst(player).AttackTurnsRemaining;
+        BrotherRelic relic = player.GetRelic<BrotherRelic>();
+        return SavedAttackTurnsRemaining[relic];
     }
 
-    public static void SetFromBrother(Player player, Brother bro)
+    public static void SetFromBrother(Player player, Creature bro)
     {
-        Entry.BrotherStateData.Modify(player, state => {
-            state.Hp = Math.Max(1, bro.Creature.CurrentHp);
-            state.MaxHp = Math.Max(1, bro.Creature.MaxHp);
-            state.Strength = Math.Max(0, bro.Creature.GetPowerAmount<StrengthPower>());
-            state.AttackTurnsRemaining = Math.Max(0, bro.Creature.GetPowerAmount<BrotherAttackTurnsPower>());
-        });
+        BrotherRelic.UpdateSavedHP(player, bro.CurrentHp);
+        BrotherRelic.UpdateSavedMaxHP(player, bro.MaxHp);
+        BrotherRelic.UpdateSavedStrength(player, bro.GetPowerAmount<StrengthPower>());
+        BrotherRelic.UpdateSavedAttackTurnsRemaining(player, bro.GetPowerAmount<BrotherAttackTurnsPower>());
     }
 
     public static void SetHp(Player player, int hp)
     {
-        Entry.BrotherStateData.Modify(player, state => state.Hp = Math.Max(1, hp));
+        BrotherRelic.UpdateSavedHP(player, hp);
     }
 
     public static void SetHp(Player player, int hp, int maxHp)
     {
-        Entry.BrotherStateData.Modify(player, state => {
-            state.Hp = Math.Max(1, hp);
-            state.MaxHp = Math.Max(1, maxHp);
-        });
+        BrotherRelic.UpdateSavedHP(player, hp);
+        BrotherRelic.UpdateSavedMaxHP(player, maxHp);
     }
 
     public static void SetStrength(Player player, int strength)
     {
-        Entry.BrotherStateData.Modify(player, state => state.Strength = Math.Max(0, strength));
+        BrotherRelic.UpdateSavedStrength(player, strength);
     }
 
     public static void SetAttackTurnsRemaining(Player player, int turns)
     {
-        Entry.BrotherStateData.Modify(player, state => state.AttackTurnsRemaining = Math.Max(0, turns));
+        BrotherRelic.UpdateSavedAttackTurnsRemaining(player, turns);
     }
 
     public static void Heal(Player player, int amount)
     {
         GD.Print($"Healing Brother for {amount} HP");
-        Entry.BrotherStateData.Modify(player, state => state.Hp = Math.Min(state.MaxHp, state.Hp + amount));
-    }
-
-    public static void SetHasSummoned(Player player)
-    {
-        Entry.BrotherStateData.Modify(player, state => state.HasBeenSummoned = true);
+        BrotherRelic.UpdateSavedHP(player, Math.Min(BrotherStateData.GetHp(player) + amount, BrotherStateData.GetMaxHp(player)));
     }
 
     public static void SetDead(Player player)
     {
-        Entry.BrotherStateData.Modify(player, state => {
-            state.Hp = 1;
-            state.Strength = 0;
-            state.AttackTurnsRemaining = 0;
-        });
+        BrotherRelic.UpdateSavedHP(player, 1);
+        BrotherRelic.UpdateSavedStrength(player, 0);
+        BrotherRelic.UpdateSavedAttackTurnsRemaining(player, 0);
     }
 }

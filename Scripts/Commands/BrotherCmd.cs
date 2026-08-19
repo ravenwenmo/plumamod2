@@ -58,9 +58,6 @@ public static class BrotherCmd
             await PowerCmd.Apply<BrotherSupportPower>(new ThrowingPlayerChoiceContext(), summoner.Creature, 1m, null, null);
             brotherNode?.TrackBlockStatus(summoner.Creature);
 
-            // 召唤成功，写入持久化标记
-            BrotherStateData.SetHasSummoned(summoner);
-
             return new SummonResult(brother, brother.CurrentHp);
         }
     }
