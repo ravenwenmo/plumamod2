@@ -12,13 +12,13 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 伺机而动：饮用基酒时，获得一点力量；饮用鸡尾酒时，增加攻击段数
+// 伺机而动：力量达到一定层数时，进入数回合的攻击意图。
 // 同时用于检测龙舌兰生命值增减并在BrotherStateData中更新；龙舌兰死亡时重置持久化状态
 [RegisterPower]
 public class BrotherPower : ModPowerTemplate
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
+    public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/Brother.png",

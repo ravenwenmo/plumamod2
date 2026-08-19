@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using STS2RitsuLib.Scaffolding.Godot;
@@ -183,7 +184,7 @@ public class Brother : ModMonsterTemplate
         var powerUpIntent = new MoveState(
             "POWER_UP",
             PowerUpMove,
-            new BuffIntent()
+            new BrotherBuffIntent()
         );
 
         return powerUpIntent;
@@ -194,7 +195,7 @@ public class Brother : ModMonsterTemplate
         var attackIntent = new MoveState(
             "ATTACK",
             AttackMove,
-            new SingleAttackIntent(BasicDamage)
+            new BrotherAttackIntent(BasicDamage, () => ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>())
         );
 
         return attackIntent;

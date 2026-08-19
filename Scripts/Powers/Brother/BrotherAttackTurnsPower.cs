@@ -11,7 +11,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 剑走偏锋：龙舌兰攻击循环意图的剩余回合数，层数即剩余回合。
+// 当机立断：龙舌兰攻击循环意图的剩余回合数，层数即剩余回合。
 [RegisterPower]
 public class BrotherAttackTurnsPower : ModPowerTemplate
 {

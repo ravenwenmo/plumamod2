@@ -1,0 +1,7 @@
+{
+    "PLUMA_BROTHER_BUFF.title": "强化",
+    "PLUMA_BROTHER_BUFF.description": "龙舌兰会在你的回合开始时获得[blue]1[/blue]点[gold]力量[/gold]。",
+
+    "PLUMA_BROTHER_ATTACK.title": "攻击",
+    "PLUMA_BROTHER_ATTACK.description": "龙舌兰会在你的回合结束时对[gold]所有敌人[/gold]造成[blue]{Damage}[/blue]点伤害{Repeat:choose(1):|[blue]{}[/blue]次}。"
+}
