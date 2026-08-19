@@ -58,13 +58,15 @@ public static class BrotherCmd
             await PowerCmd.Apply<BrotherSupportPower>(new ThrowingPlayerChoiceContext(), summoner.Creature, 1m, null, null);
             brotherNode?.TrackBlockStatus(summoner.Creature);
             //额外增加一个被动
+            //好像不对，这是给羽毛笔加上了吗
+            /*
             await PowerCmd.Apply<MarkerRecoveryPower>(
                 choiceContext,
                 summoner.Creature,
                 1m,
                 null,
                 null
-            );
+            );*/
 
             return new SummonResult(brother, brother.CurrentHp);
         }

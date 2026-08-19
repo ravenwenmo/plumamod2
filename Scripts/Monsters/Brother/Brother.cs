@@ -65,7 +65,6 @@ public class Brother : ModMonsterTemplate
         await CreatureCmd.SetCurrentHp(Creature, Math.Max(1, BrotherStateData.GetHp(Creature.PetOwner)));
         await PowerCmd.Apply<BrotherPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
         await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetAttackTurnsRemaining(Creature.PetOwner), null, null);
-        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetStrength(Creature.PetOwner), null, null);
         //额外增加一个被动
         await PowerCmd.Apply<MarkerRecoveryPower>(
             new ThrowingPlayerChoiceContext(),
@@ -74,6 +73,8 @@ public class Brother : ModMonsterTemplate
             null,
             null
         );
+        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetStrength(Creature.PetOwner), null, null);
+
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         brotherNode?.ToggleIsInteractable(true);
     }
