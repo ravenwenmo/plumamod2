@@ -78,15 +78,11 @@ public class BrotherPower : ModPowerTemplate
         Creature? applier,
         CardModel? cardSource)
     {
-        // 实时更新力量与当机立断效果
-        if (power is StrengthPower || power is BrotherAttackTurnsPower)
-        {
-            BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
-        }
         // 只关心龙舌兰自身的力量变化
         if (power is not StrengthPower || power.Owner != Owner) return;
         if (Owner.Monster is Brother brother)
         {
+            BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
             await brother.TriggerWhenGainStrength();
         } else
         {
