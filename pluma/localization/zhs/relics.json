@@ -27,8 +27,8 @@
   "PLUMA_RELIC_SPINACH_CAN.description": "每当你获得 渐入佳境 ，获得1层 活力 。",
   "PLUMA_RELIC_SPINACH_CAN.flavor": "“很多卡特斯相信吃下这盒罐头，他们就会变得力大无穷。出色的广告效果，业界经典成功案例。”",
 
-  "PLUMA_RELIC_BROTHER_RELIC.title": "双重身份",
-  "PLUMA_RELIC_BROTHER_RELIC.description": "[gold]龙舌兰[/gold]将在战斗中协助你。龙舌兰的生命值与力量效果跨战斗继承。\n[green]生命值:{HP}/{MaxHP}[/green]\n[red]力量:{Strength}[/red]\n[gold]当机立断:{Turns}[/gold]",
+  "PLUMA_RELIC_BROTHER_RELIC.title": "龙舌兰",
+  "PLUMA_RELIC_BROTHER_RELIC.description": "[gold]龙舌兰[/gold]将在战斗中协助你。龙舌兰的生命值与力量效果跨战斗继承。\n[green]生命值:{HP}/{MaxHP}[/green]\n[red]力量:{Strength}[/red]\n[gold]解放回合:{Turns}[/gold]",
   "PLUMA_RELIC_BROTHER_RELIC.flavor": "羽毛笔险路遇敌，羽毛笔陷入苦战，羽毛笔昏招频出，羽毛笔血条蹦迪，羽毛笔和龙舌兰发表获胜感言。",
 
   "SEA_GLASS.PLUMA_CHARACTER_PLUMA_CHARACTER.title": "戈多玻璃"
