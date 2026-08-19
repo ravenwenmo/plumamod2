@@ -131,6 +131,12 @@ public class Brother : ModMonsterTemplate
         SetMoveImmediate(GetAttackIntent());
         await CreatureCmd.TriggerAnim(Creature, "Skill_1_Start", 0.3f);
         DieForYou = true;
+
+        // 双重身份：进入攻击循环后刷新冷却
+        if (Creature.GetPower<DoubleIdentityPower>() is DoubleIdentityPower doubleIdentity)
+        {
+            doubleIdentity.RefreshCooldown();
+        }
     }
 
     // 切换为强化循环意图
@@ -144,6 +150,12 @@ public class Brother : ModMonsterTemplate
         SetMoveImmediate(GetPowerUpIntent());
         await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
         DieForYou = false;
+
+        // 双重身份：进入强化循环时触发一次力量获取
+        if (Creature.GetPower<DoubleIdentityPower>() is DoubleIdentityPower doubleIdentity)
+        {
+            await doubleIdentity.TriggerOnPowerUpCycle();
+        }
     }
 
     public async Task TriggerWhenGainStrength()
