@@ -8,11 +8,13 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Scripts;
 
 namespace Pluma.Monsters;
 
 public class BrotherBuffIntent : BuffIntent
 {
+	
 	protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
     {
         LocString locString = new LocString("intents", "PLUMA_BROTHER_BUFF" + ".description");
@@ -20,115 +22,111 @@ public class BrotherBuffIntent : BuffIntent
         locString.Add("IsMultiplayer", combatState != null && combatState.RunState.Players.Count > 1);
         return locString;
     }
-}
+	
 
+	
+}
 public class BrotherAttackIntent : AttackIntent
 {
-	private readonly int _repeat;
+    private readonly int _repeat;
+    private readonly Func<int>? _repeatCalc;
+    private readonly bool _isAoe;
 
-	private readonly Func<int>? _repeatCalc;
+    protected override LocString IntentLabelFormat => new LocString("intents", "FORMAT_DAMAGE_MULTI");
 
-	protected override LocString IntentLabelFormat => new LocString("intents", "FORMAT_DAMAGE_MULTI");
+    // 根据是否拥有范围攻击能力，使用不同的本地化前缀
+    protected override string IntentPrefix =>
+        _isAoe ? "PLUMA_BROTHER_ATTACK_AOE" : "PLUMA_BROTHER_ATTACK_SINGLE";
 
-	public override int Repeats => _repeatCalc?.Invoke() ?? _repeat;
+    public override int Repeats => _repeatCalc?.Invoke() ?? _repeat;
 
-	public BrotherAttackIntent(int damage, int repeat)
-	{
-		base.DamageCalc = () => damage;
-		_repeat = repeat;
-	}
+    public BrotherAttackIntent(int damage, int repeat, bool isAoe = false)
+    {
+        base.DamageCalc = () => damage;
+        _repeat = repeat;
+        _isAoe = isAoe;
+    }
 
-	public BrotherAttackIntent(int damage, Func<int> repeatCalc)
-	{
-		base.DamageCalc = () => damage;
-		_repeatCalc = repeatCalc;
-	}
+    public BrotherAttackIntent(int damage, Func<int> repeatCalc, bool isAoe = false)
+    {
+        base.DamageCalc = () => damage;
+        _repeatCalc = repeatCalc;
+        _isAoe = isAoe;
+    }
 
-	public override int GetTotalDamage(IEnumerable<Creature> targets, Creature owner)
-	{
-		return GetDamage(targets, owner) * Repeats;
-	}
+    public override int GetTotalDamage(IEnumerable<Creature> targets, Creature owner)
+    {
+        return GetDamage(targets, owner) * Repeats;
+    }
 
-	protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
-	{
-		IEnumerable<Creature> enemys = owner.CombatState.GetOpponentsOf(owner);
-		LocString locString = new("intents", "PLUMA_BROTHER_ATTACK" + ".description");
-		locString.Add("Damage", GetDamage(enemys, owner));
+    protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
+    {
+        IEnumerable<Creature> enemies = owner.CombatState.GetOpponentsOf(owner);
+        bool isAoe = _isAoe; // 直接使用构造时传入的值
+
+        string key = isAoe
+            ? "PLUMA_BROTHER_ATTACK_AOE.description"
+            : "PLUMA_BROTHER_ATTACK_SINGLE.description";
+
+        LocString locString = new("intents", key);
+        locString.Add("Damage", GetDamage(enemies, owner));
         locString.Add("Repeat", Repeats);
-		return locString;
-	}
+        return locString;
+    }
 
-	public override LocString GetIntentLabel(IEnumerable<Creature> targets, Creature owner)
-	{
-		IEnumerable<Creature> enemys = owner.CombatState.GetOpponentsOf(owner);
-		LocString intentLabelFormat = IntentLabelFormat;
-		intentLabelFormat.Add("Damage", GetDamage(enemys, owner));
-		intentLabelFormat.Add("Repeat", Repeats);
-		return intentLabelFormat;
-	}
+    public override LocString GetIntentLabel(IEnumerable<Creature> targets, Creature owner)
+    {
+        IEnumerable<Creature> enemies = owner.CombatState.GetOpponentsOf(owner);
+        LocString intentLabelFormat = IntentLabelFormat;
+        intentLabelFormat.Add("Damage", GetDamage(enemies, owner));
+        intentLabelFormat.Add("Repeat", Repeats);
+        return intentLabelFormat;
+    }
 
-	public int GetDamage(IEnumerable<Creature> targets, Creature owner)
-	{
-		decimal num = DamageCalc();
+    public int GetDamage(IEnumerable<Creature> targets, Creature owner)
+    {
+        decimal num = DamageCalc();
 
-		Player? me = owner.PetOwner ?? LocalContext.GetMe(owner.CombatState);
-		if (me == null || me.Creature == null || me.RunState == null)
-		{
-			// 预览/初始化阶段玩家上下文不完整时，返回未经修正的基础伤害
-			return Math.Max(0, (int)num);
-		}
+        Player? me = owner.PetOwner ?? LocalContext.GetMe(owner.CombatState);
+        if (me == null || me.Creature == null || me.RunState == null)
+        {
+            return Math.Max(0, (int)num);
+        }
 
-		if (targets != null && targets.Count() == 1)
-		{
-			Creature mo = targets.First();
-			num = Hook.ModifyDamage(
-				me.RunState,
-				me.Creature.CombatState,
-				mo,
-				owner,
-				DamageCalc(),
-				ValueProp.Move,
-				null,
-				null,
-				ModifyDamageHookType.All,
-				CardPreviewMode.None,
-				out IEnumerable<AbstractModel> _
-			);
-		}
-		else
-		{
-			num = Hook.ModifyDamage(
-				me.RunState,
-				me.Creature.CombatState,
-				null,
-				owner,
-				DamageCalc(),
-				ValueProp.Move,
-				null,
-				null,
-				ModifyDamageHookType.All,
-				CardPreviewMode.None,
-				out IEnumerable<AbstractModel> _
-			);
-		}
+        if (targets != null && targets.Count() == 1)
+        {
+            Creature mo = targets.First();
+            num = Hook.ModifyDamage(
+                me.RunState,
+                me.Creature.CombatState,
+                mo,
+                owner,
+                DamageCalc(),
+                ValueProp.Move,
+                null,
+                null,
+                ModifyDamageHookType.All,
+                CardPreviewMode.None,
+                out IEnumerable<AbstractModel> _
+            );
+        }
+        else
+        {
+            num = Hook.ModifyDamage(
+                me.RunState,
+                me.Creature.CombatState,
+                null,
+                owner,
+                DamageCalc(),
+                ValueProp.Move,
+                null,
+                null,
+                ModifyDamageHookType.All,
+                CardPreviewMode.None,
+                out IEnumerable<AbstractModel> _
+            );
+        }
 
-		return Math.Max(0, (int)num);
-	}
-	/*
-	public int GetDamage(IEnumerable<Creature> targets, Creature owner)
-	{
-		decimal num = DamageCalc();
-		Player me = LocalContext.GetMe(owner.CombatState);
-		if (targets.Count() == 1)
-		{
-			Creature mo = targets.First();
-			num = Hook.ModifyDamage(me.RunState, me.Creature.CombatState, mo, owner, DamageCalc(), ValueProp.Move, null, null, ModifyDamageHookType.All, CardPreviewMode.None, out IEnumerable<AbstractModel> _);
-		} else
-		{
-			num = Hook.ModifyDamage(me.RunState, me.Creature.CombatState, null, owner, DamageCalc(), ValueProp.Move, null, null, ModifyDamageHookType.All, CardPreviewMode.None, out IEnumerable<AbstractModel> _);
-		}
-
-		return Math.Max(0, (int)num);
-	}
-	*/
+        return Math.Max(0, (int)num);
+    }
 }

@@ -28,7 +28,7 @@ namespace Pluma.Scripts.Monsters;
 public class Brother : ModMonsterTemplate
 {
     // 基础生命上限
-    public const int INITIAL_HP = 66;
+    public const int INITIAL_HP = 40;
     // 强化循环意图每回合获得的特性层数
     private const int TraitPerTurn = 25;
     // 特性达到该值后切换为攻击循环意图
@@ -203,32 +203,39 @@ public class Brother : ModMonsterTemplate
 
         int hits = ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>();
         decimal damage = BasicDamage;
-        
-        //await CreatureCmd.TriggerAnim(Creature, "Attack", 0.3f);
+
         string attackAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Loop" : "Attack";
         await CreatureCmd.TriggerAnim(Creature, attackAnim, 0.3f);
-
-        IReadOnlyList<Creature> allOpponents = Creature.CombatState.GetOpponentsOf(Creature);
-
-        // 根据是否持有群体攻击能力决定目标
-        IReadOnlyList<Creature> targets;
-        if (Creature.HasPower<BrotherAoePower>())
-        {
-            targets = allOpponents; // 群体伤害
-        }
-        else
-        {
-            // 单体伤害：只攻击最左侧敌方单位（GetOpponentsOf 返回的第一个元素）
-            targets = allOpponents.Count > 0
-                ? new[] { allOpponents[0] }
-                : new Creature[0];
-        }
 
         // 消耗一攻击回合执行攻击
         await PowerCmd.Decrement(Creature.GetPower<BrotherAttackTurnsPower>());
 
         for (int i = 0; i < hits; i++)
         {
+            // 每次攻击前重新获取当前存活的敌方单位
+            IReadOnlyList<Creature> aliveOpponents = Creature.CombatState
+                .GetOpponentsOf(Creature)
+                .Where(c => c.IsAlive)
+                .ToList();
+
+            // 没有存活敌人时，剩余段数不再空挥
+            if (aliveOpponents.Count == 0)
+            {
+                break;
+            }
+
+            IReadOnlyList<Creature> targets;
+            if (Creature.HasPower<BrotherAoePower>())
+            {
+                // 群体攻击：对所有当前存活敌人造成伤害
+                targets = aliveOpponents;
+            }
+            else
+            {
+                // 单体攻击：只攻击最左侧的存活敌人
+                targets = new[] { aliveOpponents[0] };
+            }
+
             await CreatureCmd.Damage(choiceContext, targets, damage, ValueProp.Move, Creature);
         }
 
@@ -360,7 +367,11 @@ public class Brother : ModMonsterTemplate
         var attackIntent = new MoveState(
             "ATTACK",
             AttackMove,
-            new BrotherAttackIntent(BasicDamage, () => ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>())
+            new BrotherAttackIntent(
+                BasicDamage,
+                () => ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>(),
+                Creature.HasPower<BrotherAoePower>()
+            )            
         );
 
         return attackIntent;

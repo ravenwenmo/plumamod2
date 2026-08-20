@@ -18,7 +18,7 @@
   "PLUMA_CARD_DOUBLE_SLASH.description": "造成{Damage:diff()}点伤害2次。",
 
   "PLUMA_CARD_SHARPEN_BLADE.title": "磨刀",
-  "PLUMA_CARD_SHARPEN_BLADE.description": "若龙舌兰在场，使其获得{TraitAmount:diff()}层特性，否则下一张攻击牌会造成{SharpenBladePower:diff()}%额外伤害。",
+  "PLUMA_CARD_SHARPEN_BLADE.description": "若龙舌兰在磨刀，使其获得{TraitAmount:diff()}层特性，否则下一张攻击牌会造成{SharpenBladePower:diff()}%额外伤害。",
 
   "PLUMA_CARD_CHARGING.title": "蓄力",
   "PLUMA_CARD_CHARGING.description": "若龙舌兰在场，使其获得1层[gold]蓄力[/gold]；否则你获得1层[gold]蓄力[/gold]。",
