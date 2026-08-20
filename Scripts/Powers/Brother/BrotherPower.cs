@@ -1,10 +1,14 @@
 using Godot;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -19,6 +23,14 @@ public class BrotherPower : ModPowerTemplate
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
+
+    private static int StrengthThreshold => Brother.STRENGTH_THRESHOLD;
+    public static int AttackIntentTurns { get; set; } = Brother.ATTACK_INTENT_TURNS;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new DynamicVar("StrengthThreshold", StrengthThreshold),
+        new DynamicVar("AttackIntentTurns", AttackIntentTurns)
+    ];
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/Brother.png",
@@ -78,15 +90,28 @@ public class BrotherPower : ModPowerTemplate
         Creature? applier,
         CardModel? cardSource)
     {
+        if (power is BrotherAttackTurnsPower)
+        {
+            BrotherStateData.SetAttackTurnsRemaining(Owner.PetOwner, Owner.GetPowerAmount<BrotherAttackTurnsPower>());
+            return;
+        }
         // 只关心龙舌兰自身的力量变化
         if (power is not StrengthPower || power.Owner != Owner) return;
         if (Owner.Monster is Brother brother)
         {
-            BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
+            BrotherStateData.SetStrength(Owner.PetOwner, Owner.GetPowerAmount<StrengthPower>());
             await brother.TriggerWhenGainStrength();
         } else
         {
             throw new Exception("BrotherPower: Owner is not Tequila.");
+        }
+    }
+
+    public override async Task BeforeDeath(Creature creature)
+    {
+        if (creature == Owner.PetOwner?.Creature)
+        {
+            await CreatureCmd.Kill(Owner, true);
         }
     }
 }

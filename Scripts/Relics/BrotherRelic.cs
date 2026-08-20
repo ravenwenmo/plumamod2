@@ -74,7 +74,6 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     public override async Task BeforeCombatStart()
     {
         if (_hasSummonedBrother) return;
-        Flash();
         await BrotherCmd.AutoSummon(Owner);
         _hasSummonedBrother = true;
     }

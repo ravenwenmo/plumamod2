@@ -113,7 +113,7 @@
 
   "PLUMA_POWER_BROTHER_POWER.title": "解放者",
   "PLUMA_POWER_BROTHER_POWER.description": "力量达到一定层数时，进入数回合的解放者（解放）。",
-  "PLUMA_POWER_BROTHER_POWER.smartDescription": "力量达到[blue]8[/blue]点时，进入基础持续[blue]3[/blue]回合的解放者（解放）。",
+  "PLUMA_POWER_BROTHER_POWER.smartDescription": "力量达到[blue]{StrengthThreshold}[/blue]点时，进入[blue]{AttackIntentTurns}[/blue]回合的解放者（解放）。",
 
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.title": "多段斩",
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰处于解放者（解放）时，额外造成[blue]{Amount}[/blue]段伤害。",
