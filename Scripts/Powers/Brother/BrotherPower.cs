@@ -36,6 +36,10 @@ namespace Pluma.Scripts;
 [RegisterPower]
 public class BrotherPower : ModPowerTemplate
 {
+    // 从能力列表 UI 隐藏：本能力为纯后台逻辑（代伤、状态同步、意图切换），
+    // 对外展示整合进 TraitPower（特性）的描述中。隐藏不影响任何逻辑（官方机制，见 PowerModel.IsVisibleInternal）。
+    protected override bool IsVisibleInternal => false;
+
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 

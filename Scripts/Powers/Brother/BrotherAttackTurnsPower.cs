@@ -15,6 +15,10 @@ namespace Pluma.Scripts;
 [RegisterPower]
 public class BrotherAttackTurnsPower : ModPowerTemplate
 {
+    // 从能力列表 UI 隐藏：本能力只是攻击循环剩余回合的计数器，
+    // 对外展示整合进 TraitPower（特性）的描述中。隐藏不影响任何逻辑（官方机制，见 PowerModel.IsVisibleInternal）。
+    protected override bool IsVisibleInternal => false;
+
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 

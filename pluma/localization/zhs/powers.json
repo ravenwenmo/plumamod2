@@ -116,15 +116,15 @@
   "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]解放者（解放）[/gold]或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。",
 
   "PLUMA_POWER_BROTHER_POWER.title": "解放者",
-  "PLUMA_POWER_BROTHER_POWER.description": "特性达到一定层数时，进入数回合的解放者（解放）。",
-  "PLUMA_POWER_BROTHER_POWER.smartDescription": "特性达到[blue]{TraitThreshold}[/blue]点时，进入[blue]{AttackIntentTurns}[/blue]回合的解放者（解放）。",
+  "PLUMA_POWER_BROTHER_POWER.description": "详情见[gold]龙舌兰[/gold]遗物。",
+  "PLUMA_POWER_BROTHER_POWER.smartDescription": "详情见[gold]龙舌兰[/gold]遗物。",
 
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.title": "多段斩",
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰处于解放者（解放）时，额外造成[blue]{Amount}[/blue]段伤害。",
 
   "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.title": "解放",
-  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.description": "龙舌兰处于解放者（解放）数回合后，结束后回到解放者（通常）。",
-  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.smartDescription": "龙舌兰处于解放者（解放），[blue]{Amount}[/blue]回合后回到解放者（通常）。",
+  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.description": "剩余回合见[gold]龙舌兰[/gold]遗物。",
+  "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.smartDescription": "剩余回合见[gold]龙舌兰[/gold]遗物。",
 
   "PLUMA_POWER_MARKER_RECOVERY_POWER.title": "标志物回收",
   "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得等于层数的特性或额外攻击段数。",
@@ -139,8 +139,8 @@
   "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.smartDescription": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成[blue]{Amount}[/blue]%的伤害。",
 
   "PLUMA_POWER_TRAIT_POWER.title": "特性",
-  "PLUMA_POWER_TRAIT_POWER.description": "每层使龙舌兰造成的伤害提高1%。",
-  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高 [blue]{Amount}%[/blue]。",
+  "PLUMA_POWER_TRAIT_POWER.description": "每层使龙舌兰造成的伤害提高1%。特性达到{TraitThreshold:diff()}层时进入解放，持续{AttackIntentTurns:diff()}回合。解放期间为羽毛笔吸收未格挡伤害，结束后特性清零。",
+  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高[blue]{Amount}%[/blue]，特性达到[blue]{TraitThreshold:diff()}[/blue]层时进入解放，持续[blue]{AttackIntentTurns:diff()}[/blue]回合。解放期间为羽毛笔吸收未格挡伤害，结束后特性清零。",
 
   "PLUMA_POWER_BROTHER_AOE_POWER.title": "范围攻击",
   "PLUMA_POWER_BROTHER_AOE_POWER.description": "龙舌兰的攻击目标变为全体敌人，强化循环获得特性值与攻击循环持续回合数相应调整。",
