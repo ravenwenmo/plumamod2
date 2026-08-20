@@ -163,7 +163,7 @@ public class Tequila : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 
                 // 龙舌兰额外1层?
-                if (await SpiritTargeting.ApplyRegenToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue+1, base.Owner.Creature, this))
+                if (await SpiritTargeting.ApplyRegenToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars["RegenAmount"].BaseValue+1, base.Owner.Creature, this))
                 {
                     break;
                 }

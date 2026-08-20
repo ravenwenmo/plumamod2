@@ -166,7 +166,7 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
                 // 获得 3 层敏捷
                 
                 // 龙舌兰
-                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue*2, base.Owner.Creature, this))
+                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars["DexterityAmount"].BaseValue*2, base.Owner.Creature, this))
                 {
                     break;
                 }

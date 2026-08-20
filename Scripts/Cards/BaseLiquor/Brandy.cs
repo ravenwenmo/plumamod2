@@ -163,7 +163,7 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
                 
                 // 若为龙舌兰
-                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue, base.Owner.Creature, this))
+                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars["SpeedPotionAmount"].BaseValue, base.Owner.Creature, this))
                 {
                     break;
                 }
