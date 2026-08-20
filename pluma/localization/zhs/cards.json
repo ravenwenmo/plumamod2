@@ -308,10 +308,10 @@
   "PLUMA_CARD_TEST_BROTHER.description": "[gold]龙舌兰支援[/gold]",
 
   "PLUMA_CARD_MARKER_RECOVERY.title": "标志物回收",
-  "PLUMA_CARD_MARKER_RECOVERY.description": "若龙舌兰在场，每当你消耗基酒牌或辅料牌，龙舌兰获得1点力量；否则你获得1点力量。",
+  "PLUMA_CARD_MARKER_RECOVERY.description": "每当你消耗[gold]基酒[gold]或[gold]辅料组合包[gold]，龙舌兰获得1点[gold]力量[/gold]。若龙舌兰不在场改为你获得1点力量。",
 
   "PLUMA_CARD_DOUBLE_IDENTITY.title": "双重身份",
-  "PLUMA_CARD_DOUBLE_IDENTITY.description": "让龙舌兰获得能力「双重身份」：龙舌兰每次进入强化循环时，立即获得[blue]4[/blue]点力量，随后该能力进入冷却；龙舌兰进入攻击循环后冷却刷新。",
+  "PLUMA_CARD_DOUBLE_IDENTITY.description": "龙舌兰获得[gold]双重身份[gold]：\n每当从攻击意图切换为强化意图时，获得4点[gold]力量[/gold]。",
 
   "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.title": "伺机而动",
   "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.description": "龙舌兰处于解放者（通常）时，若龙舌兰或后方单位受到伤害，对伤害来源造成[blue]{Stacks:diff()}%[/blue]×[red]基础攻击+力量[/red]点伤害。"

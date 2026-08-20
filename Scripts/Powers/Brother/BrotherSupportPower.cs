@@ -45,8 +45,11 @@ public class BrotherSupportPower : ModPowerTemplate
             await (brother.Monster as Brother)?.TakeTurn(choiceContext);
             foreach (PowerModel power in brother.Powers.ToList())
             {
-                GD.Print($"[BrotherSupportPower] BeforeSideTurnEnd: Calling BeforeSideTurnEnd for power {power.GetType().Name}");
                 await power.BeforeSideTurnEndEarly(choiceContext, side, [brother]);
+            }
+            foreach (PowerModel power in brother.Powers.ToList())
+            {
+                await power.AfterSideTurnEnd(choiceContext, side, [brother]);
             }
         }
     }

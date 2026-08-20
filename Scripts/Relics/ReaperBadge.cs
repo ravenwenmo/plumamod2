@@ -33,12 +33,12 @@ public class ReaperBadge : ModRelicTemplate
         BigIconPath: $"res://pluma/images/relics/{GetType().Name}.png"
     );
 
-    private bool _hasObtainedBrotherRelic = false;
+    private static bool _hasObtainedBrotherRelic = false;
     public override async Task AfterRoomEntered(AbstractRoom room)
     {
         if (Owner.GetRelic<BrotherRelic>() == null && !_hasObtainedBrotherRelic)
         {
-            await RelicCmd.Obtain<BrotherRelic>(Owner);
+            await RelicCmd.Obtain(ModelDb.Relic<BrotherRelic>().ToMutable(), Owner, 0);
             _hasObtainedBrotherRelic = true;
         }
     }
@@ -61,7 +61,6 @@ public class ReaperBadge : ModRelicTemplate
         await CreatureCmd.Heal(base.Owner.Creature, 1);
     }
 
-    private bool ban_heal = false;
     // 移除“休息”选项，让玩家无法选择
     public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
     {
@@ -70,30 +69,7 @@ public class ReaperBadge : ModRelicTemplate
         var healOption = options.FirstOrDefault(o => o is HealRestSiteOption);
         if (healOption == null) return false;
 
-        // 检查是否有除休息以外的可用选项
-        bool hasOtherEnabledOption = options.Any(o => o != healOption && o.IsEnabled);
-        // 我焯为什么只能检测到敲牌是否可用啊不应该啊md算了就这样吧
-        
-        if (hasOtherEnabledOption)
-        {
-            options.Remove(healOption);
-            ban_heal = false;
-            Flash();
-            return true;
-        }
-        ban_heal = true;
-        return false;
-    }
-    
-    // 让“休息”回血变为 0，选项保留，避免卡死
-    public override decimal ModifyRestSiteHealAmount(Creature creature, decimal originalAmount)
-    {
-        if (creature == base.Owner.Creature && ban_heal)
-        {
-            Flash();
-            return 0;
-        }
-        return originalAmount;
-    }
-    
+        options.Remove(healOption);
+        return true;
+    }    
 }
