@@ -34,7 +34,7 @@ public class Brother : ModMonsterTemplate
     // 特性达到该值后切换为攻击循环意图
     public const int TraitThreshold = 200;
     // 攻击循环意图持续的回合数（变量，可调整）
-    public const int ATTACK_INTENT_TURNS = 3;
+    public const int ATTACK_INTENT_TURNS = 4;
     // 攻击基础段数（额外段数由 BrotherExtraHitsPower 层数提供）
     public const int ATTACK_BASE_HITS = 1;
     // 每段基础伤害
@@ -55,8 +55,9 @@ public class Brother : ModMonsterTemplate
     );
 
     // 自动转换怪物场景，让你不需要手动挂脚本。复制即可。
-    protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.VisualsScenePath!);
-
+    protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.VisualsScenePath!);   
+    
+    /*
     public override async Task AfterAddedToRoom()
     {
         await CreatureCmd.SetMaxHp(Creature, Math.Max(1, BrotherStateData.GetMaxHp(Creature.PetOwner)));
@@ -78,7 +79,48 @@ public class Brother : ModMonsterTemplate
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         brotherNode?.ToggleIsInteractable(true);
     }
+    */
+    
+    public override async Task AfterAddedToRoom()
+    
+    {
+    
+        int attackTurnsRemaining = BrotherStateData.GetAttackTurnsRemaining(Creature.PetOwner);
+        GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
+        
+        await CreatureCmd.SetMaxHp(Creature, Math.Max(1, BrotherStateData.GetMaxHp(Creature.PetOwner)));
+        await CreatureCmd.SetCurrentHp(Creature, Math.Max(1, BrotherStateData.GetHp(Creature.PetOwner)));
+        await PowerCmd.Apply<BrotherPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
+        await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, attackTurnsRemaining, null, null);
+        await PowerCmd.Apply<MarkerRecoveryPower>(
+            new ThrowingPlayerChoiceContext(),
+            Creature,
+            10m,
+            null,
+            null
+        );
+        await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetTrait(Creature.PetOwner), null, null);
+        GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
+        // 关键：根据持久化数据恢复意图状态机与动画
+        if (attackTurnsRemaining > 0)
+        {
+            SetMoveImmediate(GetAttackIntent());   // 先切换状态机，让 IntendsToAttack 变成 true
+            DieForYou = true;
+            GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
+            // 与 SwitchToAttackIntent 一致：按是否持有 AOE 能力选择进入动画
+            string startAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Start" : "Skill_1_Start";
+            GD.Print($"[Brother] AfterAddedToRoom: executing TriggerAnim '{startAnim}', creatureNode={(NCombatRoom.Instance?.GetCreatureNode(Creature) != null ? "exists" : "null")}");
+            await CreatureCmd.TriggerAnim(Creature, startAnim, 0.3f);
+        }
+        else
+        {
+            DieForYou = false;
+        }
 
+        NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
+        brotherNode?.ToggleIsInteractable(true);
+        GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
+    }
     // 测试牌重复打出时：回满生命值并切换为攻击循环意图
     public async Task OrderBrother()
     {
@@ -90,6 +132,7 @@ public class Brother : ModMonsterTemplate
     // 强化循环期间获得力量。力量值的同步与达到阈值的切换由
     // BrotherPower.AfterPowerAmountChanged 实时完成（控制台加力量也能即时触发），
     // 这里无需再手动检查阈值。
+    /*
     public async Task PlayerTurnStart()
     {
         if (IntendsToAttack)
@@ -100,11 +143,32 @@ public class Brother : ModMonsterTemplate
         await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, TraitPerTurn, Creature, null);
         GD.Print($"[Brother] Power-up turn start: trait {Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
     }
+    */
+    public async Task PlayerTurnStart()
+    {
+        if (IntendsToAttack)
+        {
+            return; // 攻击循环期间回合开始无动作
+        }
 
+        int traitGain = Creature.HasPower<BrotherAoePower>()
+            ? BrotherAoePower.TraitPerTurn
+            : TraitPerTurn;
+
+        await PowerCmd.Apply<TraitPower>(
+            new ThrowingPlayerChoiceContext(),
+            Creature,
+            traitGain,
+            Creature,
+            null
+        );
+
+        GD.Print($"[Brother] Power-up turn start: trait {Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
+    }
 
     // 回合结束（由 BrotherSupportPower 驱动）：
     // 攻击循环期间执行群体攻击，并结算剩余攻击回合
-  
+    /*
     public async Task TakeTurn(PlayerChoiceContext choiceContext)
     {
         if (!IntendsToAttack)
@@ -129,7 +193,52 @@ public class Brother : ModMonsterTemplate
             await SwitchToPowerUpIntent();
         }
     }
+    */
+    public async Task TakeTurn(PlayerChoiceContext choiceContext)
+    {
+        if (!IntendsToAttack)
+        {
+            return; // 强化循环期间回合结束无动作
+        }
 
+        int hits = ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>();
+        decimal damage = BasicDamage;
+        
+        //await CreatureCmd.TriggerAnim(Creature, "Attack", 0.3f);
+        string attackAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Loop" : "Attack";
+        await CreatureCmd.TriggerAnim(Creature, attackAnim, 0.3f);
+
+        IReadOnlyList<Creature> allOpponents = Creature.CombatState.GetOpponentsOf(Creature);
+
+        // 根据是否持有群体攻击能力决定目标
+        IReadOnlyList<Creature> targets;
+        if (Creature.HasPower<BrotherAoePower>())
+        {
+            targets = allOpponents; // 群体伤害
+        }
+        else
+        {
+            // 单体伤害：只攻击最左侧敌方单位（GetOpponentsOf 返回的第一个元素）
+            targets = allOpponents.Count > 0
+                ? new[] { allOpponents[0] }
+                : new Creature[0];
+        }
+
+        // 消耗一攻击回合执行攻击
+        await PowerCmd.Decrement(Creature.GetPower<BrotherAttackTurnsPower>());
+
+        for (int i = 0; i < hits; i++)
+        {
+            await CreatureCmd.Damage(choiceContext, targets, damage, ValueProp.Move, Creature);
+        }
+
+        if (Creature.GetPowerAmount<BrotherAttackTurnsPower>() <= 0)
+        {
+            // 攻击循环结束，清空特性并切回强化循环
+            await PowerCmd.Remove<TraitPower>(Creature);
+            await SwitchToPowerUpIntent();
+        }
+    }
     // 切换为攻击循环意图
     public async Task SwitchToAttackIntent()
     {
@@ -139,7 +248,13 @@ public class Brother : ModMonsterTemplate
         }
 
         SetMoveImmediate(GetAttackIntent());
-        await CreatureCmd.TriggerAnim(Creature, "Skill_1_Start", 0.3f);
+        //await CreatureCmd.TriggerAnim(Creature, "Skill_1_Start", 0.3f);
+        // 根据是否持有群体攻击能力选择不同动画
+        string startAnim = Creature.HasPower<BrotherAoePower>()
+            ? "Skill_2_Start"
+            : "Skill_1_Start";
+        GD.Print($"[Brother] SwitchToAttackIntent: IntendsToAttack={IntendsToAttack}, TriggerAnim '{startAnim}'");
+        await CreatureCmd.TriggerAnim(Creature, startAnim, 0.3f);
         DieForYou = true;
 
         // 双重身份：进入攻击循环后刷新冷却
@@ -158,7 +273,13 @@ public class Brother : ModMonsterTemplate
         }
 
         SetMoveImmediate(GetPowerUpIntent());
-        await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
+        //await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
+        
+        // 根据是否持有群体攻击能力选择不同动画
+        string endAnim = Creature.HasPower<BrotherAoePower>()
+            ? "Skill_2_End"
+            : "Skill_1_End";
+        await CreatureCmd.TriggerAnim(Creature, endAnim, 0.3f);
         DieForYou = false;
 
         // 双重身份：进入强化循环时触发一次
@@ -168,7 +289,7 @@ public class Brother : ModMonsterTemplate
         }
     }
 
-
+    /*
     public async Task TriggerWhenGainTrait()
     {
         if (Creature.HasPower<BrotherAttackTurnsPower>())
@@ -182,7 +303,29 @@ public class Brother : ModMonsterTemplate
             await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, ATTACK_INTENT_TURNS, Creature, null);
         }
     }
-    
+    */
+    public async Task TriggerWhenGainTrait()
+    {
+        if (Creature.HasPower<BrotherAttackTurnsPower>())
+        {
+            return;
+        }
+
+        if (Creature.GetPowerAmount<TraitPower>() >= TraitThreshold)
+        {
+            int attackTurns = Creature.HasPower<BrotherAoePower>()
+                ? BrotherAoePower.AttackIntentTurns
+                : ATTACK_INTENT_TURNS;
+
+            await PowerCmd.Apply<BrotherAttackTurnsPower>(
+                new ThrowingPlayerChoiceContext(),
+                Creature,
+                attackTurns,
+                Creature,
+                null
+            );
+        }
+    }
     // 仅用作显示，召唤物不主动执行意图（实际行动由 BrotherSupportPower 在回合钩子中驱动）
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
@@ -233,12 +376,15 @@ public class Brother : ModMonsterTemplate
         await Task.CompletedTask;
     }
 
+    
+    /*
     public override CreatureAnimator GenerateAnimator(MegaSprite controller)
 	{
         GD.Print("[Brother] Generating animator for Brother");
         AnimState summonAnimState = new AnimState("Start");
 		AnimState idleAnimState = new AnimState("Idle", isLooping: true);
 		AnimState castAnimState = new AnimState("Skill_1_Start");
+        
         AnimState castIdleAnimState = new AnimState("Skill_1_Idle", isLooping: true);
 		AnimState castAttackAnimState = new AnimState("Attack");
         AnimState castEndAnimState = new AnimState("Skill_1_End");
@@ -258,5 +404,61 @@ public class Brother : ModMonsterTemplate
 		castEndAnimState.NextState = idleAnimState;
 		CreatureAnimator creatureAnimator = new CreatureAnimator(summonAnimState, controller);
 		return creatureAnimator;
-	}
+	}*/
+public override CreatureAnimator GenerateAnimator(MegaSprite controller)
+{
+    GD.Print("[Brother] Generating animator for Brother");
+
+    AnimState summonAnimState = new AnimState("Start");
+    AnimState idleAnimState = new AnimState("Idle", isLooping: true);
+
+    // Skill_1 系列（普通攻击循环）
+    AnimState castAnimState = new AnimState("Skill_1_Start");
+    AnimState castIdleAnimState = new AnimState("Skill_1_Idle", isLooping: true);
+    AnimState castEndAnimState = new AnimState("Skill_1_End");
+    AnimState castAttackAnimState = new AnimState("Attack");
+
+    // Skill_2 系列（范围攻击循环）
+    AnimState cast2AnimState = new AnimState("Skill_2_Start");
+    AnimState cast2IdleAnimState = new AnimState("Skill_2_Idle", isLooping: true);
+    AnimState cast2EndAnimState = new AnimState("Skill_2_End");
+    AnimState cast2AttackAnimState = new AnimState("Skill_2_Loop");
+
+    AnimState deadAnimState = new AnimState("Die");
+
+    // 初始与通用分支
+    summonAnimState.NextState = idleAnimState;
+    // 重要：入场时 AfterAddedToRoom 恢复攻击循环会立刻触发 Skill_1_Start/Skill_2_Start，
+    // 此时动画还处于召唤用的 "Start" 状态（约 1 秒）。如果 Start 状态没有这些分支，
+    // SetTrigger 会静默丢弃触发器，Start 播完后只会进入通用 Idle。
+    summonAnimState.AddBranch("Skill_1_Start", castAnimState);
+    summonAnimState.AddBranch("Skill_2_Start", cast2AnimState);
+    idleAnimState.AddBranch("Dead", deadAnimState);
+    idleAnimState.AddBranch("Skill_1_Start", castAnimState);
+    idleAnimState.AddBranch("Skill_2_Start", cast2AnimState);
+    GD.Print("[Brother] GenerateAnimator: Start branches Skill_1_Start/Skill_2_Start registered, Skill_1_Start -> Skill_1_Idle, Skill_2_Start -> Skill_2_Idle");
+
+    // Skill_1 状态链
+    castAnimState.NextState = castIdleAnimState;
+    castIdleAnimState.AddBranch("Attack", castAttackAnimState);
+    castIdleAnimState.AddBranch("Skill_1_End", castEndAnimState);
+    castIdleAnimState.AddBranch("Dead", deadAnimState);
+    castAttackAnimState.NextState = castIdleAnimState;      // 普通攻击后回到 Skill_1_Idle
+    castAttackAnimState.AddBranch("Skill_1_End", castEndAnimState);
+    castAttackAnimState.AddBranch("Dead", deadAnimState);
+    castEndAnimState.NextState = idleAnimState;
+
+    // Skill_2 状态链
+    cast2AnimState.NextState = cast2IdleAnimState;
+    cast2IdleAnimState.AddBranch("Skill_2_Loop", cast2AttackAnimState);
+    cast2IdleAnimState.AddBranch("Skill_2_End", cast2EndAnimState);
+    cast2IdleAnimState.AddBranch("Dead", deadAnimState);
+    cast2AttackAnimState.NextState = cast2IdleAnimState;   // 范围攻击后回到 Skill_2_Idle
+    cast2AttackAnimState.AddBranch("Skill_2_End", cast2EndAnimState);
+    cast2AttackAnimState.AddBranch("Dead", deadAnimState);
+    cast2EndAnimState.NextState = idleAnimState;
+
+    CreatureAnimator creatureAnimator = new CreatureAnimator(summonAnimState, controller);
+    return creatureAnimator;
+}
 }

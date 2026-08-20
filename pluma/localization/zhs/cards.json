@@ -307,7 +307,6 @@
   "PLUMA_CARD_TEST_BROTHER.title": "龙舌兰",
   "PLUMA_CARD_TEST_BROTHER.description": "[gold]龙舌兰支援[/gold]",
 
-
   "PLUMA_CARD_MARKER_RECOVERY.title": "标志物回收",
   "PLUMA_CARD_MARKER_RECOVERY.description": "每当你消耗[gold]基酒[/gold]或[gold]辅料组合包[/gold]，龙舌兰获得1层特性。若龙舌兰不在场改为你获得1层特性。",
 
@@ -315,5 +314,8 @@
   "PLUMA_CARD_DOUBLE_IDENTITY.description": "龙舌兰获得[gold]双重身份[/gold]：\n每当从攻击意图切换为强化意图时，获得100层特性。",
 
   "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.title": "伺机而动",
-  "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.description": "龙舌兰处于解放者（通常）时，若龙舌兰或后方单位受到伤害，对伤害来源造成[blue]{Stacks:diff()}[/blue]×[red]基础攻击+特性[/red]点伤害。"
+  "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.description": "龙舌兰处于解放者（通常）时，若龙舌兰或后方单位受到伤害，对伤害来源造成[blue]{Stacks:diff()}[/blue]×[red]基础攻击+特性[/red]点伤害。",
+
+  "PLUMA_CARD_SWORD_WALKING_EDGE.title": "剑走偏锋",
+  "PLUMA_CARD_SWORD_WALKING_EDGE.description": "对龙舌兰的攻击意图变为[gold]范围攻击[/gold]。若在蓄力循环重复叠加转而将[gold]蓄力[/gold]层数变为3层。"
 }

@@ -104,6 +104,10 @@
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.description": "你手中每有一张[gold]鸡尾酒[/gold]，手牌上限额外+1。",
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.smartDescription": "手中的鸡尾酒使手牌上限额外+1。",
 
+  "PLUMA_POWER_RESTOCK_CALL_POWER.title": "补货联络",
+  "PLUMA_POWER_RESTOCK_CALL_POWER.description": "在接下来的2个你的回合开始时，各获得1张随机基酒。",
+  "PLUMA_POWER_RESTOCK_CALL_POWER.smartDescription": "在接下来的 [blue]2[/blue] 个你的回合开始时，各获得1张随机基酒。",
+  
   "PLUMA_POWER_PREMONITION_POWER.title": "预感",
   "PLUMA_POWER_PREMONITION_POWER.description": "下个回合开始时，获得等同于层数的渐入佳境。",
   "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
@@ -136,5 +140,9 @@
 
   "PLUMA_POWER_TRAIT_POWER.title": "特性",
   "PLUMA_POWER_TRAIT_POWER.description": "每层使龙舌兰造成的伤害提高1%。",
-  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高 [blue]{Amount}%[/blue]。"
+  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高 [blue]{Amount}%[/blue]。",
+
+  "PLUMA_POWER_BROTHER_AOE_POWER.title": "范围攻击",
+  "PLUMA_POWER_BROTHER_AOE_POWER.description": "龙舌兰的攻击目标变为全体敌人，强化循环获得特性值与攻击循环持续回合数相应调整。",
+  "PLUMA_POWER_BROTHER_AOE_POWER.smartDescription": "龙舌兰攻击变为群体攻击。"
 }

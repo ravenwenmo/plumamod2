@@ -13,7 +13,8 @@ using Pluma.Scripts.Monsters;
 
 namespace Pluma.Scripts.Cards;
 
-// 磨刀：若龙舌兰存在，使其获得50层特性；否则获得50层磨刀。升级后75层。
+// 磨刀：若龙舌兰在场且处于蓄力循环，使其获得50层特性；
+// 若龙舌兰不在场，或龙舌兰处于攻击循环，则改为获得50层磨刀。升级后75层。
 [RegisterCard(typeof(PlumaCardPool))]
 public class SharpenBlade : ModCardTemplate
 {
@@ -45,14 +46,21 @@ public class SharpenBlade : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Creature brother = base.Owner.Brother();
+        Creature creature = base.Owner.Brother();
 
-        if (brother != null && brother.IsAlive)
+        // 判断是否应该给龙舌兰加特性：
+        // 条件：龙舌兰存在、存活，且处于蓄力循环（非攻击循环）
+        bool giveTrait = creature != null
+                         && creature.IsAlive
+                         && creature.Monster is Brother brother
+                         && !brother.IntendsToAttack;
+
+        if (giveTrait && creature.Monster is Brother traitBrother)
         {
-            // 龙舌兰在场：获得特性
+            // 龙舌兰在蓄力循环：对龙舌兰施加特性
             await PowerCmd.Apply<TraitPower>(
                 choiceContext,
-                brother,
+                creature,
                 DynamicVars["TraitAmount"].BaseValue,
                 base.Owner.Creature,
                 this
@@ -60,7 +68,7 @@ public class SharpenBlade : ModCardTemplate
         }
         else
         {
-            // 龙舌兰不在场：保持原效果
+            // 龙舌兰不存在、死亡，或处于攻击循环：对玩家施加磨刀
             await PowerCmd.Apply<SharpenBladePower>(
                 choiceContext,
                 base.Owner.Creature,

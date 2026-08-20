@@ -70,6 +70,54 @@ public class BrotherAttackIntent : AttackIntent
 	public int GetDamage(IEnumerable<Creature> targets, Creature owner)
 	{
 		decimal num = DamageCalc();
+
+		Player? me = owner.PetOwner ?? LocalContext.GetMe(owner.CombatState);
+		if (me == null || me.Creature == null || me.RunState == null)
+		{
+			// 预览/初始化阶段玩家上下文不完整时，返回未经修正的基础伤害
+			return Math.Max(0, (int)num);
+		}
+
+		if (targets != null && targets.Count() == 1)
+		{
+			Creature mo = targets.First();
+			num = Hook.ModifyDamage(
+				me.RunState,
+				me.Creature.CombatState,
+				mo,
+				owner,
+				DamageCalc(),
+				ValueProp.Move,
+				null,
+				null,
+				ModifyDamageHookType.All,
+				CardPreviewMode.None,
+				out IEnumerable<AbstractModel> _
+			);
+		}
+		else
+		{
+			num = Hook.ModifyDamage(
+				me.RunState,
+				me.Creature.CombatState,
+				null,
+				owner,
+				DamageCalc(),
+				ValueProp.Move,
+				null,
+				null,
+				ModifyDamageHookType.All,
+				CardPreviewMode.None,
+				out IEnumerable<AbstractModel> _
+			);
+		}
+
+		return Math.Max(0, (int)num);
+	}
+	/*
+	public int GetDamage(IEnumerable<Creature> targets, Creature owner)
+	{
+		decimal num = DamageCalc();
 		Player me = LocalContext.GetMe(owner.CombatState);
 		if (targets.Count() == 1)
 		{
@@ -82,4 +130,5 @@ public class BrotherAttackIntent : AttackIntent
 
 		return Math.Max(0, (int)num);
 	}
+	*/
 }
