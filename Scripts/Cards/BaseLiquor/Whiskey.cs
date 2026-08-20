@@ -73,7 +73,9 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
         ModCardVars.Int("PlatingAmount", 4),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        // 龙舌兰实际获得的覆甲层数 = PlatingAmount + 1（Ally 分支对宠物额外 +1）
+        ModCardVars.Int("PetPlatingAmount", 5)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

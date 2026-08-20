@@ -73,7 +73,9 @@ public class Tequila : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
         ModCardVars.Int("RegenAmount", 3),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        // 龙舌兰实际获得的再生层数 = RegenAmount + 1（Ally 分支对宠物额外 +1）
+        ModCardVars.Int("PetRegenAmount", 4)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

@@ -80,7 +80,9 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(12m, ValueProp.Move),
         ModCardVars.Int("DexterityAmount", 3),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        // 龙舌兰实际获得的覆甲层数 = DexterityAmount × 2（Ally 分支将敏捷翻倍转换为覆甲）
+        ModCardVars.Int("PetPlatingAmount", 6)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

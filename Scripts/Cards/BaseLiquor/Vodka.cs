@@ -72,7 +72,9 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        // 龙舌兰实际获得的力量层数（Ally 分支将 2 点能量转换为等量力量）
+        ModCardVars.Int("PetStrengthAmount", 2)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

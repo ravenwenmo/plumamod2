@@ -17,7 +17,7 @@ namespace Pluma.Scripts;
 // 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
-[RegisterCharacterStarterCard(typeof(PlumaCharacter), 5)]
+[RegisterCharacterStarterCard(typeof(PlumaCharacter), 4)]
 public class DefendPluma : ModCardTemplate
 {
     // 基础耗能

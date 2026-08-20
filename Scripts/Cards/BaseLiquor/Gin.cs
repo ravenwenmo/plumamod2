@@ -73,7 +73,9 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
         ModCardVars.Int("FlexAmount", 2),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        // 龙舌兰占位效果：施加的特性层数（≈强化循环一回合的自然积累量）
+        ModCardVars.Int("TraitAmount", 25)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -161,6 +163,12 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
+                // 龙舌兰占位效果：临时力量为玩家专属效果，对宠物改为施加特性
+                if (await SpiritTargeting.ApplyTraitToPetInstead(choiceContext, cardPlay.Target, DynamicVars["TraitAmount"].BaseValue,
+                        base.Owner.Creature, this))
+                {
+                    break;
+                }
                 // 获得 2 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
                 await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);

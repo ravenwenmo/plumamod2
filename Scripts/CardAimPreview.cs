@@ -19,14 +19,14 @@ internal static class CardAimPreview
         => CurrentCard is TCard && ReferenceEquals(CurrentTarget, target);
 
     /// <summary>
-    /// 若 card 正在被瞄准，返回瞄准目标对应的阵营分支（自己/敌人/友方）；
-    /// 否则返回 null。
+    /// 若 card 正在被瞄准，返回瞄准目标对应的显示分支（宠物 → Ally、自己/友方玩家 → Self、敌人 → Enemy）；
+    /// 否则返回 null。仅用于描述预览与发光，使用 SpiritTargeting.ResolveForDisplay（不影响实际执行）。
     /// </summary>
     public static SpiritTargetBranch? GetAimBranchFor(CardModel card)
     {
         if (!ReferenceEquals(CurrentCard, card) || CurrentTarget == null || card.Owner == null)
             return null;
-        return SpiritTargeting.Resolve(CurrentTarget, card.Owner.Creature);
+        return SpiritTargeting.ResolveForDisplay(CurrentTarget, card.Owner.Creature);
     }
 
     public static void SetAim(CardModel? card, Creature? target)

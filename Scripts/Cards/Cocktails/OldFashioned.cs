@@ -79,7 +79,8 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(12m, ValueProp.Move),
-        new BlockVar(25m, ValueProp.Move),
+        // 修正：格挡变量与实际效果（GainBlock 20）保持一致，避免 {Block} 描述显示错误数值
+        new BlockVar(20m, ValueProp.Move),
         ModCardVars.Int("WeakAmount", 1)
     ];
 
