@@ -74,7 +74,8 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
         new DamageVar(6m, ValueProp.Move),
         ModCardVars.Int("WeakAmount", 1),
         // 龙舌兰实际获得的力量层数（Ally 分支将 2 点能量转换为等量力量）
-        ModCardVars.Int("PetStrengthAmount", 2)
+        ModCardVars.Int("PetStrengthAmount", 2),
+        ModCardVars.Int("PetTraitAmount", 50)   // 新增：龙舌兰特性层数
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -161,16 +162,20 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
-                // 宠物（如龙舌兰）无法获得能量，转为获得等量力量
-                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, 2, base.Owner.Creature, this))
+
+                // 龙舌兰效果：获得 PetTraitAmount 层特性
+                if (await SpiritTargeting.ApplyTraitToPetInstead(
+                        choiceContext,
+                        cardPlay.Target,
+                        DynamicVars["PetTraitAmount"].BaseValue,
+                        base.Owner.Creature,
+                        this))
                 {
                     break;
                 }
-                // 获得 1 点能量
+
+                // 友方玩家效果：获得 2 点能量
                 await PlayerCmd.GainEnergy(2, cardPlay.Target!.Player);
-                // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
-                // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
-                //     base.Owner.Creature, this);
                 break;
         }
     }

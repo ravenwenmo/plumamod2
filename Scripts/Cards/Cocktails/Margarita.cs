@@ -82,7 +82,7 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
         ModCardVars.Int("ReaperHealingAmount", 1),
         ModCardVars.Int("WeakAmount", 1),
         // 龙舌兰占位效果：施加的特性层数（≈强化循环一回合的自然积累量）
-        ModCardVars.Int("TraitAmount", 25)
+        ModCardVars.Int("PetRegenAmount", 6)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -164,22 +164,25 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
                 break;
 
             case SpiritTargetBranch.Ally:
-                // 先让目标失去 1 点生命（穿透伤害）
-                //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-
-                // 龙舌兰占位效果：收割者为玩家专属效果，对宠物改为施加特性
-                if (await SpiritTargeting.ApplyTraitToPetInstead(choiceContext, cardPlay.Target, DynamicVars["TraitAmount"].BaseValue,
-                        base.Owner.Creature, this))
+                // 龙舌兰效果：获得 6 层再生（层数由 PetRegenAmount 变量控制）
+                if (await SpiritTargeting.ApplyRegenToPetInstead(
+                        choiceContext,
+                        cardPlay.Target,
+                        DynamicVars["PetRegenAmount"].BaseValue,
+                        base.Owner.Creature,
+                        this))
                 {
                     break;
                 }
 
-                // 获得 1 层收割者（友方玩家）
-                await PowerCmd.Apply<ReaperHealingPower>(choiceContext, cardPlay.Target, DynamicVars["ReaperHealingAmount"].BaseValue,
-                    base.Owner.Creature, this);
-                // ---- 旧效果（对友方施加1层虚弱，已注释保留）----
-                // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
-                //     base.Owner.Creature, this);
+                // 友方玩家效果：获得收割者
+                await PowerCmd.Apply<ReaperHealingPower>(
+                    choiceContext,
+                    cardPlay.Target,
+                    DynamicVars["ReaperHealingAmount"].BaseValue,
+                    base.Owner.Creature,
+                    this
+                );
                 break;
         }
     }

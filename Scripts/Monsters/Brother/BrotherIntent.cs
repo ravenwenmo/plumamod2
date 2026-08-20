@@ -14,18 +14,15 @@ namespace Pluma.Monsters;
 
 public class BrotherBuffIntent : BuffIntent
 {
-	
-	protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
+    protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
     {
         LocString locString = new LocString("intents", "PLUMA_BROTHER_BUFF" + ".description");
         ICombatState? combatState = owner.CombatState;
         locString.Add("IsMultiplayer", combatState != null && combatState.RunState.Players.Count > 1);
         return locString;
     }
-	
-
-	
 }
+
 public class BrotherAttackIntent : AttackIntent
 {
     private readonly int _repeat;
@@ -54,6 +51,12 @@ public class BrotherAttackIntent : AttackIntent
         _isAoe = isAoe;
     }
 
+    // 关键修复：覆盖动画名称，避免框架生成不存在的动画键
+    public override string GetAnimation(IEnumerable<Creature> targets, Creature owner)
+    {
+        return _isAoe ? "Skill_2_Loop" : "Attack";
+    }
+
     public override int GetTotalDamage(IEnumerable<Creature> targets, Creature owner)
     {
         return GetDamage(targets, owner) * Repeats;
@@ -62,7 +65,7 @@ public class BrotherAttackIntent : AttackIntent
     protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
     {
         IEnumerable<Creature> enemies = owner.CombatState.GetOpponentsOf(owner);
-        bool isAoe = _isAoe; // 直接使用构造时传入的值
+        bool isAoe = _isAoe;
 
         string key = isAoe
             ? "PLUMA_BROTHER_ATTACK_AOE.description"

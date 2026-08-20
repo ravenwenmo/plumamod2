@@ -70,14 +70,13 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
     };
 
     // 伤害变量（基础3，无升级变化）
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("PlatingAmount", 4),
-        ModCardVars.Int("WeakAmount", 1),
-        // 龙舌兰实际获得的覆甲层数 = PlatingAmount + 1（Ally 分支对宠物额外 +1）
-        ModCardVars.Int("PetPlatingAmount", 5)
-    ];
-
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        new DamageVar(6m, ValueProp.Move),          // 原有伤害变量，保持不变
+        ModCardVars.Int("WeakAmount", 1),           // 原有虚弱层数
+        new BlockVar(10m, ValueProp.Move),          // 友方/自己格挡值
+        ModCardVars.Int("PetBlockAmount", 15)       // 龙舌兰格挡值
+    };
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
@@ -141,12 +140,14 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
                 // 先失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, base.Owner.Creature, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
-                // 获得 3 层覆甲
-                await PowerCmd.Apply<PlatingPower>(choiceContext, base.Owner.Creature, DynamicVars["PlatingAmount"].BaseValue,
-                    base.Owner.Creature, this);
-                // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
-                // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
-                //     base.Owner.Creature, this);
+
+                // 获得格挡
+                await CreatureCmd.GainBlock(
+                    base.Owner.Creature,
+                    DynamicVars["Block"].BaseValue,
+                    ValueProp.Move,
+                    cardPlay
+                );
                 break;
 
             case SpiritTargetBranch.Enemy:
@@ -163,19 +164,26 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
-                
-                // 龙舌兰
-                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars["PlatingAmount"].BaseValue+1, base.Owner.Creature, this))
+
+                // 龙舌兰：获得 15 点格挡
+                if (cardPlay.Target != null && cardPlay.Target.IsPet)
                 {
+                    await CreatureCmd.GainBlock(
+                        cardPlay.Target,
+                        DynamicVars["PetBlockAmount"].BaseValue,
+                        ValueProp.Move,
+                        cardPlay
+                    );
                     break;
                 }
-                
-                // 获得 3 层覆甲
-                await PowerCmd.Apply<PlatingPower>(choiceContext, cardPlay.Target, DynamicVars["PlatingAmount"].BaseValue,
-                    base.Owner.Creature, this);
-                // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
-                // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
-                //     base.Owner.Creature, this);
+
+                // 友方玩家：获得 10 点格挡
+                await CreatureCmd.GainBlock(
+                    cardPlay.Target!,
+                    DynamicVars["Block"].BaseValue,
+                    ValueProp.Move,
+                    cardPlay
+                );
                 break;
         }
     }

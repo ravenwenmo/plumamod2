@@ -144,5 +144,9 @@
 
   "PLUMA_POWER_BROTHER_AOE_POWER.title": "范围攻击",
   "PLUMA_POWER_BROTHER_AOE_POWER.description": "龙舌兰的攻击目标变为全体敌人，强化循环获得特性值与攻击循环持续回合数相应调整。",
-  "PLUMA_POWER_BROTHER_AOE_POWER.smartDescription": "龙舌兰攻击变为群体攻击。"
+  "PLUMA_POWER_BROTHER_AOE_POWER.smartDescription": "龙舌兰攻击变为群体攻击。",
+
+  "PLUMA_POWER_TEMPORARY_EXTRA_HITS_POWER.title": "临时多段斩",
+  "PLUMA_POWER_TEMPORARY_EXTRA_HITS_POWER.description": "攻击结束后，移除等同层数的多段斩并移除自身。",
+  "PLUMA_POWER_TEMPORARY_EXTRA_HITS_POWER.smartDescription": "攻击结束后移除[blue]{Amount}[/blue]层多段斩。"
 }

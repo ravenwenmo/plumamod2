@@ -74,7 +74,8 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
         new DamageVar(6m, ValueProp.Move),
         //ModCardVars.Int("FlowAmount", 2),
         ModCardVars.Int("WeakAmount", 1),
-        new CardsVar(2)
+        new CardsVar(2),
+        ModCardVars.Int("ExtraHitsAmount", 1)   // 新增：临时额外攻击段数层数
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -164,20 +165,39 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
-                // 宠物（如龙舌兰）无法抽牌，转为获得等量力量
-                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue, base.Owner.Creature, this))
+
+                // 龙舌兰：获得临时额外攻击段数
+                if (cardPlay.Target != null && cardPlay.Target.IsPet)
                 {
+                    decimal extraHits = DynamicVars["ExtraHitsAmount"].BaseValue;
+
+                    await PowerCmd.Apply<BrotherExtraHitsPower>(
+                        choiceContext,
+                        cardPlay.Target,
+                        extraHits,
+                        base.Owner.Creature,
+                        this
+                    );
+
+                    await PowerCmd.Apply<TemporaryExtraHitsPower>(
+                        choiceContext,
+                        cardPlay.Target,
+                        extraHits,
+                        base.Owner.Creature,
+                        this
+                    );
+
                     break;
                 }
-                // 获得 2 层渐入佳境
-                //await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAmount"].BaseValue,base.Owner.Creature, this);
-                // 抽牌
+
+                // 友方玩家：抽牌（保持原效果）
                 await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(
                     choiceContext,
                     base.DynamicVars.Cards.BaseValue,
-                    cardPlay.Target.Player,
+                    cardPlay.Target!.Player,
                     this
                 );
+                break;
                 // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
                 //     base.Owner.Creature, this);

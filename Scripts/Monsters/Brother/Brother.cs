@@ -238,7 +238,15 @@ public class Brother : ModMonsterTemplate
 
             await CreatureCmd.Damage(choiceContext, targets, damage, ValueProp.Move, Creature);
         }
-
+        // 攻击完成后，消耗临时额外攻击段数
+        if (Creature.HasPower<TemporaryExtraHitsPower>())
+        {
+            TemporaryExtraHitsPower tempPower = Creature.GetPower<TemporaryExtraHitsPower>();
+            if (tempPower != null)
+            {
+                await tempPower.ConsumeAfterAttack(choiceContext);
+            }
+        }
         if (Creature.GetPowerAmount<BrotherAttackTurnsPower>() <= 0)
         {
             // 攻击循环结束，清空特性并切回强化循环

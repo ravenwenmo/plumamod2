@@ -81,7 +81,7 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
         new DamageVar(12m, ValueProp.Move),
         // 修正：格挡变量与实际效果（GainBlock 20）保持一致，避免 {Block} 描述显示错误数值
         new BlockVar(20m, ValueProp.Move),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("PetBlockAmount", 30m)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -162,13 +162,25 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
                 break;
 
             case SpiritTargetBranch.Ally:
-                // 先让目标失去 1 点生命（穿透伤害）
-                //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 15 点格挡
-                await CreatureCmd.GainBlock(cardPlay.Target!, 20m, ValueProp.Move, cardPlay);
-                // ---- 旧效果（对友方获得1层敏捷，已注释保留）----
-                // await PowerCmd.Apply<DexterityPower>(choiceContext, cardPlay.Target, 1,
-                //     base.Owner.Creature, this);
+                // 龙舌兰效果：获得 PetBlockAmount 点格挡
+                if (cardPlay.Target != null && cardPlay.Target.IsPet)
+                {
+                    await CreatureCmd.GainBlock(
+                        cardPlay.Target,
+                        DynamicVars["PetBlockAmount"].BaseValue,
+                        ValueProp.Move,
+                        cardPlay
+                    );
+                    break;
+                }
+
+                // 友方玩家效果：获得 Block 点格挡
+                await CreatureCmd.GainBlock(
+                    cardPlay.Target!,
+                    DynamicVars["Block"].BaseValue,
+                    ValueProp.Move,
+                    cardPlay
+                );
                 break;
         }
     }

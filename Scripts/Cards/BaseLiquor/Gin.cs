@@ -163,12 +163,15 @@ public class Gin : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
+                // 都加临时力量
+                /*
                 // 龙舌兰占位效果：临时力量为玩家专属效果，对宠物改为施加特性
                 if (await SpiritTargeting.ApplyTraitToPetInstead(choiceContext, cardPlay.Target, DynamicVars["TraitAmount"].BaseValue,
                         base.Owner.Creature, this))
                 {
                     break;
                 }
+                */
                 // 获得 2 层临时力量（直接使用弹性药水的 FlexPotionPower，回合结束失去等量力量）
                 await PowerCmd.Apply<FlexPotionPower>(choiceContext, cardPlay.Target, DynamicVars["FlexAmount"].BaseValue,
                     base.Owner.Creature, this);

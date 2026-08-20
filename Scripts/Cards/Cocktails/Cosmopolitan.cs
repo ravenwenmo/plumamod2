@@ -80,7 +80,8 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(12m, ValueProp.Move),
         new EnergyVar(4),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        ModCardVars.Int("PetTraitAmount", 200)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -165,8 +166,13 @@ public class Cosmopolitan : ModCardTemplate, IModRightClickableCard, ISpiritMode
                 // 先让目标失去 1 点生命（穿透伤害）
                 //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                 //    ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 宠物（如龙舌兰）无法获得能量，转为获得等量力量
-                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, DynamicVars.Energy.BaseValue, base.Owner.Creature, this))
+                // 龙舌兰效果：获得 PetTraitAmount 层特性
+                if (await SpiritTargeting.ApplyTraitToPetInstead(
+                        choiceContext,
+                        cardPlay.Target,
+                        DynamicVars["PetTraitAmount"].BaseValue,
+                        base.Owner.Creature,
+                        this))
                 {
                     break;
                 }

@@ -82,7 +82,8 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
         //ModCardVars.Int("FlowSelfAmount", 6),
         //ModCardVars.Int("FlowAllyAmount", 6),
         new CardsVar(6),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        ModCardVars.Int("ExtraHitsAmount", 1)   // 新增：龙舌兰获得的额外攻击段数
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -166,24 +167,27 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
                 break;
 
             case SpiritTargetBranch.Ally:
-                // 先让目标失去 1 点生命（穿透伤害）
-                //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 5 层渐入佳境
-                //await PowerCmd.Apply<FlowState>(choiceContext, cardPlay.Target, DynamicVars["FlowAllyAmount"].BaseValue, base.Owner.Creature, this);
-                
-                // 宠物（如龙舌兰）无法抽牌，转为获得等量力量
-                if (await SpiritTargeting.ApplyStrengthToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars.Cards.BaseValue, base.Owner.Creature, this))
+                // 龙舌兰：获得 ExtraHitsAmount 层额外攻击段数
+                if (cardPlay.Target != null && cardPlay.Target.IsPet)
                 {
+                    await PowerCmd.Apply<BrotherExtraHitsPower>(
+                        choiceContext,
+                        cardPlay.Target,
+                        DynamicVars["ExtraHitsAmount"].BaseValue,
+                        base.Owner.Creature,
+                        this
+                    );
                     break;
                 }
-                // 抽牌
+
+                // 友方玩家：抽牌（保持原效果）
                 await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(
                     choiceContext,
                     base.DynamicVars.Cards.BaseValue,
-                    cardPlay.Target.Player,
+                    cardPlay.Target!.Player,
                     this
                 );
-                
+
                 // ---- 旧效果（对友方获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(cardPlay.Target!, 3m, ValueProp.Move, cardPlay);
                 break;
