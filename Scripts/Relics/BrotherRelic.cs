@@ -10,6 +10,11 @@ using STS2RitsuLib.Combat.Ui.ExtraCornerAmountLabels;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
+
 namespace Pluma.Scripts;
 
 [RegisterRelic(typeof(PlumaRelicPool))]
@@ -37,12 +42,12 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
             hpText = "[red]" + hpText + "[/red]";
         }
 
-        int strength = BrotherStateData.SavedStrength[this];
-        string strengthText = "[font_size=24]" + strength.ToString() + "[/font_size]";
+        int trait = BrotherStateData.SavedTrait[this];
+        string traitText = "[font_size=24]" + trait.ToString() + "[/font_size]";
 
         return
         [
-            ExtraIconAmountLabelSpec.RichTextCustom(strengthText,
+            ExtraIconAmountLabelSpec.RichTextCustom(traitText,
                 50, 0, 82, 32
             ),
             ExtraIconAmountLabelSpec.RichTextCustom(hpText,
@@ -54,7 +59,7 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("HP", BrotherStateData.SavedHp[this]),
         new DynamicVar("MaxHP", BrotherStateData.SavedMaxHp[this]),
-        new DynamicVar("Strength", BrotherStateData.SavedStrength[this]),
+        new DynamicVar("Trait", BrotherStateData.SavedTrait[this]),
         new DynamicVar("Turns", BrotherStateData.SavedAttackTurnsRemaining[this])
     ];
 
@@ -93,7 +98,7 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     {
         DynamicVars["HP"].BaseValue = BrotherStateData.SavedHp[this];
         DynamicVars["MaxHP"].BaseValue = BrotherStateData.SavedMaxHp[this];
-        DynamicVars["Strength"].BaseValue = BrotherStateData.SavedStrength[this];
+        DynamicVars["Trait"].BaseValue = BrotherStateData.SavedTrait[this];
         DynamicVars["Turns"].BaseValue = BrotherStateData.SavedAttackTurnsRemaining[this];
         InvokeDisplayAmountChanged();
     }
@@ -110,9 +115,9 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         player.GetRelic<BrotherRelic>().UpdateDisplay();
     }
 
-    public static void UpdateSavedStrength(Player player, int strength)
+    public static void UpdateSavedTrait(Player player, int trait)
     {
-        BrotherStateData.SavedStrength[player.GetRelic<BrotherRelic>()] = strength;
+        BrotherStateData.SavedTrait[player.GetRelic<BrotherRelic>()] = trait;
         player.GetRelic<BrotherRelic>().UpdateDisplay();
     }
 

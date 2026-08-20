@@ -11,12 +11,20 @@ using Godot;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Scripts.Monsters;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
 // 伺机而动：龙舌兰处于蓄力循环时，若龙舌兰或羽毛笔受到伤害，对伤害来源造成
-// （龙舌兰基础攻击力 + 当前力量） × 能力层数 的伤害。伤害来源视为龙舌兰。
+// （龙舌兰基础攻击力 × 能力层数%）的伤害；特性加成由 TraitPower 自动应用。
 [RegisterPower]
 public class WaitForOpportunityPower : ModPowerTemplate
 {
@@ -62,10 +70,14 @@ public class WaitForOpportunityPower : ModPowerTemplate
         {
             return;
         }
-
-        // 计算伤害值：(基础攻击力 + 当前力量) × 能力层数 / 100m
-        int strengthAmount = Owner.GetPowerAmount<StrengthPower>();
-        decimal baseDamage = Brother.BasicDamage + strengthAmount;
+        // 仅当伤害来源为敌方时才反击
+        if (!dealer.IsEnemy)
+        {
+            return;
+        }
+        // 计算伤害值：基础攻击力 × 能力层数百分比
+        // 特性加成由 TraitPower.ModifyDamageMultiplicative 自动应用，避免重复计算
+        decimal baseDamage = Brother.BasicDamage;
         decimal totalDamage = baseDamage * (decimal)Amount / 100m;
 
         // 对伤害来源造成伤害，来源视为龙舌兰

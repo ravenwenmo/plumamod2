@@ -12,10 +12,9 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
-
 // 双重身份：龙舌兰每次进入强化循环时（或获得本能力时正处于强化循环），若未冷却，
-// 立即获得力量阈值一半的力量，随后进入冷却；龙舌兰进入攻击循环后冷却刷新，
-// 从而每个连续的强化循环期间最多触发一次。
+// 立即获得特性阈值一半的特性，随后进入冷却；龙舌兰进入攻击循环后冷却刷新，
+// 从而每个连续地强化循环期间最多触发一次。
 // 触发与刷新由 Brother.SwitchToPowerUpIntent / SwitchToAttackIntent 驱动。
 [RegisterPower]
 public class DoubleIdentityPower : ModPowerTemplate
@@ -28,7 +27,7 @@ public class DoubleIdentityPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/DoubleIdentityPower.png"
     );
 
-    // 冷却状态（1 = 冷却中）：本强化循环内已触发过力量获取
+    // 冷却状态（1 = 冷却中）：本强化循环内已触发过特性获取
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("Cooldown", 0)
     ];
@@ -44,14 +43,14 @@ public class DoubleIdentityPower : ModPowerTemplate
     {
         if (Owner.Monster is Brother brother && !brother.IntendsToAttack)
         {
-            await TriggerStrengthGain();
+            await TriggerTraitGain();
         }
     }
 
     // 龙舌兰进入强化循环时（由 Brother.SwitchToPowerUpIntent 调用）
     public async Task TriggerOnPowerUpCycle()
     {
-        await TriggerStrengthGain();
+        await TriggerTraitGain();
     }
 
     // 龙舌兰进入攻击循环时（由 Brother.SwitchToAttackIntent 调用），刷新冷却
@@ -60,7 +59,7 @@ public class DoubleIdentityPower : ModPowerTemplate
         IsOnCooldown = false;
     }
 
-    private async Task TriggerStrengthGain()
+    private async Task TriggerTraitGain()
     {
         if (IsOnCooldown)
         {
@@ -68,10 +67,10 @@ public class DoubleIdentityPower : ModPowerTemplate
         }
 
         IsOnCooldown = true;
-        await PowerCmd.Apply<StrengthPower>(
+        await PowerCmd.Apply<TraitPower>(
             new ThrowingPlayerChoiceContext(),
             Owner,
-            Brother.STRENGTH_THRESHOLD / 2m,
+            Brother.TraitThreshold / 2m,   // 获得阈值一半的特性（200 / 2 = 100）
             Owner,
             null
         );

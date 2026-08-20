@@ -27,17 +27,18 @@ namespace Pluma.Scripts.Monsters;
 [RegisterMonster]
 public class Brother : ModMonsterTemplate
 {
-    public const int INITIAL_HP = 40;
-    // 强化循环意图每回合获得的力量
-    private const int PowerUpStrengthPerTurn = 1;
-    // 力量达到该值后切换为攻击循环意图
-    public const int STRENGTH_THRESHOLD = 8;
+    // 基础生命上限
+    public const int INITIAL_HP = 66;
+    // 强化循环意图每回合获得的特性层数
+    private const int TraitPerTurn = 25;
+    // 特性达到该值后切换为攻击循环意图
+    public const int TraitThreshold = 200;
     // 攻击循环意图持续的回合数（变量，可调整）
     public const int ATTACK_INTENT_TURNS = 3;
     // 攻击基础段数（额外段数由 BrotherExtraHitsPower 层数提供）
     public const int ATTACK_BASE_HITS = 1;
     // 每段基础伤害
-    public  const int BasicDamage = 4;
+    public const int BasicDamage = 4;
 
     public override int MinInitialHp => INITIAL_HP;
     public override int MaxInitialHp => INITIAL_HP;
@@ -58,22 +59,21 @@ public class Brother : ModMonsterTemplate
 
     public override async Task AfterAddedToRoom()
     {
-        // 按持久化数据恢复生命值、力量与意图。
-        // 注意顺序：先设置意图再恢复力量，避免力量恢复触发
-        // BrotherPower.AfterPowerAmountChanged 时误切意图（幂等保护见 SwitchToAttackIntent）。
         await CreatureCmd.SetMaxHp(Creature, Math.Max(1, BrotherStateData.GetMaxHp(Creature.PetOwner)));
         await CreatureCmd.SetCurrentHp(Creature, Math.Max(1, BrotherStateData.GetHp(Creature.PetOwner)));
         await PowerCmd.Apply<BrotherPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
         await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetAttackTurnsRemaining(Creature.PetOwner), null, null);
-        //额外增加一个被动
+        // 额外增加一个被动
         await PowerCmd.Apply<MarkerRecoveryPower>(
             new ThrowingPlayerChoiceContext(),
             Creature,
-            1m,
+            10m,
             null,
             null
         );
-        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetStrength(Creature.PetOwner), null, null);
+
+        // 恢复特性层数（替换原来的力量恢复）
+        await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetTrait(Creature.PetOwner), null, null);
 
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         brotherNode?.ToggleIsInteractable(true);
@@ -97,12 +97,14 @@ public class Brother : ModMonsterTemplate
             return; // 攻击循环期间回合开始无动作
         }
 
-        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), Creature, PowerUpStrengthPerTurn, Creature, null);
-        GD.Print($"[Brother] Power-up turn start: strength {Creature.GetPowerAmount<StrengthPower>()}/{STRENGTH_THRESHOLD}");
+        await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, TraitPerTurn, Creature, null);
+        GD.Print($"[Brother] Power-up turn start: trait {Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
     }
+
 
     // 回合结束（由 BrotherSupportPower 驱动）：
     // 攻击循环期间执行群体攻击，并结算剩余攻击回合
+  
     public async Task TakeTurn(PlayerChoiceContext choiceContext)
     {
         if (!IntendsToAttack)
@@ -122,8 +124,8 @@ public class Brother : ModMonsterTemplate
         }
         if (Creature.GetPowerAmount<BrotherAttackTurnsPower>() <= 0)
         {
-            // 攻击循环结束，清空力量并切回强化循环
-            await PowerCmd.Remove<StrengthPower>(Creature);
+            // 攻击循环结束，清空特性并切回强化循环
+            await PowerCmd.Remove<TraitPower>(Creature);
             await SwitchToPowerUpIntent();
         }
     }
@@ -159,27 +161,28 @@ public class Brother : ModMonsterTemplate
         await CreatureCmd.TriggerAnim(Creature, "Skill_1_End", 0.3f);
         DieForYou = false;
 
-        // 双重身份：进入强化循环时触发一次力量获取
+        // 双重身份：进入强化循环时触发一次
         if (Creature.GetPower<DoubleIdentityPower>() is DoubleIdentityPower doubleIdentity)
         {
             await doubleIdentity.TriggerOnPowerUpCycle();
         }
     }
 
-    public async Task TriggerWhenGainStrength()
+
+    public async Task TriggerWhenGainTrait()
     {
         if (Creature.HasPower<BrotherAttackTurnsPower>())
         {
             // 已经处于攻击意图
             return;
         }
-        if (Creature.GetPowerAmount<StrengthPower>() >= STRENGTH_THRESHOLD)
+        if (Creature.GetPowerAmount<TraitPower>() >= TraitThreshold)
         {
             // 给予攻击意图
             await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, ATTACK_INTENT_TURNS, Creature, null);
         }
     }
-
+    
     // 仅用作显示，召唤物不主动执行意图（实际行动由 BrotherSupportPower 在回合钩子中驱动）
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {

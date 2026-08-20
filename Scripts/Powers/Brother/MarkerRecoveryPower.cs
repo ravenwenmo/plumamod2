@@ -8,10 +8,11 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Players;
 
+
 namespace Pluma.Scripts;
 
 // 标记回收：每当能力持有者（玩家或其召唤物）的主人消耗基酒牌或辅料牌（MixerPack）时，
-// 能力持有者获得等于该能力层数的力量。每当鸡尾酒牌生成时，能力持有者获得 1 层额外攻击段数。
+// 能力持有者获得等于该能力层数的特性。每当鸡尾酒牌生成时，能力持有者获得 1 层额外攻击段数。
 [RegisterPower]
 public class MarkerRecoveryPower : ModPowerTemplate
 {
@@ -39,10 +40,10 @@ public class MarkerRecoveryPower : ModPowerTemplate
         // 基酒牌或辅料牌
         if (card is IBaseSpiritCard || card is MixerPack)
         {
-            await PowerCmd.Apply<StrengthPower>(
+            await PowerCmd.Apply<TraitPower>(
                 choiceContext,
                 Owner,
-                (decimal)Amount,          // 力量数值 = 当前能力层数
+                (decimal)Amount,          // 特性层数 = 当前能力层数
                 Owner,
                 card
             );

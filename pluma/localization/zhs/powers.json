@@ -11,9 +11,9 @@
   "PLUMA_POWER_SHARPEN_BLADE_POWER.smartDescription": "下一张攻击牌会造成[blue]{Amount}%额外伤害。",
   "PLUMA_POWER_SHARPEN_BLADE_POWER.title": "磨刀",
 
-  "PLUMA_POWER_CHARGING_POWER.description": "下一张攻击牌会额外打出一次。",
-  "PLUMA_POWER_CHARGING_POWER.smartDescription": "下一张攻击牌会额外打出一次。回合结束消失。",
   "PLUMA_POWER_CHARGING_POWER.title": "蓄力",
+  "PLUMA_POWER_CHARGING_POWER.description": "你的攻击牌打出次数+1，打出后消耗1层蓄力；回合结束时移除。\n若由龙舌兰持有：回合结束不移除，改为攻击循环即将结束时消耗1层并延长1回合。",
+  "PLUMA_POWER_CHARGING_POWER.smartDescription": "攻击牌打出次数+1，打出后消耗1层。龙舌兰持有时，攻击循环结束消耗1层并延长1回合。",
 
   "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌,根据层数获得攻击力加成",
   "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，当前攻击力加成：[blue]3*[/blue][blue]{Amount}%",
@@ -112,8 +112,8 @@
   "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]解放者（解放）[/gold]或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。",
 
   "PLUMA_POWER_BROTHER_POWER.title": "解放者",
-  "PLUMA_POWER_BROTHER_POWER.description": "力量达到一定层数时，进入数回合的解放者（解放）。",
-  "PLUMA_POWER_BROTHER_POWER.smartDescription": "力量达到[blue]{StrengthThreshold}[/blue]点时，进入[blue]{AttackIntentTurns}[/blue]回合的解放者（解放）。",
+  "PLUMA_POWER_BROTHER_POWER.description": "特性达到一定层数时，进入数回合的解放者（解放）。",
+  "PLUMA_POWER_BROTHER_POWER.smartDescription": "特性达到[blue]{TraitThreshold}[/blue]点时，进入[blue]{AttackIntentTurns}[/blue]回合的解放者（解放）。",
 
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.title": "多段斩",
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰处于解放者（解放）时，额外造成[blue]{Amount}[/blue]段伤害。",
@@ -123,14 +123,18 @@
   "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.smartDescription": "龙舌兰处于解放者（解放），[blue]{Amount}[/blue]回合后回到解放者（通常）。",
 
   "PLUMA_POWER_MARKER_RECOVERY_POWER.title": "标志物回收",
-  "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得等于层数的力量或额外攻击段数。",
-  "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得[blue]{Amount}[/blue]点力量或额外攻击段数。",
+  "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得等于层数的特性或额外攻击段数。",
+  "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得[blue]{Amount}[/blue]层特性或额外攻击段数。",
 
   "PLUMA_POWER_DOUBLE_IDENTITY_POWER.title": "双重身份",
-  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入解放者（通常）时，立即获得[blue]4[/blue]点力量，随后进入冷却；龙舌兰进入解放者（解放）后冷却刷新。",
-  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入解放者（通常）时获得 [blue]4[/blue] 点力量，进入解放者（解放）后冷却刷新。",
+  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入解放者（通常）时，立即获得[blue]100[/blue]层特性，随后进入冷却；龙舌兰进入解放者（解放）后冷却刷新。",
+  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入解放者（通常）时获得 [blue]100[/blue] 层特性，进入解放者（解放）后冷却刷新。",
 
   "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.title": "伺机而动",
-  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.description": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，对伤害来源造成（龙舌兰基础攻击力+当前力量）×层数的伤害。",
-  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.smartDescription1": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，对伤害来源造成[blue]{Amount}%×基础攻击+力量[/blue]点伤害。"
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.description": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成龙舌兰层数%的伤害",
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.smartDescription": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成[blue]{Amount}[/blue]%的伤害。",
+
+  "PLUMA_POWER_TRAIT_POWER.title": "特性",
+  "PLUMA_POWER_TRAIT_POWER.description": "每层使龙舌兰造成的伤害提高1%。",
+  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高 [blue]{Amount}%[/blue]。"
 }

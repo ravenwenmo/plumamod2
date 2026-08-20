@@ -23,7 +23,7 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
     public override CharacterGender Gender => CharacterGender.Feminine;
 
     // 初始血量和金币
-    public override int StartingHp => 70;
+    public override int StartingHp => 33;
     public override int StartingGold => 99;
 
     

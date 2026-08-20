@@ -13,10 +13,25 @@ using MegaCrit.Sts2.Core.ValueProps;
 using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using Godot;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.Runs;
+using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Scripts.Monsters;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 解放：力量达到一定层数时，进入数回合的攻击意图。
+// 解放：特性达到一定层数时，进入数回合的攻击意图。
 // 同时用于检测龙舌兰生命值增减并在BrotherStateData中更新；龙舌兰死亡时重置持久化状态
 [RegisterPower]
 public class BrotherPower : ModPowerTemplate
@@ -24,11 +39,11 @@ public class BrotherPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 
-    private static int StrengthThreshold => Brother.STRENGTH_THRESHOLD;
+    private static int TraitThreshold => Brother.TraitThreshold;
     public static int AttackIntentTurns { get; set; } = Brother.ATTACK_INTENT_TURNS;
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DynamicVar("StrengthThreshold", StrengthThreshold),
+        new DynamicVar("TraitThreshold", TraitThreshold),
         new DynamicVar("AttackIntentTurns", AttackIntentTurns)
     ];
 
@@ -95,13 +110,15 @@ public class BrotherPower : ModPowerTemplate
             BrotherStateData.SetAttackTurnsRemaining(Owner.PetOwner, Owner.GetPowerAmount<BrotherAttackTurnsPower>());
             return;
         }
-        // 只关心龙舌兰自身的力量变化
-        if (power is not StrengthPower || power.Owner != Owner) return;
+
+        // 只关心龙舌兰自身的特性变化
+        if (power is not TraitPower || power.Owner != Owner) return;
         if (Owner.Monster is Brother brother)
         {
-            BrotherStateData.SetStrength(Owner.PetOwner, Owner.GetPowerAmount<StrengthPower>());
-            await brother.TriggerWhenGainStrength();
-        } else
+            BrotherStateData.SetTrait(Owner.PetOwner, Owner.GetPowerAmount<TraitPower>());
+            await brother.TriggerWhenGainTrait();
+        }
+        else
         {
             throw new Exception("BrotherPower: Owner is not Tequila.");
         }
