@@ -90,6 +90,19 @@ public class Brother : ModMonsterTemplate
         
         await CreatureCmd.SetMaxHp(Creature, Math.Max(1, BrotherStateData.GetMaxHp(Creature.PetOwner)));
         await CreatureCmd.SetCurrentHp(Creature, Math.Max(1, BrotherStateData.GetHp(Creature.PetOwner)));
+
+// 应用待回复生命值
+        Player? petOwner = Creature.PetOwner;
+        if (petOwner != null)
+        {
+            int pendingHeal = BrotherStateData.GetPendingHeal(petOwner);
+            if (pendingHeal > 0)
+            {
+                await CreatureCmd.Heal(Creature, pendingHeal);
+                BrotherStateData.ClearPendingHeal(petOwner);
+            }
+        }
+        
         await PowerCmd.Apply<BrotherPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
         await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, attackTurnsRemaining, null, null);
         await PowerCmd.Apply<MarkerRecoveryPower>(
@@ -101,6 +114,9 @@ public class Brother : ModMonsterTemplate
         );
         await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetTrait(Creature.PetOwner), null, null);
         GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
+        
+        
+        
         // 关键：根据持久化数据恢复意图状态机与动画
         if (attackTurnsRemaining > 0)
         {

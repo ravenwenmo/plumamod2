@@ -31,7 +31,8 @@ public class BrotherStateData
     public static readonly SavedAttachedState<BrotherRelic, int> SavedMaxHp = new("SavedMaxHp", _ => Brother.INITIAL_HP);
     public static readonly SavedAttachedState<BrotherRelic, int> SavedTrait = new("SavedTrait", _ => 0);
     public static readonly SavedAttachedState<BrotherRelic, int> SavedAttackTurnsRemaining = new("SavedAttackTurnsRemaining", _ => 0);
-
+    public static readonly SavedAttachedState<BrotherRelic, int> SavedPendingHeal = new("SavedPendingHeal", _ => 0);
+    
     public int Hp { get; set; }
     public int MaxHp { get; set; }
 
@@ -65,6 +66,22 @@ public class BrotherStateData
     {
         BrotherRelic relic = player.GetRelic<BrotherRelic>();
         return SavedTrait[relic];
+    }
+    
+    public static void AddPendingHeal(Player player, int amount)
+    {
+        int current = SavedPendingHeal[player.GetRelic<BrotherRelic>()];
+        SavedPendingHeal[player.GetRelic<BrotherRelic>()] = current + amount;
+    }
+
+    public static int GetPendingHeal(Player player)
+    {
+        return SavedPendingHeal[player.GetRelic<BrotherRelic>()];
+    }
+
+    public static void ClearPendingHeal(Player player)
+    {
+        SavedPendingHeal[player.GetRelic<BrotherRelic>()] = 0;
     }
 
     public static int GetAttackTurnsRemaining(Player player)
