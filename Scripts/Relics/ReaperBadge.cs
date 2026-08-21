@@ -33,13 +33,12 @@ public class ReaperBadge : ModRelicTemplate
         BigIconPath: $"res://pluma/images/relics/{GetType().Name}.png"
     );
 
-    private static bool _hasObtainedBrotherRelic = false;
+    //private static bool _hasObtainedBrotherRelic = false;
     public override async Task AfterRoomEntered(AbstractRoom room)
     {
-        if (Owner.GetRelic<BrotherRelic>() == null && !_hasObtainedBrotherRelic)
+        if (Owner.GetRelic<BrotherRelic>() == null)
         {
             await RelicCmd.Obtain(ModelDb.Relic<BrotherRelic>().ToMutable(), Owner, 0);
-            _hasObtainedBrotherRelic = true;
         }
     }
     

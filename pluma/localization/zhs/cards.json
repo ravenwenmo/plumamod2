@@ -233,7 +233,7 @@
   "PLUMA_CARD_MARGARITA.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己或友方：目标失去1点生命，然后获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
   "PLUMA_CARD_MARGARITA_SELF_DESC": "获得{ReaperHealingAmount:diff()}层[gold]收割者[/gold]。",
   "PLUMA_CARD_MARGARITA_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_MARGARITA_ALLY_DESC": "使龙舌兰获得{PetRegenAmount:diff()}层[gold]再生[/gold]。",
+  "PLUMA_CARD_MARGARITA_ALLY_DESC": "使龙舌兰回复{PetHealAmount:diff()}点生命值。",
 
   "PLUMA_CARD_OLD_FASHIONED.title": "古典鸡尾酒",
   "PLUMA_CARD_OLD_FASHIONED.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己或友方：目标失去1点生命，然后获得[gold]格挡[/gold]。",
@@ -270,7 +270,7 @@
   "PLUMA_CARD_DRINKS_FOR_TWO.description": "获得2张随机基酒。\n将1张辅料组合包分别放入抽牌堆和弃牌堆。",
 
   "PLUMA_CARD_BARTENDERS_FLASK.title": "调酒师的小壶",
-  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有基酒，\n获得1张{IfUpgraded:show:[gold]指定[/gold]}基酒；\n否则获得1张辅料组合包。",
+  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有基酒，\n获得1张基酒；\n否则获得1张辅料组合包。",
   "PLUMA_CARD_BARTENDERS_FLASK.selectPrompt": "选择一张基酒",
 
   "PLUMA_CARD_INSTANT_PAIR.title": "即时搭配",
@@ -295,7 +295,7 @@
   "PLUMA_CARD_DRINK_SOMETHING.description": "获得1张随机基酒。\n抽{Cards:diff()}张牌。",
 
   "PLUMA_CARD_RESTOCK_CALL.title": "补货联络",
-  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张辅料组合包。\n在接下来的两个回合开始时，各获得1张随机基酒。",
+  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张{IfUpgraded:show:[gold]升级过[/gold]的|}辅料组合包。\n在接下来的两个回合开始时，各获得1张随机基酒。",
 
   "PLUMA_CARD_REPEAT.title": "复读",
   "PLUMA_CARD_REPEAT.description": "选择一张手牌，复制它并给复制品添加[gold]本能[/gold]。",
@@ -328,5 +328,16 @@
   "PLUMA_CARD_INSTINCT_CLEANSE_MISSING_DESC": "[gold]消耗[/gold]。\n获得200层[gold]磨刀[/gold]。",
 
   "PLUMA_CARD_POST_BATTLE_RECOVERY.title": "罗德岛医疗",
-  "PLUMA_CARD_POST_BATTLE_RECOVERY.description": "作战结束后，龙舌兰回复7点生命。\n每打出一次此牌，本场战斗内此牌费用+1。"
+  "PLUMA_CARD_POST_BATTLE_RECOVERY.description": "作战结束后，龙舌兰回复7点生命。\n每打出一次此牌，本场战斗内此牌费用+1。",
+
+  "PLUMA_CARD_I_GOT_THIS.title": "“我来就好”",
+  "PLUMA_CARD_I_GOT_THIS.description": "龙舌兰回复5点生命，每失去20层特性额外回复1点，清空其特性并切换至强化循环。",
+  "PLUMA_CARD_I_GOT_THIS_ALIVE_DESC": "龙舌兰回复5点生命，每失去20层特性额外回复1点，清空其特性并切换至强化循环。",
+  "PLUMA_CARD_I_GOT_THIS_MISSING_DESC": "抽1张牌。\n“固有的牌，为什么龙舌兰就已经不在了？”",
+
+  "PLUMA_CARD_TOGETHER_WE_FIGHT.title": "你我二人齐上",
+  "PLUMA_CARD_TOGETHER_WE_FIGHT.description": "造成{Damage:diff()}*{Hits:diff()}点伤害。\n你获得{FlexAmount:diff()}层临时力量，若龙舌兰在场其也获得等量临时力量。",
+
+  "PLUMA_CARD_FOLLOW_ORDERS.title": "服从指挥",
+  "PLUMA_CARD_FOLLOW_ORDERS.description": "造成{Damage:diff()}×{Hits:diff()}点伤害。\n每当你抽到此牌，攻击段数+1。"
 }

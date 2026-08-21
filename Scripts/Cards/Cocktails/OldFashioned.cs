@@ -81,7 +81,8 @@ public class OldFashioned : ModCardTemplate, IModRightClickableCard, ISpiritMode
         new DamageVar(12m, ValueProp.Move),
         // 修正：格挡变量与实际效果（GainBlock 20）保持一致，避免 {Block} 描述显示错误数值
         new BlockVar(20m, ValueProp.Move),
-        ModCardVars.Int("PetBlockAmount", 30m)
+        ModCardVars.Int("PetBlockAmount", 30m),
+        ModCardVars.Int("WeakAmount", 1),
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

@@ -53,7 +53,7 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
 
         if (!hasBaseSpirit)
         {
-            if (base.IsUpgraded)
+            if (false)
             {
                 // 升级后：由玩家从六种基酒中选择一种加入手牌。
                 // 选择通过 PlayerChoiceSynchronizer 同步：本地玩家弹出选卡界面，
@@ -106,6 +106,6 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
 
     protected override void OnUpgrade()
     {
-        // 升级效果在 OnPlay 中体现：无基酒时由"随机获得"改为"玩家指定"（见 IsUpgraded 分支）
+        AddKeyword(CardKeyword.Retain); // 升级后获得保留
     }
 }

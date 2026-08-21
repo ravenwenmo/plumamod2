@@ -68,8 +68,9 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         IconOutlinePath: $"res://pluma/images/relics/{GetType().Name}.png",
         BigIconPath: $"res://pluma/images/relics/{GetType().Name}.png"
     );
+    
+    private bool _hasSummonedBrother = false;    // 实例字段，每人一个
 
-    private static bool _hasSummonedBrother = false;    // 防止多个遗物重复召唤龙舌兰
     public override async Task AfterRoomEntered(AbstractRoom room)
     {
         if (Owner.GetRelic<BrotherRelic>() == null) return;

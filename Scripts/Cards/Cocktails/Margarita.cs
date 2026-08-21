@@ -82,7 +82,8 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
         ModCardVars.Int("ReaperHealingAmount", 1),
         ModCardVars.Int("WeakAmount", 1),
         // 龙舌兰占位效果：施加的特性层数（≈强化循环一回合的自然积累量）
-        ModCardVars.Int("PetRegenAmount", 6)
+        ModCardVars.Int("PetRegenAmount", 6),
+        ModCardVars.Int("PetHealAmount", 20)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -164,14 +165,13 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
                 break;
 
             case SpiritTargetBranch.Ally:
-                // 龙舌兰效果：获得 6 层再生（层数由 PetRegenAmount 变量控制）
-                if (await SpiritTargeting.ApplyRegenToPetInstead(
-                        choiceContext,
-                        cardPlay.Target,
-                        DynamicVars["PetRegenAmount"].BaseValue,
-                        base.Owner.Creature,
-                        this))
+                // 龙舌兰效果：回复 PetHealAmount 点生命值
+                if (cardPlay.Target != null && cardPlay.Target.IsPet)
                 {
+                    await CreatureCmd.Heal(
+                        cardPlay.Target,
+                        DynamicVars["PetHealAmount"].BaseValue
+                    );
                     break;
                 }
 
