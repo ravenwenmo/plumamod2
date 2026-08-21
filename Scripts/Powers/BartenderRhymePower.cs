@@ -17,8 +17,8 @@ public class BartenderRhymePower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single; // 不可叠加
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/BartenderRhyme.png",
-        BigIconPath: "res://pluma/images/powers/BartenderRhyme.png"
+        IconPath: "res://pluma/images/powers/BartenderRhymePower.png",
+        BigIconPath: "res://pluma/images/powers/BartenderRhymePower.png"
     );
     
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)

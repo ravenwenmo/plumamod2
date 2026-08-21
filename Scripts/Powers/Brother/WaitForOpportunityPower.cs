@@ -32,8 +32,8 @@ public class WaitForOpportunityPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/WaitForOpportunity.png",
-        BigIconPath: "res://pluma/images/powers/WaitForOpportunity.png"
+        IconPath: "res://pluma/images/powers/WaitForOpportunityPower.png",
+        BigIconPath: "res://pluma/images/powers/WaitForOpportunityPower.png"
     );
 
     public override async Task BeforeDamageReceived(

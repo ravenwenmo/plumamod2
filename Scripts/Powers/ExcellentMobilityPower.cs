@@ -18,7 +18,7 @@ public class ExcellentMobilityPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter; // 可叠加
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/ExcellentMobility.png",
-        BigIconPath: "res://pluma/images/powers/ExcellentMobility.png"
+        IconPath: "res://pluma/images/powers/ExcellentMobilityPower.png",
+        BigIconPath: "res://pluma/images/powers/ExcellentMobilityPower.png"
     );
 }

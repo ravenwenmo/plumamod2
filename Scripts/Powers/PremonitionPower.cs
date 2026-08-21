@@ -20,8 +20,8 @@ public class PremonitionPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter; // 层数即获得量
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/Premonition.png",
-        BigIconPath: "res://pluma/images/powers/Premonition.png"
+        IconPath: "res://pluma/images/powers/PremonitionPower.png",
+        BigIconPath: "res://pluma/images/powers/PremonitionPower.png"
     );
 
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)

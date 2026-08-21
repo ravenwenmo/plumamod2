@@ -52,8 +52,8 @@ public class BrotherPower : ModPowerTemplate
     ];
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/Brother.png",
-        BigIconPath: "res://pluma/images/powers/Brother.png"
+        IconPath: "res://pluma/images/powers/BrotherPower.png",
+        BigIconPath: "res://pluma/images/powers/BrotherPower.png"
     );
 
     public override Creature ModifyUnblockedDamageTarget(Creature target, decimal unblockedDamage, ValueProp props, Creature? _)

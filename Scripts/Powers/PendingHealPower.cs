@@ -13,7 +13,7 @@ public class PendingHealPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/PendingHeal.png",
-        BigIconPath: "res://pluma/images/powers/PendingHeal.png"
+        IconPath: "res://pluma/images/powers/PendingHealPower.png",
+        BigIconPath: "res://pluma/images/powers/PendingHealPower.png"
     );
 }

@@ -21,8 +21,8 @@ public class FeintPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/Feint.png",
-        BigIconPath: "res://pluma/images/powers/Feint.png"
+        IconPath: "res://pluma/images/powers/FeintPower.png",
+        BigIconPath: "res://pluma/images/powers/FeintPower.png"
     );
 
 

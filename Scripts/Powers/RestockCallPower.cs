@@ -21,8 +21,8 @@ public class RestockCallPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/RestockCall.png",
-        BigIconPath: "res://pluma/images/powers/RestockCall.png"
+        IconPath: "res://pluma/images/powers/RestockCallPower.png",
+        BigIconPath: "res://pluma/images/powers/RestockCallPower.png"
     );
 
     // 设置持续回合数（应由卡牌打出时赋予 2）

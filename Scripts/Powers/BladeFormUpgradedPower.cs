@@ -24,8 +24,8 @@ public class BladeFormUpgradedPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/BladeFormUpgradePower.png",
-        BigIconPath: "res://pluma/images/powers/BladeFormUpgradePower.png"
+        IconPath: "res://pluma/images/powers/BladeFormUpgradedPower.png",
+        BigIconPath: "res://pluma/images/powers/BladeFormUpgradedPower.png"
     );
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)

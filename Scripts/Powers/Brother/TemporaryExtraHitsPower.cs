@@ -36,8 +36,8 @@ public class TemporaryExtraHitsPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/TemporaryExtraHits.png",
-        BigIconPath: "res://pluma/images/powers/TemporaryExtraHits.png"
+        IconPath: "res://pluma/images/powers/TemporaryExtraHitsPower.png",
+        BigIconPath: "res://pluma/images/powers/TemporaryExtraHitsPower.png"
     );
 
     /// <summary>

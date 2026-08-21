@@ -22,8 +22,8 @@ public class BrotherSupportPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/BrotherSupport.png",
-        BigIconPath: "res://pluma/images/powers/BrotherSupport.png"
+        IconPath: "res://pluma/images/powers/BrotherSupportPower.png",
+        BigIconPath: "res://pluma/images/powers/BrotherSupportPower.png"
     );
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)

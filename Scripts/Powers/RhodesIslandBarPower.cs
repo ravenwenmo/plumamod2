@@ -16,8 +16,8 @@ public class RhodesIslandBarPower : ModPowerTemplate, IMaxHandSizeModifier
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/RhodesIslandBar.png",
-        BigIconPath: "res://pluma/images/powers/RhodesIslandBar.png"
+        IconPath: "res://pluma/images/powers/RhodesIslandBarPower.png",
+        BigIconPath: "res://pluma/images/powers/RhodesIslandBarPower.png"
     );
 
     // 早期修正：只对能力持有者生效，按手牌中鸡尾酒牌数量增加上限

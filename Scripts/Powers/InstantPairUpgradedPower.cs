@@ -19,8 +19,8 @@ public class InstantPairUpgradedPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/InstantPairUpgraded.png",
-        BigIconPath: "res://pluma/images/powers/InstantPairUpgraded.png"
+        IconPath: "res://pluma/images/powers/InstantPairUpgradedPower.png",
+        BigIconPath: "res://pluma/images/powers/InstantPairUpgradedPower.png"
     );
 
     public override async Task AfterCardGeneratedForCombat(CardModel card, Player? creator)

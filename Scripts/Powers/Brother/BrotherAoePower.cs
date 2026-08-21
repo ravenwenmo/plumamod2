@@ -29,8 +29,8 @@ public class BrotherAoePower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter; // 改为可叠加
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/BrotherAoe.png",
-        BigIconPath: "res://pluma/images/powers/BrotherAoe.png"
+        IconPath: "res://pluma/images/powers/BrotherAoePower.png",
+        BigIconPath: "res://pluma/images/powers/BrotherAoePower.png"
     );
     public override async Task AfterPowerAmountChanged(
         PlayerChoiceContext choiceContext,

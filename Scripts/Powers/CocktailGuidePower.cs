@@ -16,8 +16,8 @@ public class CocktailGuidePower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/CocktailGuide.png",
-        BigIconPath: "res://pluma/images/powers/CocktailGuide.png"
+        IconPath: "res://pluma/images/powers/CocktailGuidePower.png",
+        BigIconPath: "res://pluma/images/powers/CocktailGuidePower.png"
     );
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)

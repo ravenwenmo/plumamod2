@@ -19,8 +19,8 @@ public class LikeABirdPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter; // 可叠加，每层触发一次
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/LikeABird.png",
-        BigIconPath: "res://pluma/images/powers/LikeABird.png"
+        IconPath: "res://pluma/images/powers/LikeABirdPower.png",
+        BigIconPath: "res://pluma/images/powers/LikeABirdPower.png"
     );
 
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target, DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)

@@ -39,8 +39,11 @@ public class IGotThis : ModCardTemplate, ISpiritModeCard
     {
         get
         {
-            // 百科/图鉴或 Owner 未初始化时，返回通用描述，避免空引用
-            if (base.Owner == null)
+            // 百科/图鉴里是 canonical（不可变）实例，Owner getter 会先 AssertMutable() 抛
+            // CanonicalModelException（发生在 null 判断之前），必须先判 IsMutable 再读 Owner
+            //（游戏自身在 GetDescriptionForPile 里就是用 base.IsMutable 守卫 Owner 读取的）。
+            // Owner 未初始化（mutable 但无主人）时同样返回通用描述，避免空引用。
+            if (!IsMutable || base.Owner == null)
             {
                 return new LocString("cards", "PLUMA_CARD_I_GOT_THIS.description");
             }

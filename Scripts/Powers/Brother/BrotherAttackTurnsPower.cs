@@ -23,8 +23,8 @@ public class BrotherAttackTurnsPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/BrotherAttackTurns.png",
-        BigIconPath: "res://pluma/images/powers/BrotherAttackTurns.png"
+        IconPath: "res://pluma/images/powers/BrotherAttackTurnsPower.png",
+        BigIconPath: "res://pluma/images/powers/BrotherAttackTurnsPower.png"
     );
 
     // 获得能力后，切换为攻击循环意图

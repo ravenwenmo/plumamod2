@@ -17,8 +17,8 @@ public class SlashingDrawPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter; // 可叠加
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/SlashingDraw.png",
-        BigIconPath: "res://pluma/images/powers/SlashingDraw.png"
+        IconPath: "res://pluma/images/powers/SlashingDrawPower.png",
+        BigIconPath: "res://pluma/images/powers/SlashingDrawPower.png"
     );
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)

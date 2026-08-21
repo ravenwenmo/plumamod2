@@ -13,7 +13,7 @@ public class BrotherExtraHitsPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/BrotherExtraHits.png",
-        BigIconPath: "res://pluma/images/powers/BrotherExtraHits.png"
+        IconPath: "res://pluma/images/powers/BrotherExtraHitsPower.png",
+        BigIconPath: "res://pluma/images/powers/BrotherExtraHitsPower.png"
     );
 }

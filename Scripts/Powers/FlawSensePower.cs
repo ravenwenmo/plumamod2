@@ -23,8 +23,8 @@ public class FlawSensePower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/FlawSense.png",
-        BigIconPath: "res://pluma/images/powers/FlawSense.png"
+        IconPath: "res://pluma/images/powers/FlawSensePower.png",
+        BigIconPath: "res://pluma/images/powers/FlawSensePower.png"
     );
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]

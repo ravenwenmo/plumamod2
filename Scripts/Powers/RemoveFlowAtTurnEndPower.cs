@@ -19,8 +19,8 @@ public class RemoveFlowAtTurnEndPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single; // 不可叠加
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/RemoveFlow.png",
-        BigIconPath: "res://pluma/images/powers/RemoveFlow.png"
+        IconPath: "res://pluma/images/powers/RemoveFlowAtTurnEndPower.png",
+        BigIconPath: "res://pluma/images/powers/RemoveFlowAtTurnEndPower.png"
     );
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)

@@ -18,8 +18,8 @@ public class WindFeatherPower : ModPowerTemplate
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter; // 可叠加
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/WindFeather.png",
-        BigIconPath: "res://pluma/images/powers/WindFeather.png"
+        IconPath: "res://pluma/images/powers/WindFeatherPower.png",
+        BigIconPath: "res://pluma/images/powers/WindFeatherPower.png"
     );
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)

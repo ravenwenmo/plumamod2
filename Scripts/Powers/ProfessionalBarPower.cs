@@ -9,7 +9,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 专业吧台：每两个玩家回合，将一张辅料组合包加入手牌。
+// 专业吧台：每两个玩家回合，将一张 辅料组合包加入手牌。
 [RegisterPower]
 public class ProfessionalBarPower : ModPowerTemplate
 {
@@ -19,8 +19,8 @@ public class ProfessionalBarPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/ProfessionalBar.png",
-        BigIconPath: "res://pluma/images/powers/ProfessionalBar.png"
+        IconPath: "res://pluma/images/powers/ProfessionalBarPower.png",
+        BigIconPath: "res://pluma/images/powers/ProfessionalBarPower.png"
     );
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)

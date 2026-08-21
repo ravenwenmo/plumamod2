@@ -32,8 +32,8 @@ public class TraitPower : ModPowerTemplate
     ];
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/Trait.png",
-        BigIconPath: "res://pluma/images/powers/Trait.png"
+        IconPath: "res://pluma/images/powers/TraitPower.png",
+        BigIconPath: "res://pluma/images/powers/TraitPower.png"
     );
 
     // 每层提高1%伤害，加成对所有来源为龙舌兰的伤害生效

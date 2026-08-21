@@ -22,8 +22,8 @@ public class ProfessionalBarUpgradedPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Single;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/ProfessionalBarUpgraded.png",
-        BigIconPath: "res://pluma/images/powers/ProfessionalBarUpgraded.png"
+        IconPath: "res://pluma/images/powers/ProfessionalBarUpgradedPower.png",
+        BigIconPath: "res://pluma/images/powers/ProfessionalBarUpgradedPower.png"
     );
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
