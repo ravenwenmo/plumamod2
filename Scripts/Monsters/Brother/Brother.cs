@@ -3,6 +3,7 @@ using Godot;
 using MegaCrit.Sts2.Core.Animation;
 using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -134,7 +135,13 @@ public class Brother : ModMonsterTemplate
         }
 
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
-        brotherNode?.ToggleIsInteractable(true);
+        // 仅本地玩家可交互：远程客户端保持游戏对远程宠物的隐藏血条/不可交互处理
+        //（远程 Osty 同样不恢复交互，见 NCombatRoom.AddCreature 的通用宠物分支），
+        // 避免龙舌兰 hitbox 遮挡远程玩家的出牌瞄准/点选。
+        if (LocalContext.IsMe(Creature.PetOwner))
+        {
+            brotherNode?.ToggleIsInteractable(true);
+        }
         GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
     }
     // 测试牌重复打出时：回满生命值并切换为攻击循环意图

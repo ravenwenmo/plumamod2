@@ -2,6 +2,7 @@
 using Godot;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -42,16 +43,29 @@ public static class BrotherCmd
             // 龙舌兰不存在，生成龙舌兰
             brother = await PlayerCmd.AddPet<Brother>(summoner);
             NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(brother);
-            // 卡牌召唤（如测试卡 TestBrother）：此时战斗布局已完成，
-            // 直接做入场滑入动画，与测试卡路径一致。
             if (brotherNode != null)
             {
-                NCreature ownerNode = NCombatRoom.Instance?.GetCreatureNode(brother.PetOwner.Creature);
-                if (ownerNode != null)
+                // 参考 OstyCmd.Summon：卡牌召唤时节点级淡入。
+                // 用节点级 Modulate，不会覆盖 Visuals 上的后排压暗（两者相乘）。
+                // Brother 的 spine 没有 revive 动画，故不调 StartReviveAnim。
+                if (source is CardModel)
                 {
-                    Tween tween = brotherNode.CreateTween().SetParallel();
-                    tween.TweenProperty(brotherNode, "position", brotherNode.Position + GetBrotherOffsetFromPlayer(brother), 0.3);
-                    brotherNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
+                    brotherNode.Modulate = Colors.Transparent;
+                    Tween fadeTween = brotherNode.CreateTween();
+                    fadeTween.TweenProperty(brotherNode, "modulate", Colors.White, 0.35).SetDelay(0.1);
+                }
+                // 位置滑入与交互仅本地客户端处理（参考 NCreature.OstyScaleToSize 的 IsMe 门控）：
+                // 远程客户端保持游戏对通用宠物的布局与 ToggleIsInteractable(false)，
+                // 避免龙舌兰 hitbox 遮挡远程玩家的出牌瞄准/点选。
+                if (LocalContext.IsMe(summoner))
+                {
+                    NCreature ownerNode = NCombatRoom.Instance?.GetCreatureNode(brother.PetOwner.Creature);
+                    if (ownerNode != null)
+                    {
+                        Tween tween = brotherNode.CreateTween().SetParallel();
+                        tween.TweenProperty(brotherNode, "position", brotherNode.Position + GetBrotherOffsetFromPlayer(brother), 0.3);
+                        brotherNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
+                    }
                 }
             }
             await brother.Monster.AfterAddedToRoom();
@@ -73,7 +87,7 @@ public static class BrotherCmd
         await Summon(new ThrowingPlayerChoiceContext(), summoner, null);
     }
 
-    private static Vector2 GetBrotherOffsetFromPlayer(Creature brother)
+    public static Vector2 GetBrotherOffsetFromPlayer(Creature brother)
     {
         NCreature nCreature = NCombatRoom.Instance?.GetCreatureNode(brother.PetOwner.Creature);
         if (nCreature == null)
