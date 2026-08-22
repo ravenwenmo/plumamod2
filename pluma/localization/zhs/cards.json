@@ -57,7 +57,7 @@
   "PLUMA_CARD_EMPTY_MIND.description": "洗牌。失去所有[gold]渐入佳境[/gold]，每失去1层，获得{Energy:energyIcons()}并抽1张牌。",
 
   "PLUMA_CARD_THE_BEAT.title": "节奏感",
-  "PLUMA_CARD_THE_BEAT.description": "每当你打出两张[gold]本能[/gold]牌，获得{Energy:energyIcons()}。",
+  "PLUMA_CARD_THE_BEAT.description": "每当你打出3张[gold]本能[/gold]牌，获得{Energy:energyIcons()}。",
 
   "PLUMA_CARD_LACERATE.title": "划破",
   "PLUMA_CARD_LACERATE.description": "造成{Damage:diff()}点伤害。\n施加{OpenWound:diff()}层[gold]创伤[/gold] 。",
@@ -93,7 +93,7 @@
   "PLUMA_CARD_LIBERI_BITE.description": "施加{OpenWound:diff()}层[gold]创伤[/gold]。",
 
   "PLUMA_CARD_FULL_SPEED_SLASH.title": "全速斩击",
-  "PLUMA_CARD_FULL_SPEED_SLASH.description": "造成{Damage:diff()}点伤害2次。\n额外造成[gold]渐入佳境[/gold]层数一半的段数。",
+  "PLUMA_CARD_FULL_SPEED_SLASH.description": "造成{Damage:diff()}点伤害{BaseHits:diff()}次。额外造成渐入佳境层数一半的段数。",
 
   "PLUMA_CARD_SLASHING_MASTER.title": "切割大师",
   "PLUMA_CARD_SLASHING_MASTER.description": "生成{Cards:diff()}张[gold]切割[/gold]。",
@@ -339,5 +339,11 @@
   "PLUMA_CARD_TOGETHER_WE_FIGHT.description": "造成{Damage:diff()}*{Hits:diff()}点伤害。\n你获得{FlexAmount:diff()}层临时力量，若龙舌兰在场其也获得等量临时力量。",
 
   "PLUMA_CARD_FOLLOW_ORDERS.title": "服从指挥",
-  "PLUMA_CARD_FOLLOW_ORDERS.description": "造成{Damage:diff()}×{Hits:diff()}点伤害。\n每当你抽到此牌，攻击段数+1。"
+  "PLUMA_CARD_FOLLOW_ORDERS.description": "造成{Damage:diff()}×{Hits:diff()}点伤害。\n每当你抽到此牌，攻击段数+1。",
+
+  "PLUMA_CARD_ALL_IN.title": "ALL IN",
+  "PLUMA_CARD_ALL_IN.description": "获得{IfUpgraded:show:X+1|X}个尽可能不同的随机基酒。",
+
+  "PLUMA_CARD_STURDY_BOTTLE.title": "坚固酒瓶",
+  "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。"
 }

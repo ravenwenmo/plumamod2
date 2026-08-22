@@ -16,11 +16,11 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 羽毛风暴：2费罕见攻击，指定一个目标造成1点伤害并施加2层易伤，然后随机造成1点伤害数次。升级后费用降为1。
+// 羽毛风暴：1费罕见攻击，指定一个目标造成1点伤害并施加2层易伤，然后随机造成1点伤害数次。升级后易伤层数+1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class FeatherStorm : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 1;
     private const CardType type = CardType.Attack;
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.AnyEnemy;
@@ -30,11 +30,12 @@ public class FeatherStorm : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 伤害固定为1，随机攻击次数基础5
+    // 伤害固定为1，随机攻击次数基础5，易伤层数基础1
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
         new DamageVar(1m, ValueProp.Move),
-        ModCardVars.Int("RandomHits", 5)
+        ModCardVars.Int("RandomHits", 5),
+        ModCardVars.Int("VulnerableAmount", 1)
     };
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -57,12 +58,13 @@ public class FeatherStorm : ModCardTemplate
         var rng = base.Owner.RunState.Rng.CombatCardSelection;
         decimal damage = DynamicVars.Damage.BaseValue;
         int randomHits = DynamicVars["RandomHits"].IntValue;
+        decimal vulnerableAmount = DynamicVars["VulnerableAmount"].BaseValue;
 
-        // 1. 对指定目标施加2层易伤
+        // 1. 对指定目标施加易伤
         await PowerCmd.Apply<VulnerablePower>(
             choiceContext,
             target,
-            2,
+            vulnerableAmount,
             base.Owner.Creature,
             this
         );
@@ -88,8 +90,7 @@ public class FeatherStorm : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 2费 → 1费
-        // 如需升级增加攻击段数，可取消下面注释：
-        // DynamicVars["RandomHits"].UpgradeValueBy(1); // 5 → 6
+        // 升级后易伤层数 +1（2 → 3）
+        DynamicVars["VulnerableAmount"].UpgradeValueBy(1m);
     }
 }

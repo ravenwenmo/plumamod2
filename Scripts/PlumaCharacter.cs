@@ -1,4 +1,5 @@
 ﻿using Godot;
+using MegaCrit.Sts2.Core.Animation;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Nodes.Combat;
@@ -6,7 +7,7 @@ using STS2RitsuLib.Data.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Godot;
-using MegaCrit.Sts2.Core.Context; 
+using MegaCrit.Sts2.Core.Context;
 namespace Pluma.Scripts;
 
 [RegisterCharacter]
@@ -125,6 +126,35 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
     public override float AttackAnimDelay => 0f;
     public override float CastAnimDelay => 0f;
 
+    // 在原版动画状态机之上追加 Skill_2 系列触发器（收割等卡牌使用）。
+    // 原版 GenerateAnimator 会为每个条目注册 anyState 触发器，并在动画播完后
+    // 自动接回待机（含低血量分支），因此这里只需声明状态即可。
+    protected override List<(AnimState, string)> AnimationStates
+    {
+        get
+        {
+            var states = base.AnimationStates.ToList();
+
+            // 收割期间默认待机动画
+            var skill2Idle = new AnimState("Skill_2_Idle", isLooping: true);
+
+            var skill2Start = new AnimState("Skill_2_Start");
+            skill2Start.NextState = skill2Idle;
+
+            var skill2Attack = new AnimState("Skill_2_Attack");
+            skill2Attack.NextState = skill2Idle;
+
+            // Skill_2_End 不设置 NextState，让原版自动接回普通待机
+            var skill2End = new AnimState("Skill_2_End");
+
+            states.Add((skill2Idle, "Skill_2_Idle"));
+            states.Add((skill2Start, "Skill_2_Start"));
+            states.Add((skill2Attack, "Skill_2_Attack"));
+            states.Add((skill2End, "Skill_2_End"));
+
+            return states;
+        }
+    }
     // 如果你的人物不需要时间线小故事，加上这句。
     public override bool RequiresEpochAndTimeline => false;
 

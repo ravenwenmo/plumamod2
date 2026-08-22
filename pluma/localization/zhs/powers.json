@@ -20,8 +20,8 @@
   "PLUMA_POWER_FLOW_STATE.title": "渐入佳境",
 
   "PLUMA_POWER_THE_BEAT_POWER.title": "节奏感",
-  "PLUMA_POWER_THE_BEAT_POWER.description": "每打出两张本能牌，获得 1 点能量。",
-  "PLUMA_POWER_THE_BEAT_POWER.smartDescription": "每打出两张本能牌，获得 1 点能量。",
+  "PLUMA_POWER_THE_BEAT_POWER.description": "每打出3张本能牌，获得1点能量。",
+  "PLUMA_POWER_THE_BEAT_POWER.smartDescription": "每打出3张本能牌，获得1点能量。",
 
   "PLUMA_POWER_OPEN_WOUND_POWER.title": "创伤",
   "PLUMA_POWER_OPEN_WOUND_POWER.description": "造成伤害时，先受到等量于层数的伤害，然后层数减少1。",

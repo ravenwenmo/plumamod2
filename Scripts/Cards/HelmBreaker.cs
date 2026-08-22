@@ -22,7 +22,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class HelmBreaker : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 3;
     private const CardType type = CardType.Attack;
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.AnyEnemy;
@@ -37,9 +37,9 @@ public class HelmBreaker : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
-        new DamageVar(12m, ValueProp.Move)
+        new DamageVar(18m, ValueProp.Move)
     };
-
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.MuscleMemory };
     public HelmBreaker() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }

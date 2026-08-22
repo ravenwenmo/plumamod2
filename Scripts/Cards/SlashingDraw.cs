@@ -4,7 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -12,14 +12,14 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace Pluma.Scripts;
 
 // 能力牌：每当你打出“切割”时抽1张牌。升级后费用减为1。
-[RegisterCard(typeof(PlumaCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public class SlashingDraw : ModCardTemplate
 {
     private const int energyCost = 2;          // 基础2费
     private const CardType type = CardType.Power;
-    private const CardRarity rarity = CardRarity.Uncommon;
+    private const CardRarity rarity = CardRarity.Token;
     private const TargetType targetType = TargetType.Self;
-    private const bool shouldShowInCardLibrary = true;
+    private const bool shouldShowInCardLibrary = false;
 
     // 能力层数，固定为1，不随升级变化
     private const int Stacks = 1;

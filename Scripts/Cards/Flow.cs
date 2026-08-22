@@ -29,7 +29,7 @@ public class Flow : ModCardTemplate
 
     // 用 DynamicVar 定义层数，方便 OnUpgrade 修改
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        ModCardVars.Int("FlowStateAmount", 3)
+        ModCardVars.Int("FlowStateAmount", 2)
     ];
 
     public Flow() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

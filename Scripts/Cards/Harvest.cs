@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -9,12 +10,11 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.ValueProps;
-using STS2RitsuLib.Interop.AutoRegistration;
-using STS2RitsuLib.Scaffolding.Content;
 using STS2RitsuLib.Cards.DynamicVars;
-using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
@@ -66,26 +66,63 @@ public class Harvest : ModCardTemplate
             this
         );
 
-        // 打出前动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Skill_2_Start", 0.3f);
+        var creature = base.Owner.Creature;
+        var creatureNode = creature.GetCreatureNode();
 
-        // 每段攻击同步播放一次 Skill_2_Attack
-        for (int i = 0; i < x; i++)
+        // 动画速度倍率：S = min(10, (1 + 3%×渐入佳境层数) / 0.65)，升级后分母 0.5。
+        // 纯本地视觉，多人模式下只影响各自机器的动画节奏，不影响同步数据。
+        int flowStacks = creature.GetPowerAmount<FlowState>();
+        float speed = MathF.Min(10f, (float)((1m + 0.03m * flowStacks) / (base.IsUpgraded ? 0.5m : 0.65m)));
+        creatureNode?.SpineAnimation.SetTimeScale(speed);
+
+        try
         {
-            await CreatureCmd.TriggerAnim(base.Owner.Creature, "Skill_2_Attack", 0.15f);
+            // 打出前动画：播完再开始攻击
+            await PlaySkill2AnimAndWait(creature, creatureNode, "Skill_2_Start", speed);
 
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
-                .TargetingAllOpponents(base.CombatState)
-                .WithHitFx("vfx/vfx_attack_slash")
-                .Execute(choiceContext);
+            // 每段循环：Skill_2_Attack 播完后结算该段伤害
+            for (int i = 0; i < x; i++)
+            {
+                await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+                    .FromCard(this, cardPlay)
+                    .TargetingAllOpponents(base.CombatState)
+                    .WithAttackerAnim("Skill_2_Attack", 0f)
+                    .WithAttackerFx(sfx: base.Owner.Character.AttackSfx)
+                    .AfterAttackerAnim(async () =>
+                    {
+                        // 动画已同步触发，读当前动画名义时长并按速度倍率等待播完
+                        float length = creatureNode?.GetCurrentAnimationLength() ?? 0f;
+                        await WaitAnimLength(length, speed);
+                    })
+                    //.WithHitFx("vfx/vfx_attack_slash")
+                    .Execute(choiceContext);
+            }
+
+            // 结束动画：播完再收尾
+            await PlaySkill2AnimAndWait(creature, creatureNode, "Skill_2_End", speed);
         }
+        finally
+        {
+            // 恢复动画速度，并移除临时加成 Power
+            creatureNode?.SpineAnimation.SetTimeScale(1f);
+            await PowerCmd.Remove<HarvestTempPower>(base.Owner.Creature);
+        }
+    }
 
-        // 结束动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Skill_2_End", 0.3f);
+    // 触发一次 Skill_2 动画并等待其按当前速度倍率播放完成
+    private async Task PlaySkill2AnimAndWait(Creature creature, NCreature? creatureNode, string animName, float speed)
+    {
+        await CreatureCmd.TriggerAnim(creature, animName, 0f); // 只触发动画，不固定等待
+        float length = creatureNode?.GetCurrentAnimationLength() ?? 0f;
+        await WaitAnimLength(length, speed);
+    }
 
-        // 移除临时加成 Power
-        await PowerCmd.Remove<HarvestTempPower>(base.Owner.Creature);
+    // 按名义时长与速度倍率等待动画播完；快/标准模式语义与原版 TriggerAnim 一致
+    private async Task WaitAnimLength(float length, float speed)
+    {
+        if (length <= 0f || speed <= 0f) return;
+        float wait = length / speed;
+        await Cmd.CustomScaledWait(MathF.Min(wait * 0.5f, 0.25f), wait);
     }
 
     protected override void OnUpgrade()

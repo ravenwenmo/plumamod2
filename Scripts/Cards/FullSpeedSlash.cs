@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
@@ -20,7 +19,7 @@ public class FullSpeedSlash : ModCardTemplate
 {
     private const int energyCost = 2;
     private const CardType type = CardType.Attack;
-    private const CardRarity rarity = CardRarity.Common; // 可根据需要调整
+    private const CardRarity rarity = CardRarity.Common;
     private const TargetType targetType = TargetType.AnyEnemy;
     private const bool shouldShowInCardLibrary = true;
 
@@ -28,9 +27,10 @@ public class FullSpeedSlash : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => new[]
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(3m, ValueProp.Move)
+        new DamageVar(3m, ValueProp.Move),      // 基础伤害：升级前3，升级后4
+        ModCardVars.Int("BaseHits", 2)          // 基础斩击次数
     };
 
     public FullSpeedSlash() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -43,9 +43,10 @@ public class FullSpeedSlash : ModCardTemplate
         if (target == null) return;
 
         decimal baseDamage = DynamicVars.Damage.BaseValue;
+        int baseHits = DynamicVars["BaseHits"].IntValue;
 
-        // 基础3次攻击
-        for (int i = 0; i < 3; i++)
+        // 基础段数攻击
+        for (int i = 0; i < baseHits; i++)
         {
             await DamageCmd.Attack(baseDamage)
                 .FromCard(this, cardPlay)
@@ -68,9 +69,9 @@ public class FullSpeedSlash : ModCardTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<FlowState>(),
+        HoverTipFactory.FromPower<FlowState>()
     };
-    
+
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(1m); // 伤害 3 → 4
