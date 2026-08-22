@@ -152,5 +152,9 @@
 
   "PLUMA_POWER_PENDING_HEAL_POWER.title": "待回复",
   "PLUMA_POWER_PENDING_HEAL_POWER.description": "显示本场战斗中累积的龙舌兰待回复生命值。",
-  "PLUMA_POWER_PENDING_HEAL_POWER.smartDescription": "已累积 [green]{Amount}[/green] 点待回复生命值。"
+  "PLUMA_POWER_PENDING_HEAL_POWER.smartDescription": "已累积 [green]{Amount}[/green] 点待回复生命值。",
+
+  "PLUMA_POWER_HARVEST_TEMP_POWER.title": "收割临时加成",
+  "PLUMA_POWER_HARVEST_TEMP_POWER.description": "收割造成的伤害提高等同层数的百分比，仅对生命值低于一半的敌人有效。",
+  "PLUMA_POWER_HARVEST_TEMP_POWER.smartDescription": "收割伤害提高 [blue]{Amount}%[/blue]（目标生命值低于一半时）。"
 }
