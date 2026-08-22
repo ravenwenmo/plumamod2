@@ -345,5 +345,8 @@
   "PLUMA_CARD_ALL_IN.description": "获得{IfUpgraded:show:X+1|X}个尽可能不同的随机基酒。",
 
   "PLUMA_CARD_STURDY_BOTTLE.title": "坚固酒瓶",
-  "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。"
+  "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。",
+
+  "PLUMA_CARD_IAI_SLASH.title": "居合",
+  "PLUMA_CARD_IAI_SLASH.description": "造成{Damage:diff()}点伤害，立即触发1层增伤{AmplifyStacks:diff()}倍的创伤。在手牌时，受到攻击自动打出1，减伤50%。"
 }

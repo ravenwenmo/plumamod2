@@ -253,6 +253,14 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
             if (i == 0) { await Cmd.Wait(0.2f); }
             try
             {
+                // 创伤翻倍标记（居合）：本次伤害 ×(1+层数)，造成后清空标记确保只有一次增伤
+                int amplify = base.Owner.GetPowerAmount<WoundAmplifyPower>();
+                decimal damage = base.Amount;
+                if (amplify > 0)
+                {
+                    damage *= 1m + amplify;
+                }
+
                 // 伤害来源设为持有者自身（与原版 ConstrictPower 等自伤能力惯例一致）：
                 // 原版部分能力（如 LeadershipPower）在 ModifyDamage 中先解引用 dealer 再检查
                 // Unpowered，dealer 传 null 会 NRE，异常沿 Damage 任务传播会杀死整个敌方
@@ -260,10 +268,14 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
                 await CreatureCmd.Damage(
                     choiceContext,
                     base.Owner,
-                    base.Amount,
+                    damage,
                     ValueProp.Unpowered | ValueProp.Unblockable,
                     base.Owner
                 );
+                if (amplify > 0)
+                {
+                    await PowerCmd.Remove<WoundAmplifyPower>(base.Owner);
+                }
                 await PowerCmd.Decrement(this);
             }
             finally
