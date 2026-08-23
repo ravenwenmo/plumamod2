@@ -133,6 +133,9 @@ public class Brother : ModMonsterTemplate
         }
         else
         {
+            // 宠物不执行 RollMove（仅敌方单位会），NextMove 保持 UNSET_MOVE 导致无意图图标。
+            // 显式设置强化意图，使入场时强化循环图标立即可见（SetMoveImmediate 内部会 RefreshIntents）。
+            SetMoveImmediate(GetPowerUpIntent());
             DieForYou = false;
         }
 

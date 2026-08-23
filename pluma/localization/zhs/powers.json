@@ -24,8 +24,8 @@
   "PLUMA_POWER_THE_BEAT_POWER.smartDescription": "每打出3张本能牌，获得1点能量。",
 
   "PLUMA_POWER_OPEN_WOUND_POWER.title": "创伤",
-  "PLUMA_POWER_OPEN_WOUND_POWER.description": "持有着造成伤害后会受到等量于层数的伤害，然后层数减少1。",
-  "PLUMA_POWER_OPEN_WOUND_POWER.smartDescription": "持有着造成伤害后会受到[red]{Amount}[/red]点伤害并将层数减少[blue]1[/blue]。",
+  "PLUMA_POWER_OPEN_WOUND_POWER.description": "持有者造成伤害后会受到等量于层数的伤害，然后层数减少1。",
+  "PLUMA_POWER_OPEN_WOUND_POWER.smartDescription": "持有者造成伤害后会受到[red]{Amount}[/red]点伤害并将层数减少[blue]1[/blue]。",
 
   "PLUMA_POWER_TRANSPARENT_WORLD_POWER.title": "通透世界",
   "PLUMA_POWER_TRANSPARENT_WORLD_POWER.description": "渐入佳境抽到的本能牌自动打出。",

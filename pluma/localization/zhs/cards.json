@@ -69,7 +69,7 @@
   "PLUMA_CARD_INTERRUPT.description": "造成{Damage:diff()}点伤害。\n如果敌人意图是攻击，给予{OpenWound:diff()}层[gold]创伤[/gold] 。",
 
   "PLUMA_CARD_TRANSPARENT_WORLD.title": "通透",
-  "PLUMA_CARD_TRANSPARENT_WORLD.description": "[gold]渐入佳境[/gold]抽到的本能牌会被随机打出。",
+  "PLUMA_CARD_TRANSPARENT_WORLD.description": "[gold]渐入佳境[/gold]抽到的本能牌会被自动打出。",
 
   "PLUMA_CARD_REFORMATION.title": "改变思维",
   "PLUMA_CARD_REFORMATION.description": "获得5层[gold]源源不断[/gold]\n获得5层[gold]心灵腐化[/gold]。",
@@ -138,10 +138,10 @@
   "PLUMA_CARD_LIKE_A_BIRD.description": "每当你受到攻击时，获得1层[gold]渐入佳境[/gold]。",
 
   "PLUMA_CARD_FEINT.title": "假动作",
-  "PLUMA_CARD_FEINT.description": "目标本回合结束时也会触发{Stacks:diff()}次创伤效果。",
+  "PLUMA_CARD_FEINT.description": "目标本回合结束时也会触发{Stacks:diff()}次[gold]创伤[/gold]效果。",
 
   "PLUMA_CARD_FLAW_SENSE.title": "破绽感知",
-  "PLUMA_CARD_FLAW_SENSE.description": "获得{Stacks:diff()}层破绽感知。",
+  "PLUMA_CARD_FLAW_SENSE.description": "获得{Stacks:diff()}层[gold]破绽感知[/gold]。",
 
   "PLUMA_CARD_WIND_FEATHER.title": "风中之羽",
   "PLUMA_CARD_WIND_FEATHER.description": "每打出一张攻击牌获得{Stacks:diff()}层[gold]渐入佳境[/gold]。\n但[gold]渐入佳境[/gold]不再抽牌。",
@@ -153,7 +153,7 @@
   "PLUMA_CARD_COCKTAIL.description": "获得3个随机增益。\n完全没用的增益也可能会遇到。",
 
   "PLUMA_CARD_LIBERI_VIGILANCE.title": "羽兽的警觉",
-  "PLUMA_CARD_LIBERI_VIGILANCE.description": "对所有敌人施加{OpenWound:diff()}层创伤\n获得所有敌人总创伤层数的格挡。",
+  "PLUMA_CARD_LIBERI_VIGILANCE.description": "对所有敌人施加{OpenWound:diff()}层[gold]创伤[/gold]\n获得所有敌人总[gold]创伤[/gold]层数的格挡。",
 
   "PLUMA_CARD_RECALL_STRIKE.title": "回钩",
   "PLUMA_CARD_RECALL_STRIKE.description": "造成{Damage:diff()}点伤害。\n无论何处，将上一张打出的牌放回手牌。",
@@ -174,7 +174,7 @@
   "PLUMA_CARD_BLADE_FORM.description": "每回合开始，获得一张{IfUpgraded:show:[gold]升级过[/gold]的|}本回合不消耗能量且附带[gold]切割[/gold]、[gold]消耗[/gold]的随机攻击牌。",
 
   "PLUMA_CARD_HELM_BREAKER.title": "兜割",
-  "PLUMA_CARD_HELM_BREAKER.description": "造成{Damage:diff()}点伤害。立即触发目标创伤至多7次。",
+  "PLUMA_CARD_HELM_BREAKER.description": "造成{Damage:diff()}点伤害。立即触发目标[gold]创伤[/gold]至多7次。",
 
   "PLUMA_CARD_SCYTHE_UNITY.title": "人镰合一",
   "PLUMA_CARD_SCYTHE_UNITY.description": "选择{CardsToConvert:diff()}张手牌，将其变为切割。",
@@ -348,5 +348,5 @@
   "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。",
 
   "PLUMA_CARD_IAI_SLASH.title": "居合",
-  "PLUMA_CARD_IAI_SLASH.description": "造成{Damage:diff()}点伤害，立即触发1层增伤{AmplifyStacks:diff()}倍的创伤。在手牌时，受到攻击自动打出1，减伤50%。"
+  "PLUMA_CARD_IAI_SLASH.description": "造成{Damage:diff()}点伤害，立即触发1层增伤{AmplifyStacks:diff()}倍的[gold]创伤[/gold]。在手牌时，受到攻击自动打出1，减伤50%。"
 }

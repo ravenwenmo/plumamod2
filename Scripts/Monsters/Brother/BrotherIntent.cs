@@ -51,10 +51,15 @@ public class BrotherAttackIntent : AttackIntent
         _isAoe = isAoe;
     }
 
-    // 关键修复：覆盖动画名称，避免框架生成不存在的动画键
+    // 意图图标动画键必须存在于 IntentAnimData（合法键为 attack_1~attack_5、buff 等）。
+    // 基类 AttackIntent.GetAnimation 会拼上被覆盖的 IntentPrefix，生成不存在的键，
+    // 导致 NIntent.UpdateVisuals 抛 KeyNotFoundException（图标不显示/不刷新）。
+    // 这里按与基类相同的总伤害分档返回合法键。
     public override string GetAnimation(IEnumerable<Creature> targets, Creature owner)
     {
-        return _isAoe ? "Skill_2_Loop" : "Attack";
+        int totalDamage = GetTotalDamage(targets, owner);
+        string tier = totalDamage < 5 ? "1" : totalDamage < 10 ? "2" : totalDamage < 20 ? "3" : totalDamage < 40 ? "4" : "5";
+        return "attack_" + tier;
     }
 
     public override int GetTotalDamage(IEnumerable<Creature> targets, Creature owner)
