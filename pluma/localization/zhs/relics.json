@@ -4,7 +4,7 @@
   "PLUMA_RELIC_REAPER_BADGE.flavor": "“你不觉得攻击回血在塔2太超模了吗？”“玩的就是超模！”",
 
   "PLUMA_RELIC_AQUA_DAWN.title": "水蓝色黎明",
-  "PLUMA_RELIC_AQUA_DAWN.description": "每造成一次伤害，回复2点生命。休息处不可选择“休息”。",
+  "PLUMA_RELIC_AQUA_DAWN.description": "每造成一次伤害，回复1点生命，溢出的回复会回复龙舌兰。休息处不可选择“休息”。",
   "PLUMA_RELIC_AQUA_DAWN.flavor": "“人们为什么喜欢喝酒呢，席尔瓦小姐？”“我觉得……是为了能在清醒里尝到一点快乐，在苦味里留住一丝甘甜。然后就觉得，生活该是这样，就够了。”",
   
   "PLUMA_RELIC_LIBERI_LENS.title": "黎博利思维",

@@ -38,9 +38,11 @@ public class Cocktail : ModCardTemplate
         CardKeyword.Exhaust
     };
 // 悬浮提示：列出所有可能获得的增益（自定义 + 原版常见正面能力）
+/*
 protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
-{
+{;
     // 自定义能力
+
     HoverTipFactory.FromPower<FlowState>(),
     HoverTipFactory.FromPower<ExcellentMobilityPower>(),
     HoverTipFactory.FromPower<LiberiPower>(),
@@ -52,7 +54,7 @@ protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     HoverTipFactory.FromPower<WindFeatherPower>(),
     HoverTipFactory.FromPower<SlashingDrawPower>(),
     // 原版常见正面能力
-    /*
+
     HoverTipFactory.FromPower<StrengthPower>(),             // 力量
     HoverTipFactory.FromPower<DexterityPower>(),            // 敏捷
     HoverTipFactory.FromPower<VigorPower>(),                // 活力
@@ -87,9 +89,9 @@ protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     HoverTipFactory.FromPower<SelfFormingClayPower>(),     // 自成型黏土
     //HoverTipFactory.FromPower<LoopPower>(),                 // 循环
     HoverTipFactory.FromPower<StormPower>(),                // 雷暴
-    */
+    
 };
-
+*/
 
     public Cocktail() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {

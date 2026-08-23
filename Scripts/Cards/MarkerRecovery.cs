@@ -8,20 +8,21 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models.CardPools;
-using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.HoverTips;
+
 
 namespace Pluma.Scripts.Cards;
 
 // 标志物回收：1费罕见技能牌，消耗。打出后若龙舌兰在场则对龙舌兰施加标记回收能力，否则对玩家自己施加该能力；升级后0费。
 // 改成被动了
-[RegisterCard(typeof(TokenCardPool))]
+[RegisterCard(typeof(PlumaCardPool))]
 public class MarkerRecovery : ModCardTemplate
 {
     private const int energyCost = 1;
-    private const CardType type = CardType.Skill;
-    private const CardRarity rarity = CardRarity.Token;
+    private const CardType type = CardType.Power;
+    private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.None;
-    private const bool shouldShowInCardLibrary = false;
+    private const bool shouldShowInCardLibrary = true;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
@@ -42,6 +43,11 @@ public class MarkerRecovery : ModCardTemplate
         : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
+    
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<BrotherExtraHitsPower>()
+    };
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

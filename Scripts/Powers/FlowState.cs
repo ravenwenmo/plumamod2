@@ -73,6 +73,32 @@ public class FlowState : ModPowerTemplate
         await Task.Delay(1);
         await DrawAttackCard(choiceContext, amount);
     }
+    
+    public override decimal ModifyDamageMultiplicative(
+        Creature? target,
+        decimal amount,
+        ValueProp props,
+        Creature? dealer,
+        CardModel? cardSource,
+        CardPlay? cardPlay)
+    {
+        // 如果伤害来自 ButFocused，本能力不重复计算
+        if (cardSource is ButFocused)
+            return 1m;
+
+        if (dealer == base.Owner
+            && cardSource != null
+            && cardSource.Type == CardType.Attack
+            && base.Amount >= 12
+            && props.IsPoweredAttack())
+        {
+            // 叠满 12 层后 +50% 伤害
+            return 1.5m;
+        }
+
+        return 1m;
+    }
+    /*
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {
         // 如果伤害来自 ButFocused，本能力不重复计算
@@ -85,7 +111,7 @@ public class FlowState : ModPowerTemplate
         }
         return 1m;
     }
-
+    */
     public override bool TryModifyEnergyCostInCombatLate(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
         modifiedCost = originalCost;

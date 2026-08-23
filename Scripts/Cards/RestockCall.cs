@@ -9,10 +9,21 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.CardPools;
+using Pluma.Scripts;
+using STS2RitsuLib.Cards.DynamicVars;
 
-namespace Pluma.Scripts;
 
-// 补货联络：1费罕见技能牌。获得1张辅料组合包，并在接下来的两个回合开始时各获得1张随机基酒。升级后辅料组合包升级。
+namespace Pluma.Scripts.Cards;
+
+// 补货联络：1费罕见技能牌。获得1张辅料组合包，并在接下来的2个回合开始时各获得1张随机基酒。升级后持续3回合。
 [RegisterCard(typeof(PlumaCardPool))]
 public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
 {
@@ -25,6 +36,12 @@ public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
+
+    // 持续回合数：基础2，升级后3
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("Turns", 2)
+    };
 
     // 悬浮提示：显示基酒和辅料组合包预览
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -41,15 +58,11 @@ public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
     {
         var player = base.Owner;
 
-        // 1. 获得一张辅料组合包（升级后为升级版）
+        // 1. 获得一张辅料组合包
         var mixer = base.CombatState.CreateCard<MixerPack>(player);
-        if (base.IsUpgraded)
-        {
-            CardCmd.Upgrade(new List<CardModel> { mixer }, CardPreviewStyle.None);
-        }
         await CardPileCmd.AddGeneratedCardsToCombat(new[] { mixer }, PileType.Hand, player);
 
-        // 2. 施加持续两回合的补货能力
+        // 2. 施加补货能力，持续回合数由 Turns 变量决定
         var power = await PowerCmd.Apply<RestockCallPower>(
             choiceContext,
             base.Owner.Creature,
@@ -59,12 +72,13 @@ public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
         );
         if (power != null)
         {
-            power.SetTurns(2);
+            power.SetTurns(DynamicVars["Turns"].IntValue);
         }
     }
 
     protected override void OnUpgrade()
     {
-        // 效果在 OnPlay 中判断
+        // 升级后持续回合数 +1：2 → 3
+        DynamicVars["Turns"].UpgradeValueBy(1m);
     }
 }

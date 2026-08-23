@@ -6,7 +6,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 
 using Pluma.Scripts.Monsters;
@@ -37,7 +37,10 @@ public class Charging : ModCardTemplate
         : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
-
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<ChargingPower>()
+    };
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         Creature brother = base.Owner.Brother();

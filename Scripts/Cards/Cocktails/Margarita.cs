@@ -40,6 +40,8 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
 
     // 当前模式的独立描述（供 SpiritModeDescriptionPatch 使用）
     public LocString SpiritModeDescription => DescriptionForMode(_mode);
+    
+    
 
     // 瞄准预览：按瞄准目标阵营返回对应分支描述（供 SpiritModeDescriptionPatch 使用）
     public LocString GetSpiritDescriptionFor(SpiritTargetBranch branch) => branch switch
@@ -89,7 +91,8 @@ public class Margarita : ModCardTemplate, IModRightClickableCard, ISpiritModeCar
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.Cocktail),
-        HoverTipFactory.FromPower<WeakPower>()
+        HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<ReaperHealingPower>()
     };
 
     // 卡牌类型固定为技能（不再随模式切换，避免多人模式下动作不同步）

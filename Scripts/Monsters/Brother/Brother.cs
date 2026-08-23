@@ -106,6 +106,7 @@ public class Brother : ModMonsterTemplate
         
         await PowerCmd.Apply<BrotherPower>(new ThrowingPlayerChoiceContext(), Creature, 1m, null, null);
         await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, attackTurnsRemaining, null, null);
+        /*
         await PowerCmd.Apply<MarkerRecoveryPower>(
             new ThrowingPlayerChoiceContext(),
             Creature,
@@ -113,6 +114,7 @@ public class Brother : ModMonsterTemplate
             null,
             null
         );
+        */
         await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetTrait(Creature.PetOwner), null, null);
         GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, IntendsToAttack={IntendsToAttack}");
         

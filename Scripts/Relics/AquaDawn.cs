@@ -13,6 +13,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.RestSite; // 提供 RestSiteOption
+using Pluma.Scripts.Monsters;
 
 namespace Pluma.Scripts;
 
@@ -41,11 +42,23 @@ public class AquaDawn : ModRelicTemplate
         // 必须是遗物持有者自己造成的伤害
         if (dealer != base.Owner.Creature) return;
 
-        // 只要目标不是自己（避免自伤回血），就回血
+        // 只要目标不是自己（避免自伤回血）
         if (target == base.Owner.Creature) return;
 
         Flash();
-        await CreatureCmd.Heal(base.Owner.Creature, 2);
+
+        // 若玩家满血（治疗会溢出）且龙舌兰存活，则给龙舌兰回血
+        Creature? brother = base.Owner.Brother();
+        if (base.Owner.Creature.CurrentHp >= base.Owner.Creature.MaxHp
+            && brother != null
+            && brother.IsAlive)
+        {
+            await CreatureCmd.Heal(brother, 1);
+        }
+        else
+        {
+            await CreatureCmd.Heal(base.Owner.Creature, 1);
+        }
     }
     
     // 移除“休息”选项，让玩家无法选择

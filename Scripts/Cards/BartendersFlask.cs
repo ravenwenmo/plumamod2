@@ -36,7 +36,7 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
-        HoverTipFactory.FromCard<MixerPack>()
+        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
     };
 
     public BartendersFlask() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

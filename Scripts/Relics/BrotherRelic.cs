@@ -20,7 +20,7 @@ namespace Pluma.Scripts;
 [RegisterRelic(typeof(PlumaRelicPool))]
 public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProvider
 {
-    public override RelicRarity Rarity => RelicRarity.Starter;
+    public override RelicRarity Rarity => RelicRarity.Event;
 
     public override bool SpawnsPets => true;
 

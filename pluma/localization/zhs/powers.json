@@ -3,8 +3,8 @@
   "PLUMA_POWER_RAPID_SLASHING_STACKS.smartDescription": "达到一定层数时再使用高速切割会额外追加一段攻击，战斗结束不会清空该层数。已叠[blue]{Amount}层。",
   "PLUMA_POWER_RAPID_SLASHING_STACKS.title": "高速切割",
 
-  "PLUMA_POWER_REAPER_HEALING_POWER.description": "造成伤害时恢复血量。",
-  "PLUMA_POWER_REAPER_HEALING_POWER.smartDescription": "造成伤害时恢复血量。",
+  "PLUMA_POWER_REAPER_HEALING_POWER.description": "每造成1次伤害，恢复1血量。",
+  "PLUMA_POWER_REAPER_HEALING_POWER.smartDescription": "每造成1次伤害，恢复1血量。",
   "PLUMA_POWER_REAPER_HEALING_POWER.title": "收割者",
   
   "PLUMA_POWER_SHARPEN_BLADE_POWER.description": "下一张攻击牌会造成额外伤害。",
@@ -15,8 +15,8 @@
   "PLUMA_POWER_CHARGING_POWER.description": "你的攻击牌打出次数+1，打出后消耗1层蓄力；回合结束时移除。\n若由龙舌兰持有：回合结束不移除，改为攻击循环即将结束时消耗1层并延长1回合。",
   "PLUMA_POWER_CHARGING_POWER.smartDescription": "攻击牌打出次数+1，打出后消耗1层。龙舌兰持有时，攻击循环结束消耗1层并延长1回合。",
 
-  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌,根据层数获得伤害加成",
-  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，当前伤害加成：[blue]3*[/blue][blue]{Amount}%",
+  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌,叠满12层后获得50%伤害加成",
+  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，叠满12层后获得50%伤害加成。",
   "PLUMA_POWER_FLOW_STATE.title": "渐入佳境",
 
   "PLUMA_POWER_THE_BEAT_POWER.title": "节奏感",
@@ -113,14 +113,14 @@
   "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
 
   "PLUMA_POWER_BROTHER_SUPPORT_POWER.title": "义兄妹の羁绊",
-  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]解放者（解放）[/gold]或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。",
+  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]攻击意图[/gold]或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。",
 
   "PLUMA_POWER_BROTHER_POWER.title": "解放者",
   "PLUMA_POWER_BROTHER_POWER.description": "详情见[gold]龙舌兰[/gold]遗物。",
   "PLUMA_POWER_BROTHER_POWER.smartDescription": "详情见[gold]龙舌兰[/gold]遗物。",
 
   "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.title": "多段斩",
-  "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰处于解放者（解放）时，额外造成[blue]{Amount}[/blue]段伤害。",
+  "PLUMA_POWER_BROTHER_EXTRA_HITS_POWER.description": "龙舌兰处于攻击意图时，额外造成[blue]{Amount}[/blue]段伤害。",
 
   "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.title": "解放",
   "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.description": "剩余回合见[gold]龙舌兰[/gold]遗物。",
@@ -131,16 +131,16 @@
   "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得[blue]{Amount}[/blue]层特性或额外攻击段数。",
 
   "PLUMA_POWER_DOUBLE_IDENTITY_POWER.title": "双重身份",
-  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入解放者（通常）时，立即获得[blue]100[/blue]层特性，随后进入冷却；龙舌兰进入解放者（解放）后冷却刷新。",
-  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入解放者（通常）时获得 [blue]100[/blue] 层特性，进入解放者（解放）后冷却刷新。",
+  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入强化意图时，立即获得[blue]100[/blue]层特性，随后进入冷却；龙舌兰进入攻击意图后冷却刷新。",
+  "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入强化意图时获得 [blue]100[/blue] 层特性，进入攻击意图后冷却刷新。",
 
   "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.title": "伺机而动",
-  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.description": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成龙舌兰层数%的伤害",
-  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.smartDescription": "龙舌兰处于解放者（通常）时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成[blue]{Amount}[/blue]%的伤害。",
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.description": "龙舌兰处于强化意图时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成龙舌兰层数%的伤害",
+  "PLUMA_POWER_WAIT_FOR_OPPORTUNITY_POWER.smartDescription": "龙舌兰处于强化意图时，若龙舌兰或羽毛笔受到伤害，龙舌兰对伤害来源造成[blue]{Amount}[/blue]%的伤害。",
 
   "PLUMA_POWER_TRAIT_POWER.title": "特性",
-  "PLUMA_POWER_TRAIT_POWER.description": "每层使龙舌兰造成的伤害提高1%。特性达到{TraitThreshold:diff()}层时进入解放，持续{AttackIntentTurns:diff()}回合。解放期间为羽毛笔吸收未格挡伤害，结束后特性清零。",
-  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高[blue]{Amount}%[/blue]，特性达到[blue]{TraitThreshold:diff()}[/blue]层时进入解放，持续[blue]{AttackIntentTurns:diff()}[/blue]回合。解放期间为羽毛笔吸收未格挡伤害，结束后特性清零。",
+  "PLUMA_POWER_TRAIT_POWER.description": "每层使龙舌兰造成的伤害提高1%。特性达到{TraitThreshold:diff()}层时进入攻击意图，持续{AttackIntentTurns:diff()}回合。攻击意图期间为羽毛笔吸收未格挡伤害，结束后特性清零。",
+  "PLUMA_POWER_TRAIT_POWER.smartDescription": "龙舌兰造成的伤害提高[blue]{Amount}%[/blue]，特性达到[blue]{TraitThreshold:diff()}[/blue]层时进入攻击意图，持续[blue]{AttackIntentTurns:diff()}[/blue]回合。攻击意图期间为羽毛笔吸收未格挡伤害，结束后特性清零。",
 
   "PLUMA_POWER_BROTHER_AOE_POWER.title": "范围攻击",
   "PLUMA_POWER_BROTHER_AOE_POWER.description": "龙舌兰的攻击目标变为全体敌人，强化循环获得特性值与攻击循环持续回合数相应调整。",

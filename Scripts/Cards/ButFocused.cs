@@ -33,13 +33,13 @@ public class ButFocused : ModCardTemplate
     {
         new CalculationBaseVar(14m),
         new ExtraDamageVar(14m),
-        ModCardVars.Int("Multiplier", 3),
+        ModCardVars.Int("Multiplier", 10),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
         {
             if (card == null) return 0m; // 预览时无加成
             var stacks = card.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0;
             var multiplier = card.DynamicVars.TryGetValue("Multiplier", out var mv) ? mv.BaseValue : 5m;
-            return stacks * multiplier * 0.03m;
+            return stacks * multiplier * 0.01m;
         })
     };
 
@@ -61,6 +61,6 @@ public class ButFocused : ModCardTemplate
     };
     protected override void OnUpgrade()
     {
-        DynamicVars["Multiplier"].UpgradeValueBy(3m); // 5 → 10
+        DynamicVars["Multiplier"].UpgradeValueBy(10m); // 
     }
 }
