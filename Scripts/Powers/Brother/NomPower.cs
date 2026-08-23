@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using Pluma.Scripts.Monsters; // 如果需要引用 BrotherStateData
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -18,8 +19,8 @@ public class NomPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://pluma/images/powers/Nom.png",
-        BigIconPath: "res://pluma/images/powers/Nom.png"
+        IconPath: "res://pluma/images/powers/NomPower.png",
+        BigIconPath: "res://pluma/images/powers/NomPower.png"
     );
 
     public override async Task AfterAttack(
@@ -30,7 +31,6 @@ public class NomPower : ModPowerTemplate
         if (command.Attacker != Owner) return;
         if (Amount <= 0) return;
 
-        // 检查这次攻击是否至少斩杀了一个敌人
         bool killedAny = command.Results
             .SelectMany(r => r)
             .Any(r => r.WasTargetKilled);
@@ -38,7 +38,15 @@ public class NomPower : ModPowerTemplate
         if (!killedAny) return;
 
         // 提升最大生命值3点
-        await CreatureCmd.GainMaxHp(Owner, 3);
+        int newMax = Owner.MaxHp + 3;
+        await CreatureCmd.SetMaxHp(Owner, newMax);
+
+        // 同步持久化数据
+        if (Owner.PetOwner != null)
+        {
+            BrotherStateData.SetHp(Owner.PetOwner, Owner.CurrentHp, newMax);
+            // 或者 BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
+        }
 
         // 消耗一层能力
         await PowerCmd.Decrement(this);

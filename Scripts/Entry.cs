@@ -138,6 +138,9 @@ public class Entry
         // 基酒/鸡尾酒瞄准时按目标阵营切换卡牌描述
         CardAimPreviewPatch.Apply();
 
+        // 拖拽"嚼"（Nom）时卡面切换为张口脸（Nom_open），松开/取消/打出后恢复
+        NomDragPortraitPatch.Apply();
+
     }
 }
 
