@@ -15,8 +15,8 @@
   "PLUMA_POWER_CHARGING_POWER.description": "你的攻击牌打出次数+1，打出后消耗1层蓄力；回合结束时移除。\n若由龙舌兰持有：回合结束不移除，改为攻击循环即将结束时消耗1层并延长1回合。",
   "PLUMA_POWER_CHARGING_POWER.smartDescription": "攻击牌打出次数+1，打出后消耗1层。龙舌兰持有时，攻击循环结束消耗1层并延长1回合。",
 
-  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌,叠满12层后获得50%伤害加成",
-  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，叠满12层后获得50%伤害加成。",
+  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌,叠满12层后获得10%伤害加成",
+  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，叠满12层后获得10%伤害加成。",
   "PLUMA_POWER_FLOW_STATE.title": "渐入佳境",
 
   "PLUMA_POWER_THE_BEAT_POWER.title": "节奏感",

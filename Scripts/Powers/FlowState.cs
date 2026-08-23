@@ -93,7 +93,7 @@ public class FlowState : ModPowerTemplate
             && props.IsPoweredAttack())
         {
             // 叠满 12 层后 +50% 伤害
-            return 1.5m;
+            return 1.1m;
         }
 
         return 1m;
