@@ -16,7 +16,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Hint : ModCardTemplate
 {
-    private const int energyCost = 1;
+    private const int energyCost = 2;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.Self;

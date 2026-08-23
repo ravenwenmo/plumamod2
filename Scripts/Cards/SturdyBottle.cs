@@ -14,9 +14,25 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.CardPools;
+using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Scripts;
+using STS2RitsuLib.Cards.DynamicVars;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
+
 namespace Pluma.Scripts.Cards;
 
-// 坚固酒瓶：0费攻击牌，造成4点伤害并施加1层虚弱。升级后伤害提升至6。
+// 坚固酒瓶：0费攻击牌，消耗。对敌人造成3点伤害并施加1层虚弱。升级后伤害提升至6。
 [RegisterCard(typeof(PlumaCardPool))]
 public class SturdyBottle : ModCardTemplate
 {
@@ -32,8 +48,13 @@ public class SturdyBottle : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(4m, ValueProp.Move),
+        new DamageVar(6m, ValueProp.Move),   // 基础伤害3，升级后6
         ModCardVars.Int("WeakAmount", 1)
+    };
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        CardKeyword.Exhaust  // 消耗
     };
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -71,6 +92,6 @@ public class SturdyBottle : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m); // 4 → 6
+        DynamicVars.Damage.UpgradeValueBy(3m); // 3 → 6
     }
 }

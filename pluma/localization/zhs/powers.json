@@ -160,5 +160,9 @@
 
   "PLUMA_POWER_WOUND_AMPLIFY_POWER.title": "创伤翻倍",
   "PLUMA_POWER_WOUND_AMPLIFY_POWER.description": "下一次创伤伤害翻倍。",
-  "PLUMA_POWER_WOUND_AMPLIFY_POWER.smartDescription": "下一次创伤伤害翻倍（×[blue]{Amount}[/blue] 倍）。"
+  "PLUMA_POWER_WOUND_AMPLIFY_POWER.smartDescription": "下一次创伤伤害翻倍（×[blue]{Amount}[/blue] 倍）。",
+
+  "PLUMA_POWER_NOM.title": "嚼",
+  "PLUMA_POWER_NOM.description": "龙舌兰下一次攻击斩杀敌人时，提升3点最大生命值，然后消耗1层。",
+  "PLUMA_POWER_NOM.smartDescription": "斩杀后最大生命值+3。"
 }

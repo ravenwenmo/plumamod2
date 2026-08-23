@@ -36,7 +36,7 @@
   "PLUMA_CARD_RISING_SLASH.description": "造成{Damage:diff()}点伤害。\n若上一张打出的牌是攻击牌则抽{Cards:diff()}张牌。",
 
   "PLUMA_CARD_PARKA.title": "绒衣",
-  "PLUMA_CARD_PARKA.description": "获得{PlatingPower:diff()}层[gold]覆甲[/gold]。",
+  "PLUMA_CARD_PARKA.description": "优先使龙舌兰获得{PlatingPower:diff()}层[gold]覆甲[/gold]；若龙舌兰不在场，改为你获得。",
 
   "PLUMA_CARD_WORKHORSE.title": "团队基石",
   "PLUMA_CARD_WORKHORSE.description": "造成{Damage:diff()}点伤害。\n获得{Block:diff()}点[gold]格挡[/gold]\n抽{Cards:diff()}张牌。",
@@ -344,9 +344,15 @@
   "PLUMA_CARD_ALL_IN.title": "ALL IN",
   "PLUMA_CARD_ALL_IN.description": "获得{IfUpgraded:show:X+1|X}个尽可能不同的随机[gold]基酒[/gold]。",
 
-  "PLUMA_CARD_STURDY_BOTTLE.title": "坚固酒瓶",
+  "PLUMA_CARD_STURDY_BOTTLE.title": "投掷酒瓶",
   "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。",
 
   "PLUMA_CARD_IAI_SLASH.title": "居合",
-  "PLUMA_CARD_IAI_SLASH.description": "造成{Damage:diff()}点伤害，立即触发1层增伤{AmplifyStacks:diff()}倍的[gold]创伤[/gold]。在手牌时，受到攻击自动打出1，减伤50%。"
+  "PLUMA_CARD_IAI_SLASH.description": "造成{Damage:diff()}点伤害，立即触发1层增伤{AmplifyStacks:diff()}倍的[gold]创伤[/gold]。在手牌时，受到攻击自动打出1，减伤50%。",
+
+  "PLUMA_CARD_KNOCK.title": "敲",
+  "PLUMA_CARD_KNOCK.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n每当你打出一张[gold]敲[/gold]，本场战斗中所有[gold]敲[/gold]卡牌的攻击段数+1。",
+
+  "PLUMA_CARD_NOM.title": "嚼",
+  "PLUMA_CARD_NOM.description": "让龙舌兰获得1层[gold]嚼[/gold]：其下一次攻击斩杀敌人时，提升3点最大生命值并消耗该层。"
 }
