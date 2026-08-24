@@ -29,8 +29,8 @@ public class FullSpeedSlash : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(3m, ValueProp.Move),      // 基础伤害：升级前3，升级后4
-        ModCardVars.Int("BaseHits", 2)          // 基础斩击次数
+        new DamageVar(4m, ValueProp.Move),      // 基础伤害：升级前3，升级后4
+        ModCardVars.Int("BaseHits", 3)          // 基础斩击次数
     };
 
     public FullSpeedSlash() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

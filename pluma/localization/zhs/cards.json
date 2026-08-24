@@ -323,23 +323,23 @@
   "PLUMA_CARD_COVER.description": "获得{Block:diff()}点[gold]格挡[/gold]。若龙舌兰在场，其也获得等量格挡。",
 
   "PLUMA_CARD_INSTINCT_CLEANSE.title": "“交给我吧”",
-  "PLUMA_CARD_INSTINCT_CLEANSE.description": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold]\n[gold]消耗[/gold]。\n获得200层[gold]磨刀[/gold]。",
-  "PLUMA_CARD_INSTINCT_CLEANSE_ALIVE_DESC": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold]",
+  "PLUMA_CARD_INSTINCT_CLEANSE.description": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold。",
+  "PLUMA_CARD_INSTINCT_CLEANSE_ALIVE_DESC": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold]。",
   "PLUMA_CARD_INSTINCT_CLEANSE_MISSING_DESC": "[gold]消耗[/gold]。\n获得200层[gold]磨刀[/gold]。",
 
   "PLUMA_CARD_POST_BATTLE_RECOVERY.title": "罗德岛医疗",
   "PLUMA_CARD_POST_BATTLE_RECOVERY.description": "下场作战开始时，龙舌兰额外回复7点生命。\n每打出一次此牌，本场战斗内此牌费用+1。",
 
   "PLUMA_CARD_I_GOT_THIS.title": "“我来就好”",
-  "PLUMA_CARD_I_GOT_THIS.description": "龙舌兰回复5点生命，每失去20层特性额外回复1点，清空其特性并切换至强化循环。",
-  "PLUMA_CARD_I_GOT_THIS_ALIVE_DESC": "龙舌兰回复5点生命，每失去20层特性额外回复1点，清空其特性并切换至强化循环。",
+  "PLUMA_CARD_I_GOT_THIS.description": "清空龙舌兰[gold]特性[/gold]并切换至强化循环，试其回复5点生命，每失去20层[gold]特性[/gold]额外回复1点。",
+  "PLUMA_CARD_I_GOT_THIS_ALIVE_DESC": "清空龙舌兰[gold]特性[/gold]并切换至强化循环，试其回复5点生命，每失去20层[gold]特性[/gold]额外回复1点。",
   "PLUMA_CARD_I_GOT_THIS_MISSING_DESC": "抽1张牌。\n“固有的牌，为什么龙舌兰就已经不在了？”",
 
   "PLUMA_CARD_TOGETHER_WE_FIGHT.title": "你我二人齐上",
-  "PLUMA_CARD_TOGETHER_WE_FIGHT.description": "造成{Damage:diff()}*{Hits:diff()}点伤害。\n你获得{FlexAmount:diff()}层临时力量，若龙舌兰在场其也获得等量临时力量。",
+  "PLUMA_CARD_TOGETHER_WE_FIGHT.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n你获得{FlexAmount:diff()}层临时力量，若龙舌兰在场其也获得等量临时力量。",
 
   "PLUMA_CARD_FOLLOW_ORDERS.title": "服从指挥",
-  "PLUMA_CARD_FOLLOW_ORDERS.description": "造成{Damage:diff()}×{Hits:diff()}点伤害。\n每当你抽到此牌，攻击段数+1。",
+  "PLUMA_CARD_FOLLOW_ORDERS.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n每当你抽到此牌，攻击段数+1。",
 
   "PLUMA_CARD_ALL_IN.title": "ALL IN",
   "PLUMA_CARD_ALL_IN.description": "获得{IfUpgraded:show:X+1|X}个尽可能不同的随机[gold]基酒[/gold]。",

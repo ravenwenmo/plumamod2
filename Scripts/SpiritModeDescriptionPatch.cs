@@ -1,6 +1,8 @@
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Combat; // 可能不需要，若用 CombatManager
+using MegaCrit.Sts2.Core.Combat;      // 根据实际命名空间调整
 
 namespace Pluma.Scripts;
 
@@ -26,6 +28,11 @@ public static class SpiritModeDescriptionPatch
 
     public static void Postfix(CardModel __instance, ref LocString __result)
     {
+        
+        // 只在战斗进行中应用动态描述；非战斗状态保留默认通用描述
+        if (CombatManager.Instance == null || CombatManager.Instance.IsOverOrEnding)
+            return;
+        
         if (__instance is ISpiritModeCard spiritCard)
         {
             // 瞄准预览优先：指向某个单位时按目标阵营显示对应分支描述；
