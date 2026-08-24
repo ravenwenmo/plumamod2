@@ -11,9 +11,9 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Powers;
-using STS2RitsuLib.Interop.AutoRegistration;
-using STS2RitsuLib.Scaffolding.Content;
+using HarmonyLib;
+using MegaCrit.Sts2.Core.Runs;
+using MegaCrit.Sts2.Core.Entities.Ascension;
 
 namespace Pluma.Scripts;
 
@@ -68,7 +68,7 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         IconOutlinePath: $"res://pluma/images/relics/{GetType().Name}.png",
         BigIconPath: $"res://pluma/images/relics/{GetType().Name}.png"
     );
-    
+
     private bool _hasSummonedBrother = false;    // 实例字段，每人一个
 
     public override async Task AfterRoomEntered(AbstractRoom room)
@@ -126,5 +126,26 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     {
         BrotherStateData.SavedAttackTurnsRemaining[player.GetRelic<BrotherRelic>()] = turns;
         player.GetRelic<BrotherRelic>().UpdateDisplay();
+    }
+}
+
+[HarmonyPatch(typeof(AncientEventModel), "BeforeEventStarted")]
+public static class BrotherRelicAncientEventPatch
+{
+    public static void Prefix(AncientEventModel __instance, bool isPreFinished)
+    {
+        if (!isPreFinished)
+        {
+            BrotherRelic relic = __instance.Owner.GetRelic<BrotherRelic>();
+            if (relic != null)
+            {
+                decimal amount = relic.DynamicVars["MaxHP"].BaseValue - relic.DynamicVars["HP"].BaseValue;
+                if (RunManager.Instance.HasAscension(AscensionLevel.WearyTraveler))
+                {
+                    amount *= 0.8m;
+                }
+                BrotherStateData.Heal(__instance.Owner, (int)amount);
+            }
+        }
     }
 }

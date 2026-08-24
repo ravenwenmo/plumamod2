@@ -11,6 +11,8 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Utils;
+using MegaCrit.Sts2.Core.Entities.Ascension;
+using MegaCrit.Sts2.Core.Runs;
 
 namespace Pluma.Scripts.Monsters;
 
@@ -27,7 +29,15 @@ public enum BrotherIntent
 // 通过 Entry.BrotherStateData（PlayerRunSavedData）注册，随存档保存/恢复。
 public class BrotherStateData
 {
-    public static readonly SavedAttachedState<BrotherRelic, int> SavedHp = new("SavedHp", _ => Brother.INITIAL_HP);
+    public static readonly SavedAttachedState<BrotherRelic, int> SavedHp = new("SavedHp", _ =>
+    {
+        if (RunManager.Instance.HasAscension(AscensionLevel.WearyTraveler)) {
+            return (int)(Brother.INITIAL_HP * 0.8);
+        } else
+        {
+            return Brother.INITIAL_HP;
+        }
+    });
     public static readonly SavedAttachedState<BrotherRelic, int> SavedMaxHp = new("SavedMaxHp", _ => Brother.INITIAL_HP);
     public static readonly SavedAttachedState<BrotherRelic, int> SavedTrait = new("SavedTrait", _ => 0);
     public static readonly SavedAttachedState<BrotherRelic, int> SavedAttackTurnsRemaining = new("SavedAttackTurnsRemaining", _ => 0);
