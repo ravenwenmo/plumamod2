@@ -83,5 +83,6 @@ public class SharpenBlade : ModCardTemplate
     {
         DynamicVars["SharpenBladePower"].UpgradeValueBy(25m); // 50 → 75
         DynamicVars["TraitAmount"].UpgradeValueBy(25m);       // 50 → 75
+        RemoveKeyword(CardKeyword.Exhaust);
     }
 }

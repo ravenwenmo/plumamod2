@@ -17,7 +17,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Flow : ModCardTemplate
 {
-    private const int energyCost = 2;          // 1 费
+    private const int energyCost = 1;          // 1 费
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.Self;   // 对自己释放
@@ -29,8 +29,8 @@ public class Flow : ModCardTemplate
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        MyKeywords.MuscleMemory,
-        CardKeyword.Ethereal // 如有其他关键词可一起添加
+        //MyKeywords.MuscleMemory,
+        CardKeyword.Ethereal
     };
     
     // 用 DynamicVar 定义层数，方便 OnUpgrade 修改
