@@ -97,8 +97,8 @@
   "PLUMA_POWER_COCKTAIL_GUIDE_POWER.smartDescription": "鸡尾酒对自己或友方释放时，目标获得1点能量。",
 
   "PLUMA_POWER_LIBERI_POWER.title": "?!黎博利!?",
-  "PLUMA_POWER_LIBERI_POWER.description": "造成伤害时，给目标附加创伤。",
-  "PLUMA_POWER_LIBERI_POWER.smartDescription": "造成伤害时，附加[blue]{Amount}[/blue]层[gold]创伤[/gold]。",
+  "PLUMA_POWER_LIBERI_POWER.description": "每有一次攻击造成未被格挡的伤害，就给予创伤。",
+  "PLUMA_POWER_LIBERI_POWER.smartDescription": "每有一次攻击造成未被格挡的伤害，就给予[blue]{Amount}[/blue]层[gold]创伤[/gold]。",
 
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.title": "罗德岛酒吧",
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.description": "你手中每有一张[gold]鸡尾酒[/gold]，手牌上限额外+1。",
@@ -163,6 +163,6 @@
   "PLUMA_POWER_WOUND_AMPLIFY_POWER.smartDescription": "下一次创伤伤害翻倍（×[blue]{Amount}[/blue] 倍）。",
 
   "PLUMA_POWER_NOM_POWER.title": "嚼",
-  "PLUMA_POWER_NOM_POWER.description": "龙舌兰下一次攻击斩杀敌人时，提升3点最大生命值，然后消耗1层。",
-  "PLUMA_POWER_NOM_POWER.smartDescription": "斩杀后最大生命值+3。"
+  "PLUMA_POWER_NOM_POWER.description": "龙舌兰下一次斩杀敌人时，增加最大生命值。",
+  "PLUMA_POWER_NOM_POWER.smartDescription": "龙舌兰{Counter:choose(1):下一次|第{}次}斩杀敌人时，增加[blue]{Amount}[/blue]点最大生命值。"
 }

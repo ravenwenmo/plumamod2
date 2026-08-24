@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Godot;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -24,8 +25,23 @@ public class IaiSlashTriggerSingleton : HookedSingletonModel
         Instance = this;
     }
 
-    private static bool CanTrigger(Creature? target, Creature? dealer)
+    public static bool CanTrigger(Creature? target, Creature? dealer)
         => target is { IsPlayer: true } && dealer is { IsMonster: true };
+
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    {
+		if (!props.IsPoweredAttack())
+		{
+			return 1m;
+		}
+        if (!CanTrigger(target, dealer) || dealer == null) return 1m;
+        if (target.Player == null) return 1m;
+        var hand = PileType.Hand.GetPile(target.Player);
+        IaiSlash? iai = hand.Cards.OfType<IaiSlash>().FirstOrDefault();
+        if (iai == null) return 1m;
+
+        return 0.5m;
+    }
 
     public override async Task BeforeDamageReceived(
         PlayerChoiceContext choiceContext,

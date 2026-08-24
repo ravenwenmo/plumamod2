@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -16,20 +17,30 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 嚼：龙舌兰攻击斩杀敌人时，提升3点最大生命值，然后消耗1层。可叠加。
+// 嚼：龙舌兰攻击斩杀敌人时，提升3/4点最大生命值。不可叠加。
 [RegisterPower]
 public class NomPower : ModPowerTemplate
 {
-    // 每次斩杀提升的最大生命值
-    private const int MaxHpGainPerKill = 3;
-
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
+    public override PowerInstanceType InstanceType => PowerInstanceType.Instanced;
+
+    public int Counter { set; get; } = 1;
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/NomPower.png",
         BigIconPath: "res://pluma/images/powers/NomPower.png"
     );
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new DynamicVar("Counter", Counter)
+    ];
+
+    public override async Task BeforeApplied(Creature target, decimal amount, Creature? applier, CardModel? cardSource)
+    {
+        Counter += target.GetPower<NomPower>()?.Counter ?? 0;
+        DynamicVars["Counter"].BaseValue = Counter;
+    }
 
     // 注：不能用 AfterAttack 钩子——它只在 DamageCmd.Attack / AttackContext（卡牌出牌）路径触发，
     // 而龙舌兰的攻击走的是 CreatureCmd.Damage（Brother.TakeTurn），该路径只触发 AfterDamageGiven，
@@ -45,8 +56,10 @@ public class NomPower : ModPowerTemplate
     {
         // 只结算龙舌兰自己的攻击
         if (dealer != Owner) return;
-        if (Amount <= 0) return;
         if (!result.WasTargetKilled) return;
+        Counter--;
+        DynamicVars["Counter"].BaseValue = Counter;
+        if (Counter > 0) return;
 
         // 提升最大生命值（当前生命值不变）。
         // CreatureCmd.SetMaxHp 对宠物同样生效：纯模型变更，无玩家/宠物限制，
@@ -55,7 +68,7 @@ public class NomPower : ModPowerTemplate
         try
         {
             int oldMax = Owner.MaxHp;
-            int newMax = oldMax + MaxHpGainPerKill;
+            int newMax = oldMax + Amount;
             await CreatureCmd.SetMaxHp(Owner, newMax);
 
             if (Owner.PetOwner != null)
@@ -64,14 +77,13 @@ public class NomPower : ModPowerTemplate
                 BrotherStateData.SetHp(Owner.PetOwner, Owner.CurrentHp, newMax);
             }
 
-            GD.Print($"[NomPower] kill by Brother: MaxHp {oldMax} -> {Owner.MaxHp}, stacks left {Amount - 1}");
         }
         catch (Exception ex)
         {
             GD.PrintErr($"[NomPower] max HP gain failed: {ex}");
         }
 
-        // 消耗一层能力（放在最后，确保前面的异常不会阻止消耗）
-        await PowerCmd.Decrement(this);
+        // 移除此能力
+        await PowerCmd.Remove(this);
     }
 }

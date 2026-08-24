@@ -23,26 +23,14 @@ public class LiberiPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/LiberiPower.png"
     );
 
-    public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props,
-        Creature target, CardModel? cardSource)
-    {
-        // 只处理持有者造成的伤害，且目标存活，且不是创伤自身造成的伤害（防递归）
-        if (dealer != base.Owner || target == null || !target.IsAlive || target == base.Owner) return;
-        // 自残（？）不会
-        if (props.HasFlag(ValueProp.Unpowered) && props.HasFlag(ValueProp.Unblockable) && cardSource == null) return;
-        
-        // 避免创伤伤害再次触发附加（通过检查伤害属性）
-        if (props.HasFlag(ValueProp.Unpowered) && props.HasFlag(ValueProp.Unblockable)) return;
+    public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props, Creature target, CardModel? cardSource)
+	{
+		if (dealer == base.Owner && props.IsPoweredAttack() && result.UnblockedDamage > 0)
+		{
+			await PowerCmd.Apply<OpenWoundPower>(choiceContext, target, base.Amount, base.Owner, null);
+		}
+	}
 
-        // 给目标附加1层创伤
-        await PowerCmd.Apply<OpenWoundPower>(
-            choiceContext,
-            target,
-            base.Amount,
-            base.Owner,
-            cardSource
-        );
-    }
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromPower<OpenWoundPower>()

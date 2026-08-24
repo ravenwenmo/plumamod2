@@ -243,7 +243,7 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
     /// <summary>
     /// 连续触发多次创伤效果，伤害来源与正常创伤一致（无攻击者、无卡牌）。
     /// </summary>
-    public async Task TriggerMultiple(PlayerChoiceContext choiceContext, int times)
+    public async Task TriggerMultiple(PlayerChoiceContext choiceContext, int times, int amplify = 1)
     {
         for (int i = 0; i < times; i++)
         {
@@ -253,13 +253,8 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
             if (i == 0) { await Cmd.Wait(0.2f); }
             try
             {
-                // 创伤翻倍标记（居合）：本次伤害 ×(1+层数)，造成后清空标记确保只有一次增伤
-                int amplify = base.Owner.GetPowerAmount<WoundAmplifyPower>();
                 decimal damage = base.Amount;
-                if (amplify > 0)
-                {
-                    damage *= 1m + amplify;
-                }
+                damage *= amplify;
 
                 // 伤害来源设为持有者自身（与原版 ConstrictPower 等自伤能力惯例一致）：
                 // 原版部分能力（如 LeadershipPower）在 ModifyDamage 中先解引用 dealer 再检查
@@ -272,10 +267,6 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
                     ValueProp.Unpowered | ValueProp.Unblockable,
                     base.Owner
                 );
-                if (amplify > 0)
-                {
-                    await PowerCmd.Remove<WoundAmplifyPower>(base.Owner);
-                }
                 await PowerCmd.Decrement(this);
             }
             finally

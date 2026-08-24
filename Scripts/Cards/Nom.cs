@@ -4,9 +4,11 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using Pluma.Scripts;
 using Pluma.Scripts.Monsters;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -16,7 +18,7 @@ namespace Pluma.Scripts.Cards;
 [RegisterCard(typeof(PlumaCardPool))]
 public class Nom : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 1;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.Self;
@@ -25,6 +27,11 @@ public class Nom : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("Amount", 3)
+    };
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
@@ -44,7 +51,7 @@ public class Nom : ModCardTemplate
         await PowerCmd.Apply<NomPower>(
             choiceContext,
             brother,
-            1m,
+            DynamicVars["Amount"].BaseValue,
             base.Owner.Creature,
             this
         );
@@ -52,6 +59,6 @@ public class Nom : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 2费 → 1费
+        DynamicVars["Amount"].BaseValue += 1;
     }
 }
