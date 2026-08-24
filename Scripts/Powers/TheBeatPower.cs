@@ -38,6 +38,8 @@ public class TheBeatPower : ModPowerTemplate, IPowerExtraIconAmountLabelSpecsPro
                 await PlayerCmd.GainEnergy(1, base.Owner.Player);
                 _muscleMemoryCount = 0; // 重置计数，开始下一轮
             }
+
+            InvokeDisplayAmountChanged();
         }
     }
 
