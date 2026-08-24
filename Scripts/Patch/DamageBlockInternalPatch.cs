@@ -22,7 +22,7 @@ public static class DamageBlockInternalPatch
 
         Creature brother = __instance.Player.Brother();
 
-        if (!(brother.Monster as Brother).DieForYou)
+        if (!(brother.Monster as Brother).DieForYou && amount < __instance.CurrentHp)
             return;
 
         decimal remaining =
