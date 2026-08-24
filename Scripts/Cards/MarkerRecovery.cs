@@ -31,7 +31,7 @@ public class MarkerRecovery : ModCardTemplate
     // 能力层数变量
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
-        ModCardVars.Int("MarkerRecoveryPower", 1)
+        ModCardVars.Int("MarkerRecoveryPower", 25)
     };
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]

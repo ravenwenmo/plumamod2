@@ -77,7 +77,7 @@ public class EmptyMind : ModCardTemplate
         */
         
         // 2. 洗牌
-        await CardPileCmd.Shuffle(choiceContext, player);
+        //await CardPileCmd.Shuffle(choiceContext, player);
 
         // 3. 失去所有渐入佳境
         await PowerCmd.Remove<FlowState>(base.Owner.Creature);

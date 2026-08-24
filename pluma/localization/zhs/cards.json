@@ -115,7 +115,7 @@
   "PLUMA_CARD_EXCELLENT_MOBILITY.description": "每当获得[gold]渐入佳境[/gold]时，获得1点格挡。",
 
   "PLUMA_CARD_DESPERATE_ATTACK.title": "舍身攻击",
-  "PLUMA_CARD_DESPERATE_ATTACK.description": "失去当前格挡并且两回合内[gold]不可格挡[/gold]。\n造成{Damage:diff()}点伤害{Hits:diff()}次。",
+  "PLUMA_CARD_DESPERATE_ATTACK.description": "失去当前格挡并且1回合内[gold]不可格挡[/gold]。\n造成{Damage:diff()}点伤害{Hits:diff()}次。",
 
   "PLUMA_CARD_FRIENDSHIP.title": "友情与羁绊",
   "PLUMA_CARD_FRIENDSHIP.description": "获得50层[gold]渐入佳境[/gold]\n回合结束时移除所有[gold]渐入佳境[/gold]。",
@@ -277,7 +277,7 @@
   "PLUMA_CARD_INSTANT_PAIR.description": "每当获得一张[gold]基酒[/gold]时，将1张[gold]辅料组合包{IfUpgraded:show:+}[/gold]加入抽牌堆。",
 
   "PLUMA_CARD_MAKE_USE_OF_EVERYTHING.title": "物尽其用",
-  "PLUMA_CARD_MAKE_USE_OF_EVERYTHING.description": "从[gold]辅料组合包[/gold]中额外获得 {BlockAmount:diff()} 点格挡。",
+  "PLUMA_CARD_MAKE_USE_OF_EVERYTHING.description": "打出[gold]辅料组合包[/gold]后额外获得{BlockAmount:diff()}点格挡。",
 
   "PLUMA_CARD_BARTENDER_RHYME.title": "调酒之韵",
   "PLUMA_CARD_BARTENDER_RHYME.description": "每当你打出一张[gold]辅料组合包[/gold]时，抽1张牌。",

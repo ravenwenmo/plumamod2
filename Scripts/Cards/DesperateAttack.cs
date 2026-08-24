@@ -54,7 +54,7 @@ public class DesperateAttack : ModCardTemplate
         await PowerCmd.Apply<NoBlockPower>(
             choiceContext,
             base.Owner.Creature,
-            2,
+            1,
             base.Owner.Creature,
             this
         );
