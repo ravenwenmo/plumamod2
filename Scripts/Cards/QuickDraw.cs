@@ -14,11 +14,16 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
 
 using MegaCrit.Sts2.Core.Combat.History.Entries;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
+
 
 namespace Pluma.Scripts.Cards;
 
-// 玻利瓦尔拔刀：1费罕见攻击，仅限多人模式。对全体敌人造成伤害。
-// 伤害 = (基础6 + 额外10) - 你自己本回合已攻击次数 × ReduceAmount(2)。升级后额外+4，ReduceAmount+1。
+// 玻利瓦尔拔刀：1费罕见攻击，仅限多人模式。造成基础6+额外10点伤害，但你本回合每打出过一次攻击牌，额外伤害减少5点。
+// 升级后额外伤害+4，减少值不变。
 [RegisterCard(typeof(PlumaCardPool))]
 public class QuickDraw : ModCardTemplate
 {
@@ -27,54 +32,66 @@ public class QuickDraw : ModCardTemplate
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.AllEnemies;
     private const bool shouldShowInCardLibrary = true;
-    
+
+    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 伤害变量
+    // 伤害变量：基础6，额外10，每次攻击额外减少5
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(6m, ValueProp.Move),      // 基础伤害
-        new ExtraDamageVar(10m),                 // 额外伤害
-        ModCardVars.Int("ReduceAmount", 2)       // 每攻击一次减少的伤害量
+        new CalculationBaseVar(6m),
+        new ExtraDamageVar(10m),
+        ModCardVars.Int("ReduceAmount", 5),
+        new CalculatedDamageVar(ValueProp.Move).WithMultiplier((CardModel card, Creature? target) =>
+        {
+            decimal baseDamage = card.DynamicVars.CalculationBase.BaseValue;
+            decimal extraDamage = card.DynamicVars.ExtraDamage.BaseValue;
+            decimal reduceAmount = card.DynamicVars["ReduceAmount"].BaseValue;
+            decimal totalBase = baseDamage + extraDamage;
+
+            // 统计玩家自己本回合已造成的攻击次数
+            int myAttackCount = 0;
+            var enemies = card.CombatState?.HittableEnemies;
+            if (enemies != null)
+            {
+                myAttackCount = enemies.Sum(enemy =>
+                    CombatManager.Instance.History.Entries
+                        .OfType<DamageReceivedEntry>()
+                        .Count(e =>
+                            e.Receiver == enemy &&
+                            e.Result.Props.IsPoweredAttack() &&
+                            e.HappenedThisTurn(card.CombatState) &&
+                            e.Dealer == card.Owner.Creature
+                        )
+                );
+            }
+
+            // 额外伤害随攻击次数减少，最低0
+            decimal remainingExtra = Math.Max(0m, extraDamage - reduceAmount * myAttackCount);
+            decimal effectiveDamage = baseDamage + remainingExtra;
+
+            if (totalBase <= 0m || effectiveDamage <= 0m)
+                return 0m;
+
+            return effectiveDamage / totalBase;
+        })
     };
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        MyKeywords.Slashing, // 本能
+        MyKeywords.Slashing, // 切割
     };
-    
+
     public QuickDraw() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 1. 计算玩家自己本回合已造成的攻击次数
-        int myAttackCount = 0;
-        var enemies = CombatState.HittableEnemies;
-        if (enemies != null)
-        {
-            myAttackCount = enemies.Sum(enemy =>
-                CombatManager.Instance.History.Entries
-                    .OfType<DamageReceivedEntry>()
-                    .Count(e =>
-                        e.Receiver == enemy &&
-                        e.Result.Props.IsPoweredAttack() &&
-                        e.HappenedThisTurn(CombatState) &&
-                        e.Dealer == base.Owner.Creature  // 只统计自己
-                    )
-            );
-        }
-
-        // 2. 计算实际伤害 = 基础 + 额外 - 攻击次数 * ReduceAmount
-        decimal baseDamage = DynamicVars.Damage.BaseValue + DynamicVars.ExtraDamage.BaseValue;
-        decimal actualDamage = Math.Max(0m, baseDamage - myAttackCount * DynamicVars["ReduceAmount"].BaseValue);
-
-        // 3. 对全体敌人造成伤害
-        await DamageCmd.Attack(actualDamage)
+        await DamageCmd.Attack(base.DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState)
             .Execute(choiceContext);
@@ -83,6 +100,6 @@ public class QuickDraw : ModCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.ExtraDamage.UpgradeValueBy(4m);    // 10 → 14
-        DynamicVars["ReduceAmount"].UpgradeValueBy(1m); // 2 → 3
+        // ReduceAmount 保持不变（5）
     }
 }

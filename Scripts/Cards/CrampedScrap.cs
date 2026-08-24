@@ -76,7 +76,7 @@ public class CrampedScrap : ModCardTemplate
             // .FromCard(this, cardPlay) // 测试版
             .Targeting(cardPlay.Target!)
             .Execute(choiceContext);
-        await CreatureCmd.Damage(choiceContext, base.Owner.Creature, base.DynamicVars.HpLoss.BaseValue, ValueProp.Unblockable | ValueProp.Unpowered | ValueProp.Move, this, cardPlay);
+        await CreatureCmd.Damage(choiceContext, base.Owner.Creature, base.DynamicVars.HpLoss.BaseValue, ValueProp.Unblockable | ValueProp.Unpowered, this, cardPlay);
 
     }
 

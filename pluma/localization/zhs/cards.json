@@ -41,11 +41,11 @@
   "PLUMA_CARD_WORKHORSE.title": "团队基石",
   "PLUMA_CARD_WORKHORSE.description": "造成{Damage:diff()}点伤害。\n获得{Block:diff()}点[gold]格挡[/gold]\n抽{Cards:diff()}张牌。",
 
-  "PLUMA_CARD_QUICK_DRAW.title": "玻利瓦尔式拔刀",
-  "PLUMA_CARD_QUICK_DRAW.description": "对所有敌方造成{CalculatedDamage:diff()}点伤害。\n若这是最先造成伤害的牌，伤害会额外增加{ExtraDamage:diff()}点。",
-
+  "PLUMA_CARD_QUICK_DRAW.title": "玻利瓦尔拔刀",
+  "PLUMA_CARD_QUICK_DRAW.description": "造成{CalculationBase:diff()}点基础伤害，加上{ExtraDamage:diff()}点额外伤害。你本回合每打出过一次攻击牌，额外伤害减少{ReduceAmount:diff()}点。",
+  
   "PLUMA_CARD_CRAMPED_SCRAP.title": "短兵相接",
-  "PLUMA_CARD_CRAMPED_SCRAP.description": "失去{HpLoss:diff()}点生命。\n造成{Damage:diff()}点伤害3次。",
+  "PLUMA_CARD_CRAMPED_SCRAP.description": "造成{Damage:diff()}点伤害3次，\n失去{HpLoss:diff()}点生命。",
 
   "PLUMA_CARD_FLOW.title": "心流",
   "PLUMA_CARD_FLOW.description": "获得[gold]{FlowStateAmount}[/gold]层[gold]渐入佳境[/gold]。",
@@ -317,13 +317,13 @@
   "PLUMA_CARD_WAIT_FOR_OPPORTUNITY.description": "龙舌兰处于强化意图时，若龙舌兰或后方单位受到伤害，对伤害来源造成[blue]{Stacks:diff()}[/blue]×[red]基础攻击+特性[/red]点伤害。",
 
   "PLUMA_CARD_SWORD_WALKING_EDGE.title": "剑走偏锋",
-  "PLUMA_CARD_SWORD_WALKING_EDGE.description": "对龙舌兰的攻击意图变为[gold]范围攻击[/gold]。若在蓄力循环重复叠加转而将[gold]蓄力[/gold]层数变为3层。",
+  "PLUMA_CARD_SWORD_WALKING_EDGE.description": "对龙舌兰的攻击意图变为[gold]全体攻击[/gold]。若在强化循环重复叠加转而将[gold]蓄力[/gold]层数变为3层。",
 
   "PLUMA_CARD_COVER.title": "掩护",
   "PLUMA_CARD_COVER.description": "获得{Block:diff()}点[gold]格挡[/gold]。若龙舌兰在场，其也获得等量格挡。",
 
   "PLUMA_CARD_INSTINCT_CLEANSE.title": "“交给我吧”",
-  "PLUMA_CARD_INSTINCT_CLEANSE.description": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold。",
+  "PLUMA_CARD_INSTINCT_CLEANSE.description": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold]。",
   "PLUMA_CARD_INSTINCT_CLEANSE_ALIVE_DESC": "龙舌兰切换至强化循环，你获得其[gold]特性[/gold]等量[gold]磨刀[/gold]。",
   "PLUMA_CARD_INSTINCT_CLEANSE_MISSING_DESC": "[gold]消耗[/gold]。\n获得200层[gold]磨刀[/gold]。",
 
