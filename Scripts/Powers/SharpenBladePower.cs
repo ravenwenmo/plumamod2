@@ -39,11 +39,13 @@ public class SharpenBladePower : ModPowerTemplate
         return 1m;
     }
 
-    // 攻击牌打出后，消耗本能力
-    public override async Task AfterDamageGiven(PlayerChoiceContext choiceContext, Creature? dealer, DamageResult result, ValueProp props,
-        Creature target, CardModel? cardSource)
+    public override async Task AfterCardPlayed(
+        PlayerChoiceContext choiceContext,
+        CardPlay cardPlay)
     {
-        if (dealer != base.Owner) return;
+        if (cardPlay.Card.Owner.Creature != base.Owner) return;
+        if (cardPlay.Card.Type != CardType.Attack) return;
+
         await PowerCmd.Remove(this);
     }
 }
