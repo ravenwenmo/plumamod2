@@ -1,4 +1,4 @@
-﻿
+
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -45,26 +45,18 @@ public class FullSpeedSlash : ModCardTemplate
         decimal baseDamage = DynamicVars.Damage.BaseValue;
         int baseHits = DynamicVars["BaseHits"].IntValue;
 
-        // 基础段数攻击
-        for (int i = 0; i < baseHits; i++)
-        {
-            await DamageCmd.Attack(baseDamage)
-                .FromCard(this, cardPlay)
-                .Targeting(target)
-                .Execute(choiceContext);
-        }
-
         // 额外段数 = 渐入佳境层数 / 2（向下取整）
         int flowStacks = (int)base.Owner.Creature.GetPowerAmount<FlowState>();
         int extraHits = flowStacks / 2;
 
-        for (int i = 0; i < extraHits; i++)
-        {
-            await DamageCmd.Attack(baseDamage)
-                .FromCard(this, cardPlay)
-                .Targeting(target)
-                .Execute(choiceContext);
-        }
+        // 基础段数与额外段数合并为一条攻击命令（WithHitCount），
+        // 保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效，
+        // 与旋风斩（Whirlwind）等原版多段牌保持一致。
+        await DamageCmd.Attack(baseDamage)
+            .FromCard(this, cardPlay)
+            .Targeting(target)
+            .WithHitCount(baseHits + extraHits)
+            .Execute(choiceContext);
     }
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

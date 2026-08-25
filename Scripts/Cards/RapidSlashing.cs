@@ -1,4 +1,4 @@
-﻿
+
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -59,27 +59,26 @@ public class RapidSlashing : ModCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 基础伤害：对所有敌人造成伤害
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
-            .TargetingAllOpponents(CombatState)   // 改为全体敌人
-            .Execute(choiceContext);
-
         // 施加一层高速切割叠加
         await PowerCmd.Apply<RapidSlashingStacks>(choiceContext, Owner.Creature, stacks, base.Owner.Creature, this);
         var power = Owner.Creature.Powers.OfType<RapidSlashingStacks>().FirstOrDefault();
 
+        // 达到阈值时额外造成一段伤害。基础段与奖励段必须合并为一条攻击命令
+        // （WithHitCount），保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效。
+        int hits = 1;
         if (power != null && power.Amount >= DynamicVars["Threshold"].BaseValue)
         {
             // 移除叠加
             await PowerCmd.Remove(power);
-
-            // 额外伤害：也对所有敌人造成伤害
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
-                .TargetingAllOpponents(CombatState)   // 改为全体敌人
-                .Execute(choiceContext);
+            hits = 2;
         }
+
+        // 对所有敌人造成伤害
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this, cardPlay)
+            .TargetingAllOpponents(CombatState)   // 改为全体敌人
+            .WithHitCount(hits)
+            .Execute(choiceContext);
 
         // 获得1层渐入佳境
         await PowerCmd.Apply<FlowState>(

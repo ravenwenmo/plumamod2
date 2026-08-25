@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -55,36 +56,43 @@ public class FeatherStorm : ModCardTemplate
         var enemies = CombatState.HittableEnemies;
         if (!enemies.Any()) return;
 
-        var rng = base.Owner.RunState.Rng.CombatCardSelection;
+        // 随机目标使用战斗目标随机流（与 AttackCommand.TargetingRandomOpponents 一致），
+        // 保证多人对局中每个客户端的结果一致。
+        var rng = base.Owner.RunState.Rng.CombatTargets;
         decimal damage = DynamicVars.Damage.BaseValue;
         int randomHits = DynamicVars["RandomHits"].IntValue;
         decimal vulnerableAmount = DynamicVars["VulnerableAmount"].BaseValue;
 
-        // 1. 对指定目标施加易伤
-        await PowerCmd.Apply<VulnerablePower>(
-            choiceContext,
-            target,
-            vulnerableAmount,
-            base.Owner.Creature,
-            this
-        );
-
-        // 2. 对指定目标造成第一下伤害
-        await DamageCmd.Attack(damage)
-            .FromCard(this, cardPlay)
-            .Targeting(target)
-            .Execute(choiceContext);
-
-        // 3. 随机造成剩余伤害
-        for (int i = 0; i < randomHits; i++)
+        // 指定目标的第一击 + 随机多次攻击必须同属一次攻击（AttackContext）：
+        // 活力（VigorPower）在攻击命令结束（AfterAttack）时才消耗层数，
+        // 若拆成多次 Execute，第一击后活力就被整段消耗，后续随机攻击不再加成。
+        // 原版同款用法见 EchoingSlash / Omnislice。
+        await using (var attackContext = await AttackCommand.CreateContextAsync(CombatState, choiceContext, cardPlay))
         {
-            var randomEnemy = rng.NextItem(enemies);
-            if (randomEnemy == null) continue;
+            // 1. 对指定目标施加易伤
+            await PowerCmd.Apply<VulnerablePower>(
+                choiceContext,
+                target,
+                vulnerableAmount,
+                base.Owner.Creature,
+                this
+            );
 
-            await DamageCmd.Attack(damage)
-                .FromCard(this, cardPlay)
-                .Targeting(randomEnemy)
-                .Execute(choiceContext);
+            // 2. 对指定目标造成第一下伤害（保留 Execute 默认的攻击动画）
+            await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.AttackAnimDelay);
+            attackContext.AddHit(await CreatureCmd.Damage(
+                choiceContext, target, damage, ValueProp.Move, this, cardPlay));
+
+            // 3. 随机造成剩余伤害
+            for (int i = 0; i < randomHits; i++)
+            {
+                var randomEnemy = rng.NextItem(enemies);
+                if (randomEnemy == null || !randomEnemy.IsAlive) continue;
+
+                await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.AttackAnimDelay);
+                attackContext.AddHit(await CreatureCmd.Damage(
+                    choiceContext, randomEnemy, damage, ValueProp.Move, this, cardPlay));
+            }
         }
     }
 

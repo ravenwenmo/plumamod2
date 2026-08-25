@@ -46,14 +46,14 @@ public class Knock : ModCardTemplate
         decimal damage = DynamicVars.Damage.BaseValue;
         int hits = DynamicVars["Hits"].IntValue;
 
-        // 先按当前段数造成伤害
-        for (int i = 0; i < hits; i++)
-        {
-            await DamageCmd.Attack(damage)
-                .FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target)
-                .Execute(choiceContext);
-        }
+        // 先按当前段数造成伤害。所有段数合并为一条攻击命令（WithHitCount），
+        // 保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效，
+        // 与旋风斩（Whirlwind）等原版多段牌保持一致。
+        await DamageCmd.Attack(damage)
+            .FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target)
+            .WithHitCount(hits)
+            .Execute(choiceContext);
 
         // 然后让本场战斗中所有敲卡牌的攻击段数+1
         int buff = 1;

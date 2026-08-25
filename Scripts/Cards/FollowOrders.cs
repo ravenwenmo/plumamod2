@@ -51,14 +51,14 @@ public class FollowOrders : ModCardTemplate
     {
         if (cardPlay.Target == null) return;
 
+        // 所有段数合并为一条攻击命令（WithHitCount），保证活力（VigorPower）
+        // 等每次攻击消耗的能力对每段伤害都生效（与原版多段牌一致）。
         int hits = DynamicVars["Hits"].IntValue;
-        for (int i = 0; i < hits; i++)
-        {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target)
-                .Execute(choiceContext);
-        }
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target)
+            .WithHitCount(hits)
+            .Execute(choiceContext);
     }
 
     // 每次抽到这张牌，攻击段数+1

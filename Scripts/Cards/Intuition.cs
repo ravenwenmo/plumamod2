@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -75,14 +75,14 @@ public class Intuition : ModCardTemplate
         if (hasSlashing)
             hits = 2; // 切割加成
 
-        // 执行攻击
-        for (int i = 0; i < hits; i++)
-        {
-            await DamageCmd.Attack(finalDamage)
-                .FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target!)
-                .Execute(choiceContext);
-        }
+        // 执行攻击：段数合并为一条攻击命令（WithHitCount），
+        // 保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效，
+        // 与原版多段牌保持一致。
+        await DamageCmd.Attack(finalDamage)
+            .FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target!)
+            .WithHitCount(hits)
+            .Execute(choiceContext);
     }
 
     protected override void OnUpgrade()

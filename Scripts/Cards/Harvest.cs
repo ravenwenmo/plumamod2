@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -80,23 +80,24 @@ public class Harvest : ModCardTemplate
             // 打出前动画：播完再开始攻击
             await PlaySkill2AnimAndWait(creature, creatureNode, "Skill_2_Start", speed);
 
-            // 每段循环：Skill_2_Attack 播完后结算该段伤害
-            for (int i = 0; i < x; i++)
-            {
-                await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                    .FromCard(this, cardPlay)
-                    .TargetingAllOpponents(base.CombatState)
-                    .WithAttackerAnim("Skill_2_Attack", 0f)
-                    .WithAttackerFx(sfx: base.Owner.Character.AttackSfx)
-                    .AfterAttackerAnim(async () =>
-                    {
-                        // 动画已同步触发，读当前动画名义时长并按速度倍率等待播完
-                        float length = creatureNode?.GetCurrentAnimationLength() ?? 0f;
-                        await WaitAnimLength(length, speed);
-                    })
-                    //.WithHitFx("vfx/vfx_attack_slash")
-                    .Execute(choiceContext);
-            }
+            // X 段伤害必须在同一条攻击命令内完成（WithHitCount）：
+            // 活力（VigorPower）等能力在攻击命令结束（AfterAttack）时才消耗层数，
+            // 若用外部 for 循环逐段 Execute，第一段结束后活力就被整段消耗，后续段不再加成。
+            // 与旋风斩（Whirlwind）等原版多段牌保持一致。
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+                .FromCard(this, cardPlay)
+                .TargetingAllOpponents(base.CombatState)
+                .WithHitCount(x)
+                .WithAttackerAnim("Skill_2_Attack", 0f)
+                .WithAttackerFx(sfx: base.Owner.Character.AttackSfx)
+                .AfterAttackerAnim(async () =>
+                {
+                    // 动画已同步触发，读当前动画名义时长并按速度倍率等待播完
+                    float length = creatureNode?.GetCurrentAnimationLength() ?? 0f;
+                    await WaitAnimLength(length, speed);
+                })
+                //.WithHitFx("vfx/vfx_attack_slash")
+                .Execute(choiceContext);
 
             // 结束动画：播完再收尾
             await PlaySkill2AnimAndWait(creature, creatureNode, "Skill_2_End", speed);

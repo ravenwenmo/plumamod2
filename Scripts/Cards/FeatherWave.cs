@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -57,15 +57,15 @@ public class FeatherWave : ModCardTemplate
             this
         );
 
-        // 2. 对所有敌人造成3次伤害
+        // 2. 对所有敌人造成3次伤害。3段合并为一条攻击命令（WithHitCount），
+        // 保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效，
+        // 与旋风斩（Whirlwind）等原版多段牌保持一致。
         decimal damage = DynamicVars.Damage.BaseValue;
-        for (int i = 0; i < 3; i++)
-        {
-            await DamageCmd.Attack(damage)
-                .FromCard(this, cardPlay)
-                .TargetingAllOpponents(CombatState)
-                .Execute(choiceContext);
-        }
+        await DamageCmd.Attack(damage)
+            .FromCard(this, cardPlay)
+            .TargetingAllOpponents(CombatState)
+            .WithHitCount(3)
+            .Execute(choiceContext);
 
         // 3. 获取当前渐入佳境层数（包含刚刚获得的1层）
         int flowStacks = (int)base.Owner.Creature.GetPowerAmount<FlowState>();

@@ -1,4 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -54,15 +54,13 @@ public class DoubleSlash : ModCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        // 2段伤害合并为一条攻击命令（WithHitCount），保证活力（VigorPower）
+        // 等每次攻击消耗的能力对每段伤害都生效（与原版多段牌一致）。
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this,cardPlay)
             // .FromCard(this, cardPlay) // 测试版
             .Targeting(cardPlay.Target!)
-            .Execute(choiceContext);
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this,cardPlay)
-            // .FromCard(this, cardPlay) // 测试版
-            .Targeting(cardPlay.Target!)
+            .WithHitCount(2)
             .Execute(choiceContext);
     }
 

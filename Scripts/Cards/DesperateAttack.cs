@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -59,17 +59,17 @@ public class DesperateAttack : ModCardTemplate
             this
         );
 
-        // 多次攻击目标
+        // 多次攻击目标。所有段数合并为一条攻击命令（WithHitCount），
+        // 保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效，
+        // 与旋风斩（Whirlwind）等原版多段牌保持一致。
         int hits = DynamicVars["Hits"].IntValue;
         decimal damagePerHit = DynamicVars.Damage.BaseValue;
 
-        for (int i = 0; i < hits; i++)
-        {
-            await DamageCmd.Attack(damagePerHit)
-                .FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target!)
-                .Execute(choiceContext);
-        }
+        await DamageCmd.Attack(damagePerHit)
+            .FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target!)
+            .WithHitCount(hits)
+            .Execute(choiceContext);
     }
 
     protected override void OnUpgrade()

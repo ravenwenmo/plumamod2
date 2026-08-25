@@ -45,14 +45,14 @@ public class TogetherWeFight : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 对目标造成多段伤害
-        for (int i = 0; i < DynamicVars["Hits"].IntValue; i++)
-        {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target!)
-                .Execute(choiceContext);
-        }
+        // 对目标造成多段伤害：段数合并为一条攻击命令（WithHitCount），
+        // 保证活力（VigorPower）等每次攻击消耗的能力对每段伤害都生效，
+        // 与原版多段牌保持一致。
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target!)
+            .WithHitCount(DynamicVars["Hits"].IntValue)
+            .Execute(choiceContext);
 
         // 自己获得临时力量
         await PowerCmd.Apply<FlexPotionPower>(
