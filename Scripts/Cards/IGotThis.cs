@@ -12,13 +12,29 @@ using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.CardPools;
+using MegaCrit.Sts2.Core.Models.Powers;
+using Pluma.Scripts;
+using Pluma.Scripts.Monsters;
+using STS2RitsuLib.Cards.DynamicVars;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
+
 namespace Pluma.Scripts.Cards;
 
-// 我来就好：1费消耗稀有技能牌，固有。龙舌兰在场时，回复5+失去特性/20点生命，清空特性并切换至强化循环；否则抽1张牌。升级后0费。
+// 我来就好：消耗稀有技能牌，固有。龙舌兰在场时，回复基础治疗+每失去TraitStepAmount点特性额外回复HealPerTraitStep点生命，清空特性并切换至强化循环；否则抽牌。升级后费用-1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class IGotThis : ModCardTemplate, ISpiritModeCard
 {
-    private const int energyCost = 1;
+    private const int energyCost = 0;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.Self;
@@ -34,16 +50,20 @@ public class IGotThis : ModCardTemplate, ISpiritModeCard
         CardKeyword.Innate // 固有
     };
 
+    // 动态变量：基础治疗、特性步长、每步额外治疗、不在场抽牌数
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("BaseHeal", 9),
+        ModCardVars.Int("TraitStepAmount", 20),
+        ModCardVars.Int("HealPerTraitStep", 1),
+        ModCardVars.Int("CardsToDraw", 1)
+    };
+
     // 动态描述：根据龙舌兰是否在场显示不同效果文本
     public LocString SpiritModeDescription
     {
         get
         {
-            // 百科/图鉴里是 canonical（不可变）实例，Owner getter 会先 AssertMutable() 抛
-            // CanonicalModelException（发生在 null 判断之前），必须先判 IsMutable 再读 Owner
-            //（游戏自身在 GetDescriptionForPile 里就是用 base.IsMutable 守卫 Owner 读取的）。
-            // Owner 未初始化（mutable 但无主人）时同样返回通用描述，避免空引用。
-            // 非战斗状态（商店、图鉴、预览）默认显示龙舌兰在场效果
             if (!IsMutable || base.Owner == null || base.Owner.PlayerCombatState == null)
             {
                 return new LocString("cards", "PLUMA_CARD_I_GOT_THIS.description");
@@ -77,8 +97,10 @@ public class IGotThis : ModCardTemplate, ISpiritModeCard
                 await PowerCmd.Remove<TraitPower>(brotherCreature);
             }
 
-            // 基础回复5点，每失去20层特性额外回复1点
-            int totalHeal = 5 + traitAmount / 20;
+            // 总治疗 = 基础治疗 + (特性层数 / 步长) * 每步额外治疗
+            int totalHeal = DynamicVars["BaseHeal"].IntValue
+                + (traitAmount / DynamicVars["TraitStepAmount"].IntValue) * DynamicVars["HealPerTraitStep"].IntValue;
+
             await CreatureCmd.Heal(brotherCreature, totalHeal);
 
             // 切换至强化循环
@@ -86,13 +108,13 @@ public class IGotThis : ModCardTemplate, ISpiritModeCard
         }
         else
         {
-            // 龙舌兰不在场：抽一张牌
-            await CardPileCmd.Draw(choiceContext, 1m, base.Owner);
+            // 龙舌兰不在场：抽牌
+            await CardPileCmd.Draw(choiceContext, DynamicVars["CardsToDraw"].BaseValue, base.Owner);
         }
     }
 
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 1费 → 0费
+        base.EnergyCost.UpgradeBy(-1); // 费用-1
     }
 }

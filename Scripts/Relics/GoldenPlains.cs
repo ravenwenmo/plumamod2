@@ -8,12 +8,21 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Rooms;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Rooms;
+using STS2RitsuLib.Combat.Ui.ExtraCornerAmountLabels;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 黄金平原：每洗牌两次，获得1点能量。
+// 黄金平原：每洗牌两次，获得1点能量。主计数显示还需洗牌次数。
 [RegisterRelic(typeof(PlumaRelicPool))]
-public class GoldenPlains : ModRelicTemplate
+public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProvider
 {
     private int _shuffleCount;
 
@@ -30,7 +39,10 @@ public class GoldenPlains : ModRelicTemplate
     public override Task AfterRoomEntered(AbstractRoom room)
     {
         if (room is CombatRoom)
+        {
             _shuffleCount = 0;
+            InvokeDisplayAmountChanged();
+        }
         return Task.CompletedTask;
     }
 
@@ -45,5 +57,20 @@ public class GoldenPlains : ModRelicTemplate
             Flash();
             await PlayerCmd.GainEnergy(1, base.Owner);
         }
+        InvokeDisplayAmountChanged();
+    }
+
+    public IReadOnlyList<ExtraIconAmountLabelSpec> GetRelicExtraIconAmountLabelSpecs()
+    {
+        int remaining = 2 - _shuffleCount;
+        if (remaining < 0) remaining = 0;
+
+        return
+        [
+            ExtraIconAmountLabelSpec.RichText(
+                ExtraIconAmountLabelCorner.BottomRight,   // 使用主计数位置
+                $"{remaining}"
+            )
+        ];
     }
 }

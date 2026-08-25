@@ -37,7 +37,6 @@ public class SpecialBlend : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 从手牌选择两张牌（仿 TrueGrit 选择逻辑）
         var selected = await CardSelectCmd.FromHand(
             prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 2),
             context: choiceContext,
@@ -47,14 +46,13 @@ public class SpecialBlend : ModCardTemplate
         );
 
         var toExhaust = selected.ToList();
-        if (toExhaust.Count < 2) return;
 
-        // 消耗这两张牌
+// 不判断数量，直接消耗选到的牌（可能为0张）
         foreach (var card in toExhaust)
         {
             await CardCmd.Exhaust(choiceContext, card);
         }
-
+        
         // 从角色卡池中随机生成 1 张牌（仿 Stoke 生成逻辑）
         var unlockedCards = base.Owner.Character.CardPool.GetUnlockedCards(
             base.Owner.UnlockState,
