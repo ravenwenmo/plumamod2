@@ -4,7 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models.CardPools;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models.Powers;
 using Pluma.Scripts;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -31,9 +31,14 @@ public class SwordWalkingEdge : ModCardTemplate
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        CardKeyword.Ethereal // 虚无
+        CardKeyword.Ethereal, // 虚无
     };
 
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<ChargingPower>()
+    };
+    
     public SwordWalkingEdge()
         : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
