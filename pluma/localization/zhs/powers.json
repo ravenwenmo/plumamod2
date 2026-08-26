@@ -1,4 +1,4 @@
-﻿{
+{
   "PLUMA_POWER_RAPID_SLASHING_STACKS.description": "达到一定层数时再使用高速切割会额外追加一段攻击，战斗结束不会清空该层数。",
   "PLUMA_POWER_RAPID_SLASHING_STACKS.smartDescription": "达到一定层数时再使用高速切割会额外追加一段攻击，战斗结束不会清空该层数。已叠[blue]{Amount}层。",
   "PLUMA_POWER_RAPID_SLASHING_STACKS.title": "高速切割",
@@ -105,8 +105,8 @@
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.smartDescription": "手中的鸡尾酒使手牌上限额外+1。",
 
   "PLUMA_POWER_RESTOCK_CALL_POWER.title": "补货联络",
-  "PLUMA_POWER_RESTOCK_CALL_POWER.description": "在接下来的2个你的回合开始时，各获得1张随机基酒。",
-  "PLUMA_POWER_RESTOCK_CALL_POWER.smartDescription": "在接下来的 [blue]2[/blue] 个你的回合开始时，各获得1张随机基酒。",
+  "PLUMA_POWER_RESTOCK_CALL_POWER.description": "在接下来的2个你的回合开始时，各获得[gold]随机基酒[/gold] 1。",
+  "PLUMA_POWER_RESTOCK_CALL_POWER.smartDescription": "在接下来的 [blue]2[/blue] 个你的回合开始时，各获得[gold]随机基酒[/gold] 1。",
   
   "PLUMA_POWER_PREMONITION_POWER.title": "预感",
   "PLUMA_POWER_PREMONITION_POWER.description": "下个回合开始时，获得等同于层数的渐入佳境。",

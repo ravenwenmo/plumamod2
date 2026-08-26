@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models;
 
 namespace Pluma.Scripts.Cards;
 
-// ALL! IN!：稀有X费技能牌。获得X张基酒：先获得若干组完整的6种基酒，剩余部分获得随机不重复基酒。升级后数量+1。
+// ALL! IN!：稀有X费技能牌。「随机基酒 X」：获得X张不同的随机基酒，优先排除手牌已有种类；手牌集齐全部6种后忽略限制开始新的一组。升级后数量+1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class AllIn : ModCardTemplate
 {
@@ -37,49 +38,23 @@ public class AllIn : ModCardTemplate
         if (amount <= 0) return;
 
         var player = base.Owner;
-        var generated = new List<CardModel>();
 
-        int fullGroups = amount / 6;          // 完整组数
-        int remainder = amount % 6;           // 剩余随机不重复数量
-
-        // 生成 n 组完整的 6 种基酒
-        for (int group = 0; group < fullGroups; group++)
-        {
-            generated.Add(base.CombatState.CreateCard<Gin>(player));
-            generated.Add(base.CombatState.CreateCard<Tequila>(player));
-            generated.Add(base.CombatState.CreateCard<Whiskey>(player));
-            generated.Add(base.CombatState.CreateCard<Rum>(player));
-            generated.Add(base.CombatState.CreateCard<Vodka>(player));
-            generated.Add(base.CombatState.CreateCard<Brandy>(player));
-        }
-
-        // 生成剩余 r 张不重复随机基酒
-        if (remainder > 0)
-        {
-            var available = new List<CardModel>
-            {
-                base.CombatState.CreateCard<Gin>(player),
-                base.CombatState.CreateCard<Tequila>(player),
-                base.CombatState.CreateCard<Whiskey>(player),
-                base.CombatState.CreateCard<Rum>(player),
-                base.CombatState.CreateCard<Vodka>(player),
-                base.CombatState.CreateCard<Brandy>(player),
-            };
-
-            var rng = base.Owner.RunState.Rng.CombatCardGeneration;
-            for (int i = 0; i < remainder; i++)
-            {
-                int index = rng.NextInt(available.Count);
-                generated.Add(available[index]);
-                available.RemoveAt(index);
-            }
-        }
+        // 「随机基酒 X」：统一走 BaseSpiritGeneration。
+        // 优先排除手牌已有种类；手牌集齐全部 6 种后忽略限制开始新的一组；超过 6 张时自动循环成新组。
+        var rng = base.Owner.RunState.Rng.CombatCardGeneration;
+        var generated = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, amount, base.CombatState, rng);
 
         if (generated.Count > 0)
         {
             await CardPileCmd.AddGeneratedCardsToCombat(generated, PileType.Hand, player);
         }
     }
+
+    // 悬浮提示：「随机基酒」术语解释（对齐原版「召唤」的 static_hover_tips 实现）
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        BaseSpiritGeneration.RandomBaseSpiritHoverTip
+    };
 
     protected override void OnUpgrade()
     {

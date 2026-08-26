@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts.Cards;
 
-// 我喝两杯：2费罕见技能，本能，消耗。获得2张不同的随机基酒，将1张辅料组合包放入抽牌堆和弃牌堆。升级后费用减1。
+// 我喝两杯：2费罕见技能，本能，消耗。「随机基酒 2」，将1张辅料组合包放入抽牌堆和弃牌堆。升级后费用减1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
 {
@@ -33,6 +33,7 @@ public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        BaseSpiritGeneration.RandomBaseSpiritHoverTip,
         HoverTipFactory.FromCard<MixerPack>()
     };
 
@@ -45,25 +46,11 @@ public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
         var player = base.Owner;
         var rng = base.Owner.RunState.Rng.CombatCardGeneration;
 
-        // 构建六种基酒候选列表
-        var availableBaseSpirits = new List<CardModel>
+        // 「随机基酒 2」：统一走 BaseSpiritGeneration（两张不重复，优先排除手牌已有种类）
+        var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 2, base.CombatState, rng);
+        if (baseSpirits.Count > 0)
         {
-            base.CombatState.CreateCard<Gin>(player),
-            base.CombatState.CreateCard<Tequila>(player),
-            base.CombatState.CreateCard<Whiskey>(player),
-            base.CombatState.CreateCard<Rum>(player),
-            base.CombatState.CreateCard<Vodka>(player),
-            base.CombatState.CreateCard<Brandy>(player),
-        };
-
-        // 随机获得两张不同的基酒
-        for (int i = 0; i < 2; i++)
-        {
-            int index = rng.NextInt(availableBaseSpirits.Count);
-            CardModel baseSpirit = availableBaseSpirits[index];
-            availableBaseSpirits.RemoveAt(index);
-
-            await CardPileCmd.AddGeneratedCardsToCombat(new[] { baseSpirit }, PileType.Hand, player);
+            await CardPileCmd.AddGeneratedCardsToCombat(baseSpirits, PileType.Hand, player);
         }
 
         // 分别将两张辅料组合包放入抽牌堆和弃牌堆

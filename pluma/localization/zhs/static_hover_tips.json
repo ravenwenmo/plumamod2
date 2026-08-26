@@ -1,4 +1,7 @@
-﻿{
+{
   "FLOW_STATE.description": "抽取1张攻击牌，超过12层获得10%增伤。",
-  "FLOW_STATE.title": "渐入佳境（已弃用）"
+  "FLOW_STATE.title": "渐入佳境（已弃用）",
+
+  "RANDOM_BASE_SPIRIT.title": "随机基酒",
+  "RANDOM_BASE_SPIRIT.description": "获得不同的随机基酒。\n优先获得当前手牌中没有的基酒种类；\n如果当前手牌中已经拥有全部6种基酒，则从6种基酒中随机选取不重复的基酒。"
 }

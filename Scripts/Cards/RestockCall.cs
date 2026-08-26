@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -23,7 +23,7 @@ using STS2RitsuLib.Cards.DynamicVars;
 
 namespace Pluma.Scripts.Cards;
 
-// 补货联络：1费罕见技能牌。获得1张辅料组合包，并在接下来的2个回合开始时各获得1张随机基酒。升级后持续3回合。
+// 补货联络：1费罕见技能牌。获得1张辅料组合包，并在接下来的2个回合开始时各「随机基酒 1」。升级后持续3回合。
 [RegisterCard(typeof(PlumaCardPool))]
 public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
 {
@@ -43,10 +43,11 @@ public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
         ModCardVars.Int("Turns", 2)
     };
 
-    // 悬浮提示：显示基酒和辅料组合包预览
+    // 悬浮提示：显示基酒、辅料组合包预览与「随机基酒」术语
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        BaseSpiritGeneration.RandomBaseSpiritHoverTip,
         HoverTipFactory.FromCard<MixerPack>()
     };
 

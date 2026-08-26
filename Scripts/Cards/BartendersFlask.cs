@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -13,7 +13,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
-// 调酒师的小壶：1费罕见技能，本能。手牌中没有基酒时获得1张随机基酒，否则获得1张辅料组合包。
+// 调酒师的小壶：1费罕见技能，本能。手牌中没有基酒时「随机基酒 1」，否则获得1张辅料组合包。
 [RegisterCard(typeof(PlumaCardPool))]
 [RegisterCharacterStarterCard(typeof(PlumaCharacter), 1)]
 public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
@@ -36,6 +36,7 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        BaseSpiritGeneration.RandomBaseSpiritHoverTip,
         HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
     };
 
@@ -81,19 +82,15 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
             }
             else
             {
-                // 未升级：随机获得一张基酒
+                // 「随机基酒 1」：统一走 BaseSpiritGeneration。
+                // 此分支仅在手牌中没有基酒时进入，因此等价于从 6 种中随机选 1 种。
                 // 多人同步：使用局内确定性随机源（各端同一序列），严禁 new Random()
                 var rng = base.Owner.RunState.Rng.CombatCardGeneration;
-                CardModel baseSpirit = rng.NextInt(6) switch
+                var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 1, base.CombatState, rng);
+                if (baseSpirits.Count > 0)
                 {
-                    0 => base.CombatState.CreateCard<Gin>(player),
-                    1 => base.CombatState.CreateCard<Tequila>(player),
-                    2 => base.CombatState.CreateCard<Whiskey>(player),
-                    3 => base.CombatState.CreateCard<Rum>(player),
-                    4 => base.CombatState.CreateCard<Vodka>(player),
-                    _ => base.CombatState.CreateCard<Brandy>(player),
-                };
-                await CardPileCmd.AddGeneratedCardsToCombat(new[] { baseSpirit }, PileType.Hand, player);
+                    await CardPileCmd.AddGeneratedCardsToCombat(new[] { baseSpirits[0] }, PileType.Hand, player);
+                }
             }
         }
         else

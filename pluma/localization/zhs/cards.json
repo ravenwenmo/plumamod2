@@ -84,7 +84,7 @@
   "PLUMA_CARD_BUT_FOCUSED.description": "造成 {CalculatedDamage:diff()}点伤害。\n每有1层[gold]渐入佳境[/gold]该牌增伤[blue]{Multiplier}[/blue]%。",
 
   "PLUMA_CARD_SPECIAL_BLEND.title": "特调",
-  "PLUMA_CARD_SPECIAL_BLEND.description": "选择并[gold]消耗[/gold]2张手牌。\n将1张升级过的随机牌加入你的手牌。",
+  "PLUMA_CARD_SPECIAL_BLEND.description": "选择并[gold]消耗[/gold]2张手牌。\n[gold]随机基酒[/gold] 2。",
 
   "PLUMA_CARD_DESPERATE_STRIKE.title": "放手一搏",
   "PLUMA_CARD_DESPERATE_STRIKE.description": "弃掉所有手牌。\n获得等量层数的[gold]渐入佳境[/gold]。",
@@ -264,13 +264,13 @@
   "PLUMA_CARD_MIXER_PACK.selectPrompt": "选择一张基酒牌",
 
   "PLUMA_CARD_RANDOM_MIXOLOGY_SET.title": "随机调酒组合",
-  "PLUMA_CARD_RANDOM_MIXOLOGY_SET.description": "获得1张随机[gold]基酒[/gold]。\n将1张[gold]辅料组合包[/gold]放入弃牌堆。",
+  "PLUMA_CARD_RANDOM_MIXOLOGY_SET.description": "[gold]随机基酒[/gold] 1。\n将1张[gold]辅料组合包[/gold]放入弃牌堆。",
 
   "PLUMA_CARD_DRINKS_FOR_TWO.title": "我喝两杯",
-  "PLUMA_CARD_DRINKS_FOR_TWO.description": "获得2张不同的随机[gold]基酒[/gold]。\n将1张[gold]辅料组合包[/gold]分别放入抽牌堆和弃牌堆。",
+  "PLUMA_CARD_DRINKS_FOR_TWO.description": "[gold]随机基酒[/gold] 2。\n将1张[gold]辅料组合包[/gold]分别放入抽牌堆和弃牌堆。",
 
   "PLUMA_CARD_BARTENDERS_FLASK.title": "调酒师的小壶",
-  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有[gold]基酒[/gold]，\n获得1张随机[gold]基酒[/gold]；\n否则获得1张[gold]辅料组合包[/gold]。",
+  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有[gold]基酒[/gold]，\n[gold]随机基酒[/gold] 1；\n否则获得1张[gold]辅料组合包[/gold]。",
   "PLUMA_CARD_BARTENDERS_FLASK.selectPrompt": "选择一张基酒",
 
   "PLUMA_CARD_INSTANT_PAIR.title": "即时搭配",
@@ -292,10 +292,10 @@
   "PLUMA_CARD_RHODES_ISLAND_BAR.description": "你手中的[gold]基酒[/gold]和[gold]鸡尾酒[/gold]都不会占用手牌数量。",
 
   "PLUMA_CARD_DRINK_SOMETHING.title": "随便喝点啥",
-  "PLUMA_CARD_DRINK_SOMETHING.description": "获得1张随机[gold]基酒[/gold]。\n抽{Cards:diff()}张牌。",
+  "PLUMA_CARD_DRINK_SOMETHING.description": "[gold]随机基酒[/gold] 1。\n抽{Cards:diff()}张牌。",
 
   "PLUMA_CARD_RESTOCK_CALL.title": "补货联络",
-  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张辅料组合包，并在接下来的{Turns:diff()}个回合开始时各获得1张随机[gold]基酒[/gold]。",
+  "PLUMA_CARD_RESTOCK_CALL.description": "获得1张[gold]辅料组合包[/gold]，并在接下来的{Turns:diff()}个回合开始时各获得[gold]随机基酒[/gold] 1。",
   
   "PLUMA_CARD_REPEAT.title": "复读",
   "PLUMA_CARD_REPEAT.description": "选择一张手牌，复制它并给复制品添加[gold]本能[/gold]。",
@@ -342,7 +342,7 @@
   "PLUMA_CARD_FOLLOW_ORDERS.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n每当你抽到此牌，攻击段数+1。",
 
   "PLUMA_CARD_ALL_IN.title": "ALL IN",
-  "PLUMA_CARD_ALL_IN.description": "获得{IfUpgraded:show:X+1|X}个尽可能不同的随机[gold]基酒[/gold]。",
+  "PLUMA_CARD_ALL_IN.description": "[gold]随机基酒[/gold] {IfUpgraded:show:X+1|X}。",
 
   "PLUMA_CARD_STURDY_BOTTLE.title": "酒瓶打击",
   "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。",

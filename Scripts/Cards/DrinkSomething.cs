@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -12,7 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 随便喝点啥：1费罕见技能牌。获得1张随机基酒，并抽1张牌。升级后抽2张。
+// 随便喝点啥：1费罕见技能牌。「随机基酒 1」，并抽1张牌。升级后抽2张。
 [RegisterCard(typeof(PlumaCardPool))]
 public class DrinkSomething : ModCardTemplate, IBaseSpiritRelatedCard
 {
@@ -32,10 +32,11 @@ public class DrinkSomething : ModCardTemplate, IBaseSpiritRelatedCard
         new CardsVar(1)
     };
 
-    // 悬浮提示：基酒关键词
+    // 悬浮提示：基酒关键词 + 「随机基酒」术语
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit)
+        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        BaseSpiritGeneration.RandomBaseSpiritHoverTip
     };
 
     public DrinkSomething() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -46,18 +47,13 @@ public class DrinkSomething : ModCardTemplate, IBaseSpiritRelatedCard
     {
         var player = base.Owner;
 
-        // 1. 随机获得一张基酒（使用同步随机源，保证多人一致）
+        // 1. 「随机基酒 1」：统一走 BaseSpiritGeneration（同步随机源，保证多人一致）
         var rng = base.Owner.RunState.Rng.CombatCardGeneration;
-        CardModel baseSpirit = rng.NextInt(6) switch
+        var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 1, base.CombatState, rng);
+        if (baseSpirits.Count > 0)
         {
-            0 => base.CombatState.CreateCard<Gin>(player),
-            1 => base.CombatState.CreateCard<Tequila>(player),
-            2 => base.CombatState.CreateCard<Whiskey>(player),
-            3 => base.CombatState.CreateCard<Rum>(player),
-            4 => base.CombatState.CreateCard<Vodka>(player),
-            _ => base.CombatState.CreateCard<Brandy>(player),
-        };
-        await CardPileCmd.AddGeneratedCardsToCombat(new[] { baseSpirit }, PileType.Hand, player);
+            await CardPileCmd.AddGeneratedCardsToCombat(baseSpirits, PileType.Hand, player);
+        }
 
         // 2. 抽牌
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, player);

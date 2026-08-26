@@ -1,4 +1,4 @@
-﻿using MegaCrit.Sts2.Core.CardSelection;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts.Cards;
 
-// 特调：消耗两张手牌，获得2张不同的随机基酒。升级后费用-1。
+// 特调：消耗两张手牌，「随机基酒 2」。升级后费用-1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class SpecialBlend : ModCardTemplate
 {
@@ -48,28 +48,9 @@ public class SpecialBlend : ModCardTemplate
             await CardCmd.Exhaust(choiceContext, card);
         }
 
-        // 获得两张不同的随机基酒
-        var availableBaseSpirits = new List<CardModel>
-        {
-            base.CombatState.CreateCard<Gin>(player),
-            base.CombatState.CreateCard<Tequila>(player),
-            base.CombatState.CreateCard<Whiskey>(player),
-            base.CombatState.CreateCard<Rum>(player),
-            base.CombatState.CreateCard<Vodka>(player),
-            base.CombatState.CreateCard<Brandy>(player),
-        };
-
+        // 「随机基酒 2」：统一走 BaseSpiritGeneration（两张不重复，优先排除手牌已有种类）
         var rng = base.Owner.RunState.Rng.CombatCardGeneration;
-        var generated = new List<CardModel>();
-
-        for (int i = 0; i < 2; i++)
-        {
-            if (availableBaseSpirits.Count == 0) break;
-
-            int index = rng.NextInt(availableBaseSpirits.Count);
-            generated.Add(availableBaseSpirits[index]);
-            availableBaseSpirits.RemoveAt(index);
-        }
+        var generated = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 2, base.CombatState, rng);
 
         if (generated.Count > 0)
         {
@@ -80,7 +61,8 @@ public class SpecialBlend : ModCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.MuscleMemory),
-        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit)
+        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        BaseSpiritGeneration.RandomBaseSpiritHoverTip
     };
 
     protected override void OnUpgrade()
