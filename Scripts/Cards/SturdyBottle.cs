@@ -51,12 +51,15 @@ public class SturdyBottle : ModCardTemplate
         new DamageVar(6m, ValueProp.Move),   // 基础伤害3，升级后6
         ModCardVars.Int("WeakAmount", 1)
     };
-
+    /*
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         CardKeyword.Exhaust  // 消耗
     };
-
+    */
+    protected override HashSet<CardTag> CanonicalTags => [
+        CardTag.Strike, // 添加原版tag
+    ];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromPower<WeakPower>()

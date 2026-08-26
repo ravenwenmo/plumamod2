@@ -27,7 +27,7 @@ namespace Pluma.Scripts.Cards;
 [RegisterCard(typeof(PlumaCardPool))]
 public class QuickDraw : ModCardTemplate
 {
-    private const int energyCost = 1;
+    private const int energyCost = 0;
     private const CardType type = CardType.Attack;
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.AllEnemies;
@@ -42,9 +42,9 @@ public class QuickDraw : ModCardTemplate
     // 伤害变量：基础6，额外10，每次攻击额外减少5
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new CalculationBaseVar(6m),
-        new ExtraDamageVar(10m),
-        ModCardVars.Int("ReduceAmount", 5),
+        new CalculationBaseVar(4m),
+        new ExtraDamageVar(8m),
+        ModCardVars.Int("ReduceAmount", 4),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((CardModel card, Creature? target) =>
         {
             decimal baseDamage = card.DynamicVars.CalculationBase.BaseValue;

@@ -19,7 +19,7 @@ namespace Pluma.Scripts.Cards;
 [RegisterCard(typeof(PlumaCardPool))]
 public class FollowOrders : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 1;
     private const CardType type = CardType.Attack;
     private const CardRarity rarity = CardRarity.Rare;
     private const TargetType targetType = TargetType.AnyEnemy;

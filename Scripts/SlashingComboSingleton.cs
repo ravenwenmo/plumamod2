@@ -117,4 +117,18 @@ public class SlashingComboSingleton : HookedSingletonModel
         if (player == null) return 0;
         return Instance?.GetComboCount(player) ?? 0;
     }
+    // 实例方法：设置指定玩家的连击计数（例如“回旋切割”直接设为上限5）
+    public void SetComboCount(Player player, int value)
+    {
+        if (player == null) return;
+        if (value <= 0)
+        {
+            _comboCounters.Remove(player);
+        }
+        else
+        {
+            // 限制上限，避免超过5
+            _comboCounters[player] = Math.Min(value, 5);
+        }
+    }
 }

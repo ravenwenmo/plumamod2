@@ -1,4 +1,4 @@
 ﻿{
-  "FLOW_STATE.description": "抽取1张攻击牌,根据已有层数获得攻击力加成",
-  "FLOW_STATE.title": "渐入佳境"
+  "FLOW_STATE.description": "抽取1张攻击牌，超过12层获得10%增伤。",
+  "FLOW_STATE.title": "渐入佳境（已弃用）"
 }

@@ -31,7 +31,9 @@ public class Lacerate : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [
         MyKeywords.Slashing,
     ];
-    
+    protected override HashSet<CardTag> CanonicalTags => [
+        CardTag.Strike, // 添加原版tag
+    ];
     // 动态变量：基础伤害6，创伤层数3
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),

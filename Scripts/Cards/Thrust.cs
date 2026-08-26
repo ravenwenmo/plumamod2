@@ -14,7 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace Pluma.Scripts;
 
 
-// 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
+// 突刺，注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
 public class Thrust : ModCardTemplate
@@ -45,7 +45,10 @@ public class Thrust : ModCardTemplate
         new DamageVar(7m, ValueProp.Move),
         ModCardVars.Int("FlowState",1)
     ];
-    
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.Slashing      // 切割
+    };
 
     
     public Thrust() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

@@ -59,7 +59,7 @@
   "PLUMA_CARD_THE_BEAT.title": "节奏感",
   "PLUMA_CARD_THE_BEAT.description": "每当你打出3张[gold]本能[/gold]牌，获得{Energy:energyIcons()}。",
 
-  "PLUMA_CARD_LACERATE.title": "划破",
+  "PLUMA_CARD_LACERATE.title": "划破打击",
   "PLUMA_CARD_LACERATE.description": "造成{Damage:diff()}点伤害。\n施加{OpenWound:diff()}层[gold]创伤[/gold] 。",
 
   "PLUMA_CARD_ITS_LIBERI.title": "是黎博利哦",
@@ -344,7 +344,7 @@
   "PLUMA_CARD_ALL_IN.title": "ALL IN",
   "PLUMA_CARD_ALL_IN.description": "获得{IfUpgraded:show:X+1|X}个尽可能不同的随机[gold]基酒[/gold]。",
 
-  "PLUMA_CARD_STURDY_BOTTLE.title": "投掷酒瓶",
+  "PLUMA_CARD_STURDY_BOTTLE.title": "酒瓶打击",
   "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。",
 
   "PLUMA_CARD_IAI_SLASH.title": "居合",
@@ -354,5 +354,8 @@
   "PLUMA_CARD_KNOCK.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n每当你打出一张[gold]敲[/gold]，本场战斗中所有[gold]敲[/gold]卡牌的攻击段数+1。",
 
   "PLUMA_CARD_NOM.title": "嚼",
-  "PLUMA_CARD_NOM.description": "龙舌兰下一次斩杀敌人时，提升{Amount:diff()}点最大生命值。"
+  "PLUMA_CARD_NOM.description": "龙舌兰下一次斩杀敌人时，提升{Amount:diff()}点最大生命值。",
+
+  "PLUMA_CARD_ROUNDSLASH.title": "回旋切割",
+  "PLUMA_CARD_ROUNDSLASH.description": "对所有敌人造成{Damage:diff()}点伤害。\n若上一张打出的牌是[gold]切割[/gold]，则切割计数变为5层。"
 }

@@ -32,6 +32,10 @@ public class FullSpeedSlash : ModCardTemplate
         new DamageVar(4m, ValueProp.Move),      // 基础伤害：升级前3，升级后4
         ModCardVars.Int("BaseHits", 3)          // 基础斩击次数
     };
+    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
+    {
+        MyKeywords.Slashing      // 切割
+    };
 
     public FullSpeedSlash() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
