@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Context;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using Pluma.Scripts.Commands;
@@ -34,6 +35,29 @@ public static class BrotherLayoutPatch
             // 与 BrotherCmd.Summon 的 tween 目标公式一致：布局位置 + 偏移
             creatureNode.Position += BrotherCmd.GetBrotherOffsetFromPlayer(creatureNode.Entity);
             creatureNode.ToggleIsInteractable(true);
+        }
+    }
+}
+
+
+// 该死的矢野怎么把召唤物逻辑写得这么死啊（恼
+[HarmonyPatch(typeof(NCombatRoom), nameof(NCombatRoom.AddCreature))]
+public static class BrotherAddCreaturePatch
+{
+    [HarmonyPostfix]
+    public static void Postfix(Creature creature)
+    {
+        if (creature.Monster is not Brother && creature.PetOwner is not null)
+        {
+            if (LocalContext.IsMe(creature.PetOwner))
+            {
+                NCreature broNode = NCombatRoom.Instance?.GetCreatureNode(creature.PetOwner.Brother());
+                if (broNode is not null)
+                {
+                    broNode.Position = BrotherCmd.BrotherPostion;
+                    broNode.ToggleIsInteractable(true);
+                }
+            }
         }
     }
 }

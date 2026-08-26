@@ -19,6 +19,8 @@ namespace Pluma.Scripts.Commands;
 
 public static class BrotherCmd
 {
+    public static Vector2 BrotherPostion {set; get;} = Vector2.Zero;
+
     /// <summary>
 	/// 生成一只固定40血的龙舌兰在面前，若龙舌兰已存在，令龙舌兰回满生命值且切换为攻击循环意图。
 	/// 召唤成功后写入持久化标记 HasBeenSummoned=true，
@@ -63,7 +65,8 @@ public static class BrotherCmd
                     if (ownerNode != null)
                     {
                         Tween tween = brotherNode.CreateTween().SetParallel();
-                        tween.TweenProperty(brotherNode, "position", brotherNode.Position + GetBrotherOffsetFromPlayer(brother), 0.3);
+                        BrotherPostion = brotherNode.Position + GetBrotherOffsetFromPlayer(brother);
+                        tween.TweenProperty(brotherNode, "position", BrotherPostion, 0.3);
                         brotherNode.Hitbox.MouseFilter = MouseFilterEnum.Stop;
                     }
                 }
