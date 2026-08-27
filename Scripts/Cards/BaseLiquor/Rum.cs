@@ -136,13 +136,13 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
         {
             holder.UpdateCard();
 
-            // 右键切换时若悬浮提示正打开（指针仍在本牌上），立即重建悬浮提示，
-            // 让其中的鸡尾酒预览随新的 SpiritMode 分支刷新。
-            if (holder.GetGlobalRect().HasPoint(holder.GetGlobalMousePosition()))
-            {
-                NHoverTipSet.Remove(holder);
-                NHoverTipSet.CreateAndShow(holder, HoverTips)?.SetAlignmentForCardHolder(holder);
-            }
+            // 右键必然发生在指针悬停本牌（鼠标）或本牌获得焦点（手柄）时，
+            // 悬浮提示此刻一定处于打开状态，直接重建即可让鸡尾酒预览立即显示新分支。
+            // 注意不能用 holder.GetGlobalRect().HasPoint(...) 判断：
+            // HandCardHolder 自身 rect 是 0 尺寸（实际可点区域在 %Hitbox 子节点上），
+            // 该判断几乎永远为 false，会导致悬浮提示不重建、预览不刷新。
+            NHoverTipSet.Remove(holder);
+            NHoverTipSet.CreateAndShow(holder, HoverTips)?.SetAlignmentForCardHolder(holder);
         }
 
         // 可选：弹出提示（如果 RitsuToastService 不可用，可删除或替换为 GD.Print）

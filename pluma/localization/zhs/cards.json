@@ -257,7 +257,7 @@
   "PLUMA_CARD_SIDECAR.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己：获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。\n对友方：获得敏捷，并选择至多两张手牌消耗。\n对龙舌兰：获得覆甲，并使强化循环每回合特性+{BrotherTraitBonus:diff()}。",
   "PLUMA_CARD_SIDECAR_SELF_DESC": "获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
   "PLUMA_CARD_SIDECAR_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_SIDECAR_ALLY_DESC": "龙舌兰获得{SpeedPotionAmount:diff()}层[gold]覆甲[/gold]，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
+  "PLUMA_CARD_SIDECAR_ALLY_DESC": "龙舌兰获得{PetPlatingAmount:diff()}层[gold]覆甲[/gold]，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
 
   "PLUMA_CARD_MIXER_PACK.title": "辅料组合包",
   "PLUMA_CARD_MIXER_PACK.description": "将手中的一份[gold]基酒[/gold]调制成鸡尾酒。\n若无[gold]基酒[/gold]获得{Block:diff()}点[gold]格挡[/gold]。",
