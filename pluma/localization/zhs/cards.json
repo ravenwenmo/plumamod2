@@ -218,11 +218,11 @@
   "PLUMA_CARD_VODKA_ALLY_DESC": "使龙舌兰失去1点生命，然后获得{PetTraitAmount:diff()}层[gold]特性[/gold]。",
 
   "PLUMA_CARD_BRANDY.title": "白兰地",
-  "PLUMA_CARD_BRANDY.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己或友方：目标失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。",
+  "PLUMA_CARD_BRANDY.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己：失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。\n对友方：失去1点生命，获得临时敏捷，并随机烧掉一张非保留手牌。\n对龙舌兰：失去1点生命，获得{SpeedPotionAmount:diff()}层覆甲，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
   "PLUMA_CARD_BRANDY_SELF_DESC": "失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。",
   "PLUMA_CARD_BRANDY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_BRANDY_ALLY_DESC": "使龙舌兰失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]覆甲[/gold]。",
-
+  "PLUMA_CARD_BRANDY_ALLY_DESC": "使龙舌兰失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]覆甲[/gold]，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
+  
   "PLUMA_CARD_GIN_TONIC.title": "金汤力",
   "PLUMA_CARD_GIN_TONIC.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己或友方：目标失去1点生命，然后获得{StrengthAmount:diff()}层[gold]力量[/gold]。",
   "PLUMA_CARD_GIN_TONIC_SELF_DESC": "获得{FlexAmount:diff()}层[gold]临时力量[/gold]。",
@@ -254,10 +254,10 @@
   "PLUMA_CARD_COSMOPOLITAN_ALLY_DESC": "龙舌兰获得{PetTraitAmount:diff()}层[gold]特性[/gold]。",
 
   "PLUMA_CARD_SIDECAR.title": "边车",
-  "PLUMA_CARD_SIDECAR.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己或友方：目标失去1点生命，然后获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
+  "PLUMA_CARD_SIDECAR.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己：获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。\n对友方：获得敏捷，并选择至多两张手牌消耗。\n对龙舌兰：获得覆甲，并使强化循环每回合特性+{BrotherTraitBonus:diff()}。",
   "PLUMA_CARD_SIDECAR_SELF_DESC": "获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
   "PLUMA_CARD_SIDECAR_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
-  "PLUMA_CARD_SIDECAR_ALLY_DESC": "龙舌兰获得{PetPlatingAmount:diff()}层[gold]覆甲[/gold]。",
+  "PLUMA_CARD_SIDECAR_ALLY_DESC": "龙舌兰获得{SpeedPotionAmount:diff()}层覆甲，并使强化循环每回合特性+{BrotherTraitBonus:diff()}。",
 
   "PLUMA_CARD_MIXER_PACK.title": "辅料组合包",
   "PLUMA_CARD_MIXER_PACK.description": "将手中的一份[gold]基酒[/gold]调制成鸡尾酒。\n若无[gold]基酒[/gold]获得{Block:diff()}点[gold]格挡[/gold]。",

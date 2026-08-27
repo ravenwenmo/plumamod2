@@ -83,7 +83,7 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
         //ModCardVars.Int("FlowAllyAmount", 6),
         new CardsVar(6),
         ModCardVars.Int("WeakAmount", 1),
-        ModCardVars.Int("ExtraHitsAmount", 1)   // 新增：龙舌兰获得的额外攻击段数
+        ModCardVars.Int("ExtraHitsAmount", 2)   // 新增：龙舌兰获得的额外攻击段数
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

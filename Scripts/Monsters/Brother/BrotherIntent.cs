@@ -8,7 +8,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
-using Pluma.Scripts;
+using Pluma.Scripts.Monsters;
 
 namespace Pluma.Monsters;
 
@@ -19,6 +19,13 @@ public class BrotherBuffIntent : BuffIntent
         LocString locString = new LocString("intents", "PLUMA_BROTHER_BUFF" + ".description");
         ICombatState? combatState = owner.CombatState;
         locString.Add("IsMultiplayer", combatState != null && combatState.RunState.Players.Count > 1);
+
+        // 动态传入当前每回合特性获取总量
+        if (owner.Monster is Brother brother)
+        {
+            locString.Add("TraitPerTurn", brother.GetCurrentTraitPerTurn());
+        }
+
         return locString;
     }
 }

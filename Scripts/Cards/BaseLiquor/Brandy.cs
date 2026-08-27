@@ -16,6 +16,11 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interactions.RightClick;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Entities.Players;
+using Pluma.Scripts.Monsters;
 
 namespace Pluma.Scripts;
 
@@ -73,7 +78,8 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
         ModCardVars.Int("SpeedPotionAmount", 3),
-        ModCardVars.Int("WeakAmount", 1)
+        ModCardVars.Int("WeakAmount", 1),
+        ModCardVars.Int("TraitPerTurnBonus", 15)   // 强化循环每回合特性加成
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -161,18 +167,43 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
                 // 先让目标失去 1 点生命（穿透伤害）
                 await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1,
                     ValueProp.Unblockable | ValueProp.Unpowered, base.Owner.Creature);
-                
-                // 若为龙舌兰
-                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars["SpeedPotionAmount"].BaseValue, base.Owner.Creature, this))
-                {
-                    break;
+
+                if (cardPlay.Target!.IsPet)
+                {if (cardPlay.Target!.IsPet)
+                    if (cardPlay.Target!.IsPet)
+                    {
+                        // 龙舌兰：覆甲
+                        await SpiritTargeting.ApplyPlatingToPetInstead(
+                            choiceContext,
+                            cardPlay.Target,
+                            base.DynamicVars["SpeedPotionAmount"].BaseValue,
+                            base.Owner.Creature,
+                            this
+                        );
+
+                        // 增加强化循环每回合特性获取量
+                        if (cardPlay.Target.Monster is Brother brother)
+                        {
+                            brother.AddTraitPerTurn(
+                                DynamicVars["TraitPerTurnBonus"].IntValue
+                            );
+                        }
+
+                        break;
+                    }
                 }
-                // 获得 3 层临时敏捷（直接使用速度药水的 SpeedPotionPower，回合结束失去等量敏捷）
-                await PowerCmd.Apply<SpeedPotionPower>(choiceContext, cardPlay.Target, DynamicVars["SpeedPotionAmount"].BaseValue,
-                    base.Owner.Creature, this);
-                // ---- 旧占位效果（对友方施加1层虚弱，已注释保留）----
-                // await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, 1,
-                //     base.Owner.Creature, this);
+
+                // 友方玩家：原有临时敏捷
+                await PowerCmd.Apply<SpeedPotionPower>(
+                    choiceContext,
+                    cardPlay.Target,
+                    DynamicVars["SpeedPotionAmount"].BaseValue,
+                    base.Owner.Creature,
+                    this
+                );
+
+                // 新增：随机烧掉一张非保留手牌
+                await RandomExhaustNonRetainCard(choiceContext, cardPlay.Target.Player, this);
                 break;
         }
     }
@@ -180,5 +211,25 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m); // 伤害 3 → 6
+    }
+    
+    private async Task RandomExhaustNonRetainCard(
+        PlayerChoiceContext choiceContext,
+        Player player,
+        CardModel source)
+    {
+        if (player == null) return;
+
+        var hand = PileType.Hand.GetPile(player);
+        var cards = hand.Cards
+            .Where(c => !c.Keywords.Contains(CardKeyword.Retain))
+            .ToList();
+
+        if (cards.Count == 0) return;
+
+        // 使用战斗目标随机源，保证多人确定性；不新增 Random
+        var rng = player.RunState.Rng.CombatCardSelection;
+        int index = rng.NextInt(cards.Count);
+        await CardCmd.Exhaust(choiceContext, cards[index]);
     }
 }

@@ -75,7 +75,7 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
         //ModCardVars.Int("FlowAmount", 2),
         ModCardVars.Int("WeakAmount", 1),
         new CardsVar(2),
-        ModCardVars.Int("ExtraHitsAmount", 1)   // 新增：临时额外攻击段数层数
+        ModCardVars.Int("ExtraHitsAmount", 2)   // 新增：临时额外攻击段数层数
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]

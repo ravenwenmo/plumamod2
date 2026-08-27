@@ -16,6 +16,10 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interactions.RightClick;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Pluma.Scripts.Monsters;
+using MegaCrit.Sts2.Core.CardSelection;
 
 namespace Pluma.Scripts;
 
@@ -76,13 +80,14 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
         }
     }
 
-    // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(12m, ValueProp.Move),
         ModCardVars.Int("DexterityAmount", 3),
         ModCardVars.Int("WeakAmount", 1),
-        // 龙舌兰实际获得的覆甲层数 = DexterityAmount × 2（Ally 分支将敏捷翻倍转换为覆甲）
-        ModCardVars.Int("PetPlatingAmount", 6)
+        // 龙舌兰实际获得的覆甲层数 = DexterityAmount × 2
+        ModCardVars.Int("PetPlatingAmount", 6),
+        // 龙舌兰强化循环每回合额外特性加成
+        ModCardVars.Int("BrotherTraitBonus", 50),
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -161,22 +166,61 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
                 await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
-
             case SpiritTargetBranch.Ally:
                 // 先让目标失去 1 点生命（穿透伤害）
                 //await CreatureCmd.Damage(choiceContext, cardPlay.Target!, 1, ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-                // 获得 3 层敏捷
-                
-                // 龙舌兰
-                if (await SpiritTargeting.ApplyPlatingToPetInstead(choiceContext, cardPlay.Target, base.DynamicVars["DexterityAmount"].BaseValue*2, base.Owner.Creature, this))
+
+                if (cardPlay.Target!.IsPet)
                 {
+                    // 龙舌兰：获得覆甲
+                    await SpiritTargeting.ApplyPlatingToPetInstead(
+                        choiceContext,
+                        cardPlay.Target,
+                        base.DynamicVars["DexterityAmount"].BaseValue * 2,
+                        base.Owner.Creature,
+                        this
+                    );
+
+                    // 龙舌兰强化循环每回合额外获得特性
+                    if (cardPlay.Target.Monster is Brother brother)
+                    {
+                        brother.AddTraitPerTurn(
+                            DynamicVars["BrotherTraitBonus"].IntValue
+                        );
+                    }
                     break;
                 }
-                
-                await PowerCmd.Apply<DexterityPower>(choiceContext, cardPlay.Target, DynamicVars["DexterityAmount"].BaseValue,
-                    base.Owner.Creature, this);
-                // ---- 旧效果（对友方获得1点能量，已注释保留）----
-                // await PlayerCmd.GainEnergy(1, cardPlay.Target!.Player);
+
+                // 友方玩家：获得敏捷
+                await PowerCmd.Apply<DexterityPower>(
+                    choiceContext,
+                    cardPlay.Target,
+                    DynamicVars["DexterityAmount"].BaseValue,
+                    base.Owner.Creature,
+                    this
+                );
+
+                // 友方玩家：可选择至多两张手牌消耗
+                var targetPlayer = cardPlay.Target.Player;
+                if (targetPlayer != null)
+                {
+                    var selected = await CardSelectCmd.FromHand(
+                        prefs: new CardSelectorPrefs(
+                            CardSelectorPrefs.ExhaustSelectionPrompt,
+                            0,
+                            2
+                        ),
+                        context: choiceContext,
+                        player: targetPlayer,
+                        filter: null,
+                        source: this
+                    );
+
+                    foreach (var card in selected)
+                    {
+                        await CardCmd.Exhaust(choiceContext, card);
+                    }
+                }
                 break;
         }
     }

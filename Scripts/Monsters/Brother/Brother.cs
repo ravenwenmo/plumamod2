@@ -31,6 +31,10 @@ public class Brother : ModMonsterTemplate
     public const int INITIAL_HP = 40;
     // 强化循环意图每回合获得的特性层数
     private const int TraitPerTurn = 25;
+
+    // 外部效果对每回合特性获取的额外加成（例如白兰地）
+    private int _traitPerTurnBonus;
+    
     // 特性达到该值后切换为攻击循环意图
     public const int TraitThreshold = 200;
     // 攻击循环意图持续的回合数（变量，可调整）
@@ -59,7 +63,21 @@ public class Brother : ModMonsterTemplate
 
     // 自动转换怪物场景，让你不需要手动挂脚本。复制即可。
     protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.VisualsScenePath!);   
-    
+    /// <summary>
+    /// 增加龙舌兰强化循环每回合获得的特性层数。
+    /// 由卡牌等外部效果调用（例如白兰地）。
+    /// </summary>
+    public void AddTraitPerTurn(int amount)
+    {
+        _traitPerTurnBonus += amount;
+    }
+    public int GetCurrentTraitPerTurn()
+    {
+        return _traitPerTurnBonus +
+               (Creature.HasPower<BrotherAoePower>()
+                   ? BrotherAoePower.TraitPerTurn
+                   : TraitPerTurn);
+    }
     public override async Task AfterAddedToRoom()
     {
         int attackTurnsRemaining = BrotherStateData.GetAttackTurnsRemaining(Creature.PetOwner);
@@ -120,11 +138,9 @@ public class Brother : ModMonsterTemplate
     // 回合开始（由 BrotherSupportPower 驱动）
     public async Task PlayerTurnStart()
     {
-        // 注意：这里原本有 return，但被注释掉了。我们保留逻辑，但改为使用 _isAttackIntent 判断。
-        // 如果需要攻击循环期间不做动作，请恢复 return。
-        int traitGain = Creature.HasPower<BrotherAoePower>()
-            ? BrotherAoePower.TraitPerTurn
-            : TraitPerTurn;
+        if (_isAttackIntent) return;
+
+        int traitGain = GetCurrentTraitPerTurn();
 
         await PowerCmd.Apply<TraitPower>(
             new ThrowingPlayerChoiceContext(),

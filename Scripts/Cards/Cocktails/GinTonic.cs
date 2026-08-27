@@ -79,7 +79,7 @@ public class GinTonic : ModCardTemplate, IModRightClickableCard, ISpiritModeCard
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(12m, ValueProp.Move),
-        ModCardVars.Int("FlexAmount", 5),
+        ModCardVars.Int("FlexAmount", 6),
         ModCardVars.Int("WeakAmount", 1),
         // 龙舌兰占位效果：施加的特性层数（≈强化循环一回合的自然积累量）
         ModCardVars.Int("TraitAmount", 25)
