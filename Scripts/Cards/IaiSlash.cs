@@ -35,7 +35,8 @@ public class IaiSlash : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        ModCardVars.Int("AmplifyStacks", 2)   // 创伤翻倍层数：基础2，升级后3
+        new DamageVar(6m, ValueProp.Move),   // 主动伤害 6
+        ModCardVars.Int("AmplifyStacks", 2)   // 创伤翻倍层数：基础1，升级后2
     };
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
@@ -59,10 +60,20 @@ public class IaiSlash : ModCardTemplate
         {
             await wound.TriggerMultiple(choiceContext, 1, (int)DynamicVars["AmplifyStacks"].BaseValue);
         }
+        var target = cardPlay.Target;
+        if (target != null)
+        {
+            // 主动伤害
+            AttackCommand attack = await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+                .FromCard(this, cardPlay)
+                .Targeting(target)
+                .Execute(choiceContext);
+        }
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars["AmplifyStacks"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(3);
     }
 }

@@ -87,7 +87,8 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
         // 龙舌兰实际获得的覆甲层数 = DexterityAmount × 2
         ModCardVars.Int("PetPlatingAmount", 6),
         // 龙舌兰强化循环每回合额外特性加成
-        ModCardVars.Int("TraitPerTurnBonus", 50)   // 强化循环每回合特性加成
+        ModCardVars.Int("TraitPerTurnBonus", 50),   // 强化循环每回合特性加成
+        ModCardVars.Int("ExhaustCards", 2), 
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -208,7 +209,7 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
                         prefs: new CardSelectorPrefs(
                             CardSelectorPrefs.ExhaustSelectionPrompt,
                             0,
-                            2
+                            DynamicVars["ExhaustCards"].IntValue
                         ),
                         context: choiceContext,
                         player: targetPlayer,

@@ -167,6 +167,8 @@ public class Brandy : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, 
                 // 获得 3 层临时敏捷（直接使用速度药水的 SpeedPotionPower，回合结束失去等量敏捷）
                 await PowerCmd.Apply<SpeedPotionPower>(choiceContext, base.Owner.Creature, DynamicVars["SpeedPotionAmount"].BaseValue,
                     base.Owner.Creature, this);
+                // 新增：随机烧掉一张非保留手牌
+                await RandomExhaustNonRetainCard(choiceContext, cardPlay.Target.Player, this);
                 // ---- 旧占位效果（对自己施加1层虚弱，已注释保留）----
                 // await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, 1,
                 //     base.Owner.Creature, this);

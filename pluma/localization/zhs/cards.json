@@ -219,7 +219,7 @@
 
   "PLUMA_CARD_BRANDY.title": "白兰地",
   "PLUMA_CARD_BRANDY.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己：失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。\n对友方：失去1点生命，获得临时敏捷，并随机烧掉一张非保留手牌。\n对龙舌兰：失去1点生命，获得{SpeedPotionAmount:diff()}层覆甲，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
-  "PLUMA_CARD_BRANDY_SELF_DESC": "失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]。",
+  "PLUMA_CARD_BRANDY_SELF_DESC": "失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]临时敏捷[/gold]并随机消耗1张非保留手牌。",
   "PLUMA_CARD_BRANDY_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
   "PLUMA_CARD_BRANDY_ALLY_DESC": "使龙舌兰失去1点生命，然后获得{SpeedPotionAmount:diff()}层[gold]覆甲[/gold]，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
   
@@ -255,7 +255,7 @@
 
   "PLUMA_CARD_SIDECAR.title": "边车",
   "PLUMA_CARD_SIDECAR.description": "选择一个任意目标。\n对敌人：造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层虚弱。\n对自己：获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。\n对友方：获得敏捷，并选择至多两张手牌消耗。\n对龙舌兰：获得覆甲，并使强化循环每回合特性+{BrotherTraitBonus:diff()}。",
-  "PLUMA_CARD_SIDECAR_SELF_DESC": "获得{DexterityAmount:diff()}层[gold]敏捷[/gold]。",
+  "PLUMA_CARD_SIDECAR_SELF_DESC": "获得{DexterityAmount:diff()}层[gold]敏捷[/gold]，从手牌中选择最多{ExhaustCards:diff()}张牌消耗。",
   "PLUMA_CARD_SIDECAR_ENEMY_DESC": "对敌人造成{Damage:diff()}点伤害，并施加{WeakAmount:diff()}层虚弱。",
   "PLUMA_CARD_SIDECAR_ALLY_DESC": "龙舌兰获得{PetPlatingAmount:diff()}层[gold]覆甲[/gold]，并使强化循环每回合特性+{TraitPerTurnBonus:diff()}。",
 
@@ -348,7 +348,7 @@
   "PLUMA_CARD_STURDY_BOTTLE.description": "造成{Damage:diff()}点伤害，施加{WeakAmount:diff()}层[gold]虚弱[/gold]。",
 
   "PLUMA_CARD_IAI_SLASH.title": "居合",
-  "PLUMA_CARD_IAI_SLASH.description": "触发1层{AmplifyStacks:diff()}倍效果的[gold]创伤[/gold]。你受到伤害时，对伤害来源打出手牌中一张居合并减伤50%。",
+  "PLUMA_CARD_IAI_SLASH.description": "造成{Damage:diff()}点伤害，触发1层{AmplifyStacks:diff()}倍效果的[gold]创伤[/gold]。你受到伤害时，对伤害来源打出手牌中一张居合并减伤50%。",
 
   "PLUMA_CARD_KNOCK.title": "敲",
   "PLUMA_CARD_KNOCK.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n每当你打出一张[gold]敲[/gold]，本场战斗中所有[gold]敲[/gold]卡牌的攻击段数+1。",
