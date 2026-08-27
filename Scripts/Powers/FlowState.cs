@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Audio.Debug;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -148,6 +150,9 @@ public class FlowState : ModPowerTemplate
             var player = base.Owner.Player;
             if (player == null) return;
 
+            var combatState = player.Creature.CombatState;
+            if (combatState == null) return;
+
             var drawPile = PileType.Draw.GetPile(player);
             var discardPile = PileType.Discard.GetPile(player);
             var targetKeyword = MyKeywords.MuscleMemory;
@@ -185,6 +190,15 @@ public class FlowState : ModPowerTemplate
                 else
                 {
                     await CardPileCmd.Add(targetCard, PileType.Hand);
+                    // 渐入佳境是自定义选牌（绕过 CardPileCmd.Draw 的抽牌主体），
+                    // 这里在成功把牌加入手牌后补齐正常抽牌在 Add 之后会触发的钩子/事件，
+                    // 使“每抽10张牌获得能量”(AutomationPower) 等监听抽牌的能力正确计数。
+                    // 顺序与 CardPileCmd.DrawInternal 保持一致：
+                    // 历史记录 -> AfterCardDrawn(Early) -> 卡牌自身的 InvokeDrawn -> 抽牌音效。
+                    CombatManager.Instance.History.CardDrawn(combatState, targetCard, fromHandDraw: false);
+                    await Hook.AfterCardDrawn(combatState, choiceContext, targetCard, fromHandDraw: false);
+                    targetCard.InvokeDrawn();
+                    NDebugAudioManager.Instance?.Play("card_deal.mp3", 0.25f, PitchVariance.Small);
                     if (hasKeyword)
                         _discountedCards.Add(targetCard);
                 }
