@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.HoverTips;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interactions.RightClick;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -62,6 +63,16 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
+    // 右键 SpiritMode → 预览分支（Self/Enemy/Ally 一一对应），
+    // 供 hover tip 中的鸡尾酒预览牌跟随切换。
+    private SpiritTargetBranch CurrentSpiritBranch => _mode switch
+    {
+        SpiritMode.Self  => SpiritTargetBranch.Self,
+        SpiritMode.Enemy => SpiritTargetBranch.Enemy,
+        SpiritMode.Ally  => SpiritTargetBranch.Ally,
+        _ => SpiritTargetBranch.Self
+    };
+
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         MyKeywords.BaseSpirit,
@@ -83,7 +94,7 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
         HoverTipFactory.FromPower<WeakPower>(),
         // 预览对应的鸡尾酒牌
-        HoverTipFactory.FromCard<Mojito>()
+        SpiritModeHoverPreview.FromCard<Mojito>(CurrentSpiritBranch)
     };
 
     // 卡牌类型固定为技能（不再随模式切换，避免多人模式下动作不同步）
@@ -124,6 +135,14 @@ public class Rum : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, ISp
         if (NPlayerHand.Instance?.GetCardHolder(this) is NHandCardHolder holder)
         {
             holder.UpdateCard();
+
+            // 右键切换时若悬浮提示正打开（指针仍在本牌上），立即重建悬浮提示，
+            // 让其中的鸡尾酒预览随新的 SpiritMode 分支刷新。
+            if (holder.GetGlobalRect().HasPoint(holder.GetGlobalMousePosition()))
+            {
+                NHoverTipSet.Remove(holder);
+                NHoverTipSet.CreateAndShow(holder, HoverTips)?.SetAlignmentForCardHolder(holder);
+            }
         }
 
         // 可选：弹出提示（如果 RitsuToastService 不可用，可删除或替换为 GD.Print）
