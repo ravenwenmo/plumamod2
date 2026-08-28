@@ -205,7 +205,11 @@ public class Brother : ModMonsterTemplate
 
         if (Creature.GetPowerAmount<BrotherAttackTurnsPower>() <= 0)
         {
-            await PowerCmd.Remove<TraitPower>(Creature);
+            // 只有在特性层数达到200时才移除
+            if (Creature.GetPowerAmount<TraitPower>() >= 200)
+            {
+                await PowerCmd.Remove<TraitPower>(Creature);
+            }
             await SwitchToPowerUpIntent();
         }
     }

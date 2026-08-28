@@ -354,7 +354,7 @@
   "PLUMA_CARD_KNOCK.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n每当你打出一张[gold]敲[/gold]，本场战斗中所有[gold]敲[/gold]卡牌的攻击段数+1。",
 
   "PLUMA_CARD_NOM.title": "嚼",
-  "PLUMA_CARD_NOM.description": "龙舌兰下一次斩杀敌人时，提升{Amount:diff()}点最大生命值。",
+  "PLUMA_CARD_NOM.description": "龙舌兰临时切换为攻击意图1回合。下一次斩杀敌人时，龙舌兰提升{Amount:diff()}点最大生命值。",
 
   "PLUMA_CARD_ROUNDSLASH.title": "回旋切割",
   "PLUMA_CARD_ROUNDSLASH.description": "对所有敌人造成{Damage:diff()}点伤害。\n若上一张打出的牌是[gold]切割[/gold]，则切割计数变为5层。"

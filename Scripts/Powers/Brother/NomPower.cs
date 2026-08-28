@@ -68,21 +68,24 @@ public class NomPower : ModPowerTemplate
         try
         {
             int oldMax = Owner.MaxHp;
-            int newMax = oldMax + Amount;
+            int hpGain = (int)Amount;          // 提升的最大生命值
+            int newMax = oldMax + hpGain;
+
             await CreatureCmd.SetMaxHp(Owner, newMax);
+
+            // 同步回复等量生命值（“奶”增加的生命上限）
+            await CreatureCmd.Heal(Owner, hpGain);
 
             if (Owner.PetOwner != null)
             {
-                // 同步持久化数据（BrotherRelic 上的 SavedMaxHp），否则下场战斗会丢失
                 BrotherStateData.SetHp(Owner.PetOwner, Owner.CurrentHp, newMax);
             }
-
         }
         catch (Exception ex)
         {
             GD.PrintErr($"[NomPower] max HP gain failed: {ex}");
         }
-
+        
         // 移除此能力
         await PowerCmd.Remove(this);
     }
