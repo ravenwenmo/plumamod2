@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -36,6 +37,7 @@ public class IaiSlashTriggerSingleton : HookedSingletonModel
 		}
         if (!CanTrigger(target, dealer) || dealer == null) return 1m;
         if (target.Player == null) return 1m;
+        if (target.CombatState.CurrentSide == CombatSide.Player) return 1m;
         var hand = PileType.Hand.GetPile(target.Player);
         IaiSlash? iai = hand.Cards.OfType<IaiSlash>().FirstOrDefault();
         if (iai == null) return 1m;
@@ -54,6 +56,7 @@ public class IaiSlashTriggerSingleton : HookedSingletonModel
         if (_isAutoPlaying) return;
         if (!CanTrigger(target, dealer) || dealer == null) return;
         if (target.Player == null) return;
+        if (target.CombatState.CurrentSide == CombatSide.Player) return;
 
         var hand = PileType.Hand.GetPile(target.Player);
         IaiSlash? iai = hand.Cards.OfType<IaiSlash>().FirstOrDefault();
