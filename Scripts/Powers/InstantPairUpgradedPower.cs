@@ -29,8 +29,19 @@ public class InstantPairUpgradedPower : ModPowerTemplate
             return;
 
         var mixer = base.Owner.CombatState.CreateCard<MixerPack>(base.Owner.Player);
+
         // 升级辅料包
         CardCmd.Upgrade(new List<CardModel> { mixer }, CardPreviewStyle.None);
-        await CardPileCmd.Add(mixer, PileType.Draw);
+
+        // 将升级后的辅料组合包加入抽牌堆，并获得添加结果用于播放入堆特效
+        CardPileAddResult drawResult = await CardPileCmd.AddGeneratedCardToCombat(
+            mixer,
+            PileType.Draw,
+            base.Owner.Player,
+            CardPilePosition.Random
+        );
+
+        // 播放牌堆插入预览特效
+        CardCmd.PreviewCardPileAdd(new[] { drawResult });
     }
 }

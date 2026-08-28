@@ -24,7 +24,12 @@ public class ProfessionalBar : ModCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
-
+    
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
+    };
+    
     public ProfessionalBar() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
@@ -53,10 +58,7 @@ public class ProfessionalBar : ModCardTemplate
         }
     }
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
-    {
-        HoverTipFactory.FromCard<MixerPack>()
-    };
+
 
     protected override void OnUpgrade()
     {

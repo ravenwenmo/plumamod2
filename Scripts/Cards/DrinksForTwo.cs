@@ -34,7 +34,7 @@ public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
         BaseSpiritGeneration.RandomBaseSpiritHoverTip,
-        HoverTipFactory.FromCard<MixerPack>()
+        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
     };
 
     public DrinksForTwo() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -56,8 +56,28 @@ public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
         // 分别将两张辅料组合包放入抽牌堆和弃牌堆
         var mixerToDraw = base.CombatState.CreateCard<MixerPack>(player);
         var mixerToDiscard = base.CombatState.CreateCard<MixerPack>(player);
-        await CardPileCmd.Add(mixerToDraw, PileType.Draw);
-        await CardPileCmd.Add(mixerToDiscard, PileType.Discard);
+        if (base.IsUpgraded)
+        {
+            CardCmd.Upgrade(mixerToDraw);
+            CardCmd.Upgrade(mixerToDiscard);
+        }
+
+// 使用 AddGeneratedCardToCombat 获取结果，以便播放牌堆插入预览特效
+        CardPileAddResult drawResult = await CardPileCmd.AddGeneratedCardToCombat(
+            mixerToDraw,
+            PileType.Draw,
+            player,
+            CardPilePosition.Random
+        );
+
+        CardPileAddResult discardResult = await CardPileCmd.AddGeneratedCardToCombat(
+            mixerToDiscard,
+            PileType.Discard,
+            player
+        );
+
+// 播放两张牌分别飞入抽牌堆和弃牌堆的动画
+        CardCmd.PreviewCardPileAdd(new[] { drawResult, discardResult });
     }
 
     protected override void OnUpgrade()

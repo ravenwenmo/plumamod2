@@ -48,7 +48,7 @@ public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
         BaseSpiritGeneration.RandomBaseSpiritHoverTip,
-        HoverTipFactory.FromCard<MixerPack>()
+        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
     };
 
     public RestockCall() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -60,8 +60,12 @@ public class RestockCall : ModCardTemplate, IBaseSpiritRelatedCard
         var player = base.Owner;
 
         // 1. 获得一张辅料组合包
-        var mixer = base.CombatState.CreateCard<MixerPack>(player);
-        await CardPileCmd.AddGeneratedCardsToCombat(new[] { mixer }, PileType.Hand, player);
+        var mixerPack = base.CombatState.CreateCard<MixerPack>(player);
+        if (base.IsUpgraded)
+        {
+            CardCmd.Upgrade(mixerPack);
+        }
+        await CardPileCmd.AddGeneratedCardsToCombat(new[] { mixerPack }, PileType.Hand, player);
 
         // 2. 施加补货能力，持续回合数由 Turns 变量决定
         var power = await PowerCmd.Apply<RestockCallPower>(

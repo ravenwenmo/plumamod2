@@ -25,6 +25,12 @@ public class InstantPair : ModCardTemplate, IBaseSpiritRelatedCard
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
+    
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
+        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
+    };
 
     public InstantPair() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
@@ -54,11 +60,6 @@ public class InstantPair : ModCardTemplate, IBaseSpiritRelatedCard
         }
     }
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
-    {
-        HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
-        HoverTipFactory.FromCard<MixerPack>()
-    };
 
     protected override void OnUpgrade()
     {

@@ -156,6 +156,30 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
                     base.Owner.Creature, this);
                 // ---- 旧效果（对自己获得1点能量，已注释保留）----
                 // await PlayerCmd.GainEnergy(1, base.Owner);
+                
+                
+                // 友方玩家：可选择至多两张手牌消耗
+                var selfPlayer = cardPlay.Target.Player;
+                if (selfPlayer != null)
+                {
+                    var selected = await CardSelectCmd.FromHand(
+                        prefs: new CardSelectorPrefs(
+                            CardSelectorPrefs.ExhaustSelectionPrompt,
+                            0,
+                            DynamicVars["ExhaustCards"].IntValue
+                        ),
+                        context: choiceContext,
+                        player: selfPlayer,
+                        filter: null,
+                        source: this
+                    );
+
+                    foreach (var card in selected)
+                    {
+                        await CardCmd.Exhaust(choiceContext, card);
+                    }
+                }
+                
                 break;
 
             case SpiritTargetBranch.Enemy:

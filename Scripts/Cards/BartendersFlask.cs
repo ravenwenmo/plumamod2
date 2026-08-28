@@ -95,8 +95,13 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
         }
         else
         {
-            // 获得一张辅料组合包
+            
+            // 创建辅料组合包，升级后为升级版
             var mixerPack = base.CombatState.CreateCard<MixerPack>(player);
+            if (base.IsUpgraded)
+            {
+                CardCmd.Upgrade(mixerPack);
+            }
             await CardPileCmd.AddGeneratedCardsToCombat(new[] { mixerPack }, PileType.Hand, player);
         }
     }
