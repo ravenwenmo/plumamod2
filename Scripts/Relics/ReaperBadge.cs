@@ -71,4 +71,15 @@ public class ReaperBadge : ModRelicTemplate
         options.Remove(healOption);
         return true;
     }    
+
+    // 愈合无法回血
+    public override decimal ModifyRestSiteHealAmount(Creature creature, decimal originalAmount)
+    {
+        if (creature == base.Owner.Creature)
+        {
+            Flash();
+            return 0;
+        }
+        return originalAmount;
+    }
 }

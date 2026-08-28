@@ -69,20 +69,11 @@ public class AquaDawn : ModRelicTemplate
         var healOption = options.FirstOrDefault(o => o is HealRestSiteOption);
         if (healOption == null) return false;
 
-        // 检查是否有除休息以外的可用选项
-        bool hasOtherEnabledOption = options.Any(o => o != healOption && o.IsEnabled);
-        // 我焯为什么只能检测到敲牌是否可用啊不应该啊md算了就这样吧
-        
-        if (hasOtherEnabledOption)
-        {
-            options.Remove(healOption);
-            Flash();
-            return true;
-        }
-        return false;
+        options.Remove(healOption);
+        return true;
     }
     
-    // 让“休息”回血变为 0，选项保留，避免卡死
+    // 愈合无法回血
     public override decimal ModifyRestSiteHealAmount(Creature creature, decimal originalAmount)
     {
         if (creature == base.Owner.Creature)
