@@ -95,6 +95,13 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         return true;
     }
 
+    public override async Task AfterRestSiteHeal(Player player, bool isMimicked)
+    {
+        if (player != Owner || isMimicked) return;
+        
+        await HealBrotherOption.ExecuteRestSiteHeal(player);
+    }
+
     private void UpdateDisplay()
     {
         DynamicVars["HP"].BaseValue = BrotherStateData.SavedHp[this];

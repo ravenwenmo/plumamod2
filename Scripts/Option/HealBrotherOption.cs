@@ -98,7 +98,7 @@ public class HealBrotherOption : RestSiteOption
 		NDebugAudioManager.Instance?.Play("SOTE_SFX_SleepBlanket_v1.mp3", 1f, PitchVariance.Small);
 	}
 
-    private static async Task ExecuteRestSiteHeal(Player player)
+    public static async Task ExecuteRestSiteHeal(Player player)
     {
         BrotherStateData.Heal(player, (int)GetHealAmount(player));
     }
