@@ -308,7 +308,7 @@
   "PLUMA_CARD_TEST_BROTHER.description": "[gold]龙舌兰支援[/gold]",
 
   "PLUMA_CARD_MARKER_RECOVERY.title": "标志物回收",
-  "PLUMA_CARD_MARKER_RECOVERY.description": "龙舌兰在你消耗[gold]基酒[/gold]或[gold]辅料组合包[/gold]时获得10层特性，获得鸡尾酒时获得1层多段斩。",
+  "PLUMA_CARD_MARKER_RECOVERY.description": "龙舌兰在你消耗[gold]基酒[/gold]或[gold]辅料组合包[/gold]时获得{MarkerRecoveryPower:diff()}层特性，获得鸡尾酒时获得1层多段斩。",
 
   "PLUMA_CARD_DOUBLE_IDENTITY.title": "双重身份",
   "PLUMA_CARD_DOUBLE_IDENTITY.description": "龙舌兰获得[gold]双重身份[/gold]：\n每当从攻击意图切换为强化意图时，获得100层特性。",
