@@ -92,7 +92,11 @@ public class SlashingComboSingleton : HookedSingletonModel
 
         var player = cardSource.Owner;
         if (player == null) return;
-
+        
+        // 只有 powered 攻击才会附加创伤；unpowered 伤害直接跳过
+        if (!props.IsPoweredAttack())
+            return;
+        
         if (!_comboCounters.TryGetValue(player, out int count) || count <= 0)
             return;
 

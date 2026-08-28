@@ -1,5 +1,5 @@
 using System.Reflection;
-using MegaCrit.Sts2.Core.Logging;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
 using STS2RitsuLib.Interop;
@@ -98,21 +98,20 @@ public class Entry
             //Monsters.BrotherStateData.ClearMirror();
         });
 
-
+        /*
         // 自动为所有攻击牌注册固定金色发光（条件：拥有切割关键词且连击数 > 0）
         var slashingAssembly = Assembly.GetExecutingAssembly();
         var attackCardTypes = slashingAssembly.GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && typeof(ModCardTemplate).IsAssignableFrom(t))
+            .Where(t => t.IsClass && !t.IsAbstract && typeof(CardModel).IsAssignableFrom(t))
             .Where(t =>
             {
                 try
                 {
-                    var instance = (ModCardTemplate)Activator.CreateInstance(t);
+                    var instance = (CardModel)Activator.CreateInstance(t);
                     return instance.Type == CardType.Attack;
                 }
                 catch { return false; }
             });
-
         foreach (var cardType in attackCardTypes)
         {
             ModCardHandOutlineRegistry.Register(
@@ -130,6 +129,53 @@ public class Entry
                 )
             );
         }
+        */
+        
+        // 自动为所有攻击牌注册发光
+        var attackCardTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a =>
+            {
+                try
+                {
+                    return a.GetTypes();
+                }
+                catch
+                {
+                    return Type.EmptyTypes;
+                }
+            })
+            .Where(t => t.IsClass && !t.IsAbstract && typeof(CardModel).IsAssignableFrom(t))
+            .Where(t =>
+            {
+                try
+                {
+                    var instance = (CardModel)Activator.CreateInstance(t);
+                    return instance.Type == CardType.Attack;
+                }
+                catch
+                {
+                    return false;
+                }
+            })
+            .ToList();
+        foreach (var cardType in attackCardTypes)
+        {
+            ModCardHandOutlineRegistry.Register(
+                cardType,
+                ModCardHandOutlineRules.Dynamic(
+                    card => card.Keywords.Contains(MyKeywords.Slashing) &&
+                            SlashingComboSingleton.GetPlayerComboCount(card.Owner) > 0,
+                    card =>
+                    {
+                        int combo = SlashingComboSingleton.GetPlayerComboCount(card.Owner);
+                        float factor = Math.Clamp((combo - 1) / 4f, 0f, 1f);
+                        return new Color(1f, 0.843f * (1f - factor), 0f);
+                    },
+                    priority: 5
+                )
+            );
+        }
+
 
         // 三形态卡牌（基酒/鸡尾酒）按当前 SpiritMode 显示独立描述
         SpiritModeDescriptionPatch.Apply();
