@@ -74,6 +74,7 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     public override async Task AfterRoomEntered(AbstractRoom room)
     {
         if (Owner.GetRelic<BrotherRelic>() == null) return;
+        UpdateDisplay();
         _hasSummonedBrother = false;
     }
 

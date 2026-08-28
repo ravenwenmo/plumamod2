@@ -80,7 +80,7 @@ public class HealBrotherOption : RestSiteOption
 
     public static decimal GetHealAmount(Player player)
 	{
-		decimal healAmount = Hook.ModifyRestSiteHealAmount(player.RunState, player.Creature, GetBaseHealAmount(player));
+		decimal healAmount = GetBaseHealAmount(player);
 		GD.Print($"Final heal amount for Brother: {healAmount}");
 		return healAmount;
 	}
