@@ -71,11 +71,12 @@ public class NomPower : ModPowerTemplate
             int hpGain = (int)Amount;          // 提升的最大生命值
             int newMax = oldMax + hpGain;
 
-            await CreatureCmd.SetMaxHp(Owner, newMax);
-
-            // 同步回复等量生命值（“奶”增加的生命上限）
-            await CreatureCmd.Heal(Owner, hpGain);
-
+            //await CreatureCmd.SetMaxHp(Owner, newMax);
+            // 为什么上面的生效但是下面的用heal会不生效
+            //await CreatureCmd.SetCurrentHp(Owner, Owner.CurrentHp + hpGain);
+            
+            await CreatureCmd.GainMaxHp(Owner, (decimal)Amount);
+            
             if (Owner.PetOwner != null)
             {
                 BrotherStateData.SetHp(Owner.PetOwner, Owner.CurrentHp, newMax);
