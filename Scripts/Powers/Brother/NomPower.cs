@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
 using Pluma.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -75,7 +75,23 @@ public class NomPower : ModPowerTemplate
             // 为什么上面的生效但是下面的用heal会不生效
             //await CreatureCmd.SetCurrentHp(Owner, Owner.CurrentHp + hpGain);
             
-            await CreatureCmd.GainMaxHp(Owner, (decimal)Amount);
+            //await CreatureCmd.GainMaxHp(Owner, hpGain);
+            //await CreatureCmd.Heal(Owner, hpGain);
+            
+            await CreatureCmd.SetMaxHp(Owner, newMax);
+            await CreatureCmd.SetCurrentHp(Owner, Owner.CurrentHp + hpGain);
+
+            // 手动补上治疗绿字与十字特效
+            if (hpGain > 0)
+            {
+                // 治疗音效
+                SfxCmd.Play("event:/sfx/heal");
+                // 十字治疗特效
+                VfxCmd.PlayOnCreatureCenter(Owner, "vfx/vfx_cross_heal");
+                // 治疗绿字
+                Owner.GetVfxContainer()?.AddChildSafely(NHealNumVfx.Create(Owner, hpGain));
+            }
+
             
             if (Owner.PetOwner != null)
             {
