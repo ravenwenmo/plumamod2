@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -23,12 +23,14 @@ public class ConstantFlowPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/ConstantFlowPower.png"
     );
 
-    public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
+    public override async Task AfterPlayerTurnStart(
+        PlayerChoiceContext choiceContext,
+        Player player)
     {
-        if (participants.Contains(base.Owner) && base.Amount > 0)
+        if (player == base.Owner.Player && base.Amount > 0)
         {
             await PowerCmd.Apply<FlowState>(
-                new ThrowingPlayerChoiceContext(),
+                choiceContext,
                 base.Owner,
                 base.Amount,          // 每层获得1层渐入佳境
                 base.Owner,
