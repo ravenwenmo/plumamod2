@@ -331,9 +331,9 @@
   "PLUMA_CARD_POST_BATTLE_RECOVERY.description": "下场作战开始时，龙舌兰额外回复7点生命。\n每打出一次此牌，本场战斗内此牌费用+1。",
 
   "PLUMA_CARD_I_GOT_THIS.title": "“我来就好”",
-  "PLUMA_CARD_I_GOT_THIS.description": "清空龙舌兰[gold]特性[/gold]并切换至强化循环，试其回复5点生命，每失去20层[gold]特性[/gold]额外回复1点。",
-  "PLUMA_CARD_I_GOT_THIS_ALIVE_DESC": "清空龙舌兰[gold]特性[/gold]并切换至强化循环，试其回复5点生命，每失去20层[gold]特性[/gold]额外回复1点。",
-  "PLUMA_CARD_I_GOT_THIS_MISSING_DESC": "抽1张牌。\n“固有的牌，为什么龙舌兰就已经不在了？”",
+  "PLUMA_CARD_I_GOT_THIS.description": "清空龙舌兰[gold]特性[/gold]并切换至强化循环，使其回复{BaseHeal:diff()}点生命，每失去{TraitStepAmount:diff()}层[gold]特性[/gold]额外回复{HealPerTraitStep:diff()}点。",
+  "PLUMA_CARD_I_GOT_THIS_ALIVE_DESC": "清空龙舌兰[gold]特性[/gold]并切换至强化循环，使其回复{BaseHeal:diff()}点生命，每失去{TraitStepAmount:diff()}层[gold]特性[/gold]额外回复{HealPerTraitStep:diff()}点。",
+  "PLUMA_CARD_I_GOT_THIS_MISSING_DESC": "抽{CardsToDraw:diff()}张牌。\n“固有的牌，为什么龙舌兰就已经不在了？”",
 
   "PLUMA_CARD_TOGETHER_WE_FIGHT.title": "你我二人齐上",
   "PLUMA_CARD_TOGETHER_WE_FIGHT.description": "造成{Damage:diff()}点伤害{Hits:diff()}次。\n你获得{FlexAmount:diff()}层临时力量，若龙舌兰在场其也获得等量临时力量。",

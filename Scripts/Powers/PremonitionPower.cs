@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -23,15 +23,16 @@ public class PremonitionPower : ModPowerTemplate
         IconPath: "res://pluma/images/powers/PremonitionPower.png",
         BigIconPath: "res://pluma/images/powers/PremonitionPower.png"
     );
-
-    public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
+    public override async Task AfterPlayerTurnStart(
+        PlayerChoiceContext choiceContext,
+        Player player)
     {
-        // 只在自己回合开始时触发（参与者包含自己）
-        if (!participants.Contains(base.Owner)) return;
+        // 只在自己回合开始时触发
+        if (player != base.Owner.Player) return;
 
         // 获得对应层数的渐入佳境
         await PowerCmd.Apply<FlowState>(
-            new ThrowingPlayerChoiceContext(),
+            choiceContext,
             base.Owner,
             base.Amount,
             base.Owner,

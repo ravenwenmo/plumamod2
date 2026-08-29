@@ -53,8 +53,8 @@ public class IGotThis : ModCardTemplate, ISpiritModeCard
     // 动态变量：基础治疗、特性步长、每步额外治疗、不在场抽牌数
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        ModCardVars.Int("BaseHeal", 9),
-        ModCardVars.Int("TraitStepAmount", 20),
+        ModCardVars.Int("BaseHeal", 7),
+        ModCardVars.Int("TraitStepAmount", 25),
         ModCardVars.Int("HealPerTraitStep", 1),
         ModCardVars.Int("CardsToDraw", 1)
     };
@@ -115,6 +115,7 @@ public class IGotThis : ModCardTemplate, ISpiritModeCard
 
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 费用-1
+        DynamicVars["BaseHeal"].UpgradeValueBy(1m);
+        DynamicVars["HealPerTraitStep"].UpgradeValueBy(3m);
     }
 }
