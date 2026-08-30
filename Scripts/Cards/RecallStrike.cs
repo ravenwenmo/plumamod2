@@ -45,13 +45,15 @@ public class RecallStrike : ModCardTemplate
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!)
             .Execute(choiceContext);
-
-        // 2. 从战斗历史中找出上一张打出的牌（非自身）
+        
+        // 2. 从战斗历史中找出玩家自己上一张打出的牌（非当前自身）
         var history = CombatManager.Instance.History.CardPlaysStarted;
         var previousCardPlay = history.Reverse()
-            .FirstOrDefault(entry => entry.CardPlay != cardPlay)?
+            .FirstOrDefault(entry =>
+                entry.CardPlay != cardPlay &&
+                entry.CardPlay.Player == cardPlay.Player)?
             .CardPlay;
-
+        
         if (previousCardPlay?.Card != null)
         {
             if (previousCardPlay.Player == cardPlay.Player)

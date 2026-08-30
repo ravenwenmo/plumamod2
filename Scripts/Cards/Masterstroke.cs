@@ -14,7 +14,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
-// 大师斩：3费攻击牌，造成等于渐入佳境层数的伤害（实时显示）。升级后费用-1。
+// 大师斩：2费攻击牌，造成等于渐入佳境层数的伤害（实时显示）。升级后费用-1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class Masterstroke : ModCardTemplate
 {
@@ -33,9 +33,12 @@ public class Masterstroke : ModCardTemplate
     {
         new CalculationBaseVar(0m),
         new ExtraDamageVar(1m),
+        ModCardVars.Int("FlowStateAmount", 2),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
             card?.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0
         )
+
+
     };
     
     // 本能关键词
@@ -50,6 +53,13 @@ public class Masterstroke : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await PowerCmd.Apply<FlowState>(
+            choiceContext,
+            base.Owner.Creature,
+            DynamicVars["FlowStateAmount"].BaseValue,   // 3 层（升级后变为 4 层）
+            base.Owner.Creature,
+            this
+        );
         await DamageCmd.Attack(base.DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!)
@@ -62,6 +72,7 @@ public class Masterstroke : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        base.EnergyCost.UpgradeBy(-1); // 3费 → 2费
+        //base.EnergyCost.UpgradeBy(-1); // 3费 → 2费
+        DynamicVars["FlowStateAmount"].UpgradeValueBy(1m);
     }
 }

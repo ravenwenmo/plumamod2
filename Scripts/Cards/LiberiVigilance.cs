@@ -17,7 +17,7 @@ using MegaCrit.Sts2.Core.HoverTips; // 新增
 
 namespace Pluma.Scripts;
 
-// 黎博利Vigilance：2费罕见技能，对所有敌人施加2层创伤，获得所有敌人总创伤层数的格挡。升级后施加3层。
+// 羽兽的警惕：2费罕见技能，对所有敌人施加2层创伤，获得所有敌人总创伤层数的格挡。升级后施加3层。
 [RegisterCard(typeof(PlumaCardPool))]
 public class LiberiVigilance : ModCardTemplate
 {
@@ -34,7 +34,7 @@ public class LiberiVigilance : ModCardTemplate
     // 创伤层数动态变量（基础2，升级后+1）
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
-        ModCardVars.Int("OpenWound", 2)
+        ModCardVars.Int("OpenWound", 3)
     };
     
     public override IEnumerable<CardKeyword> CanonicalKeywords => [

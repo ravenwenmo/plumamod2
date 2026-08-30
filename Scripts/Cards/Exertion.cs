@@ -5,10 +5,11 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace Pluma.Scripts;
 
-
+// 竭力
 // 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
@@ -44,7 +45,10 @@ public class Exertion : ModCardTemplate
     public Exertion() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
-
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<WeakPower>()
+    };
     // 打出时的效果逻辑
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
