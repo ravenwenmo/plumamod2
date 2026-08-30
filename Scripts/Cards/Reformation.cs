@@ -8,10 +8,17 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.CardPools;
+using Pluma.Scripts;
+using STS2RitsuLib.Cards.DynamicVars;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Keywords;
+using STS2RitsuLib.Scaffolding.Content;
 
-namespace Pluma.Scripts;
+namespace Pluma.Scripts.Cards;
 
-// 改变思维：2费能力牌，获得5层源源不断和5层混乱。本能。升级后费用-1。
+// 改变思维：2费能力牌，获得源源不断和混乱。本能。升级后费用-1，且源源不断层数+1。
 [RegisterCard(typeof(PlumaCardPool))]
 public class Reformation : ModCardTemplate
 {
@@ -25,7 +32,13 @@ public class Reformation : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 本能关键词
+    // 变量：基础 4 层源源不断，5 层混乱
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("ConstantFlowAmount", 4),
+        ModCardVars.Int("MindRotAmount", 5)
+    };
+
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.MuscleMemory };
 
     public Reformation() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -34,12 +47,21 @@ public class Reformation : ModCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 施加5层源源不断
         await PowerCmd.Apply<ConstantFlowPower>(
-            choiceContext, base.Owner.Creature, 5, base.Owner.Creature, this);
-        // 施加5层混乱
+            choiceContext,
+            base.Owner.Creature,
+            DynamicVars["ConstantFlowAmount"].BaseValue,
+            base.Owner.Creature,
+            this
+        );
+
         await PowerCmd.Apply<MindRotPower>(
-            choiceContext, base.Owner.Creature, 5, base.Owner.Creature, this);
+            choiceContext,
+            base.Owner.Creature,
+            DynamicVars["MindRotAmount"].BaseValue,
+            base.Owner.Creature,
+            this
+        );
     }
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -48,10 +70,12 @@ public class Reformation : ModCardTemplate
         HoverTipFactory.FromPower<MindRotPower>()
     };
 
-    
     protected override void OnUpgrade()
     {
         // 费用 -1
-        base.EnergyCost.UpgradeBy(-1);
+        //base.EnergyCost.UpgradeBy(-1);
+
+        // 源源不断层数 +1：4 → 5
+        DynamicVars["ConstantFlowAmount"].UpgradeValueBy(1m);
     }
 }

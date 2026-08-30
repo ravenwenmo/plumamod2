@@ -32,7 +32,7 @@ public class FollowOrders : ModCardTemplate
     // 伤害变量、攻击段数变量
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(5m, ValueProp.Move),
+        new DamageVar(6m, ValueProp.Move),
         ModCardVars.Int("Hits", 1)
     };
 
@@ -75,6 +75,6 @@ public class FollowOrders : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m); // 5 → 7
+        DynamicVars.Damage.UpgradeValueBy(2m); // 6 → 8
     }
 }

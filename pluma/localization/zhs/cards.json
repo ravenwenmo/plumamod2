@@ -72,13 +72,13 @@
   "PLUMA_CARD_TRANSPARENT_WORLD.description": "[gold]渐入佳境[/gold]抽到的本能牌会被自动打出。",
 
   "PLUMA_CARD_REFORMATION.title": "改变思维",
-  "PLUMA_CARD_REFORMATION.description": "获得5层[gold]源源不断[/gold]\n获得5层[gold]心灵腐化[/gold]。",
+  "PLUMA_CARD_REFORMATION.description": "获得{ConstantFlowAmount}层[gold]源源不断[/gold]\n获得{MindRotAmount}层[red]心灵腐化[/red]。",
 
   "PLUMA_CARD_CONSTANT_FLOW.title": "源源不断",
   "PLUMA_CARD_CONSTANT_FLOW.description": "每回合获得1层[gold]渐入佳境[/gold]。",
 
   "PLUMA_CARD_MASTERSTROKE.title": "大师斩",
-  "PLUMA_CARD_MASTERSTROKE.description": "获得[gold]{FlowStateAmount}[/gold]层[gold]渐入佳境[/gold]。\n造成等于[gold]渐入佳境[/gold]层数的伤害。\n当前伤害：{CalculatedDamage:diff()}",
+  "PLUMA_CARD_MASTERSTROKE.description": "获得{FlowStateAmount}层[gold]渐入佳境[/gold]。\n造成等于[gold]渐入佳境[/gold]层数的伤害。\n当前伤害：{CalculatedDamage:diff()}",
   
   "PLUMA_CARD_BUT_FOCUSED.title": "截然相反的集中",
   "PLUMA_CARD_BUT_FOCUSED.description": "造成 {CalculatedDamage:diff()}点伤害。\n每有1层[gold]渐入佳境[/gold]该牌增伤[blue]{Multiplier}[/blue]%。",
