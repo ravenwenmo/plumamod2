@@ -40,7 +40,7 @@ public class InstinctCleanse : ModCardTemplate, ISpiritModeCard
     
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<OpenWoundPower>()
+        HoverTipFactory.FromPower<SharpenBladePower>()
     };
 
     public LocString SpiritModeDescription
