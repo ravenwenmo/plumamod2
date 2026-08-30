@@ -32,8 +32,7 @@ public class QuickDraw : ModCardTemplate
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.AllEnemies;
     private const bool shouldShowInCardLibrary = true;
-
-    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
+    
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
