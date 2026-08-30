@@ -33,12 +33,12 @@ public class MarkerRecovery : ModCardTemplate
     {
         ModCardVars.Int("MarkerRecoveryPower", 25)
     };
-
+/*
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         CardKeyword.Exhaust
     };
-
+*/
     public MarkerRecovery()
         : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {

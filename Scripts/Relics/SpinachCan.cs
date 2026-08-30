@@ -8,6 +8,16 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Models;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
+using Pluma.Scripts;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
@@ -15,7 +25,10 @@ namespace Pluma.Scripts;
 [RegisterRelic(typeof(PlumaRelicPool))]
 public class SpinachCan : ModRelicTemplate
 {
-    public override RelicRarity Rarity => RelicRarity.Uncommon; // 可根据需要调整稀有度
+    public override RelicRarity Rarity => RelicRarity.Uncommon;
+
+    // 用于记录上一次渐入佳境层数，判断是否是“增加”
+    private int _lastFlowAmount = -1;
 
     public override RelicAssetProfile AssetProfile => new(
         IconPath: $"res://pluma/images/relics/{GetType().Name}.png",
@@ -23,28 +36,34 @@ public class SpinachCan : ModRelicTemplate
         BigIconPath: $"res://pluma/images/relics/{GetType().Name}.png"
     );
 
-    // 不修改层数，只做检测用
-    public override decimal ModifyPowerAmountGivenAdditive(PowerModel power, Creature giver, decimal amount, Creature? target, CardModel? cardSource)
+    public override async Task AfterRoomEntered(AbstractRoom room)
     {
-        // 不影响渐入佳境的层数
-        return 0m;
+        // 进入战斗房间时，初始化或更新基准层数，避免上一场残留值误判
+        if (room is CombatRoom && Owner?.Creature != null)
+        {
+            _lastFlowAmount = Owner.Creature.GetPowerAmount<FlowState>();
+        }
+        await Task.CompletedTask;
     }
 
-    // 在层数被修改后触发（包括施加和增加）
-    public override async Task AfterModifyingPowerAmountGiven(PowerModel power)
+    public override async Task AfterPowerAmountChanged(
+        PlayerChoiceContext choiceContext,
+        PowerModel power,
+        decimal amount,
+        Creature? applier,
+        CardModel? cardSource)
     {
-        // 只处理给予玩家自己的渐入佳境
-        if (power is FlowState && power.Owner == base.Owner.Creature)
-        {
-            Flash();
-            // 使用空上下文施加活力（不需要玩家选择）
-            await PowerCmd.Apply<VigorPower>(
-                new ThrowingPlayerChoiceContext(),
-                base.Owner.Creature,
-                1,
-                base.Owner.Creature,
-                null
-            );
-        }
+        // 只处理玩家自己的渐入佳境
+        if (power is not FlowState || power.Owner != Owner.Creature || amount <= 0)
+            return;
+
+        Flash();
+        await PowerCmd.Apply<VigorPower>(
+            choiceContext,
+            Owner.Creature,
+            1m,
+            Owner.Creature,
+            cardSource
+        );
     }
 }
