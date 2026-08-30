@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
@@ -38,6 +38,10 @@ public class HelmBreaker : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
         new DamageVar(18m, ValueProp.Move)
+    };
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { MyKeywords.MuscleMemory };
     public HelmBreaker() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

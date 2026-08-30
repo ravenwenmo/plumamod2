@@ -4,7 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models.CardPools;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models.Powers;
 using Pluma.Scripts;
 using Pluma.Scripts.Monsters;
@@ -36,6 +36,11 @@ public class InstinctCleanse : ModCardTemplate, ISpiritModeCard
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         MyKeywords.MuscleMemory // 本能（无 Exhaust，消耗逻辑在 OnPlay 中手动处理）
+    };
+    
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
 
     public LocString SpiritModeDescription
