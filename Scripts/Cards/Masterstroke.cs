@@ -33,7 +33,7 @@ public class Masterstroke : ModCardTemplate
     {
         new CalculationBaseVar(0m),
         new ExtraDamageVar(1m),
-        ModCardVars.Int("FlowStateAmount", 2),
+        ModCardVars.Int("FlowStateAmount", 1),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
             card?.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0
         )
