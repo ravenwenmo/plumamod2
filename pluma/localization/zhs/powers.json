@@ -127,9 +127,9 @@
   "PLUMA_POWER_BROTHER_ATTACK_TURNS_POWER.smartDescription": "剩余回合见[gold]龙舌兰[/gold]遗物。",
 
   "PLUMA_POWER_MARKER_RECOVERY_POWER.title": "标志物回收",
-  "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得等于层数的特性或额外攻击段数。",
-  "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "每当消耗基酒牌或消耗辅料获得鸡尾酒牌时，获得[blue]{Amount}[/blue]层特性或额外攻击段数。",
-
+  "PLUMA_POWER_MARKER_RECOVERY_POWER.description": "每当消耗基酒牌或辅料组合包时，获得等于该能力层数的特性。每当鸡尾酒牌生成时，获得额外攻击段数。",
+  "PLUMA_POWER_MARKER_RECOVERY_POWER.smartDescription": "消耗[gold]基酒[/gold]或[gold]辅料组合包[/gold]时：特性+[blue]{Amount}[/blue]。{ExtraHitsPerCocktail:choose(0):|鸡尾酒生成时：获得[blue]{}[/blue]层多段斩。}",
+  
   "PLUMA_POWER_DOUBLE_IDENTITY_POWER.title": "双重身份",
   "PLUMA_POWER_DOUBLE_IDENTITY_POWER.description": "龙舌兰每次进入强化意图时，立即获得[blue]100[/blue]层特性，随后进入冷却；龙舌兰进入攻击意图后冷却刷新。",
   "PLUMA_POWER_DOUBLE_IDENTITY_POWER.smartDescription": "每次进入强化意图时获得 [blue]100[/blue] 层特性，进入攻击意图后冷却刷新。",

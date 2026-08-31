@@ -93,11 +93,17 @@ public static class BrotherCmd
     public static Vector2 GetBrotherOffsetFromPlayer(Creature brother)
     {
         NCreature nCreature = NCombatRoom.Instance?.GetCreatureNode(brother.PetOwner.Creature);
+
+        Vector2 rightOffset = new Vector2(30f, 0f); // 额外向右移动 30 像素
+
         if (nCreature == null)
         {
-            // 节点未就绪时兜底为固定偏移，避免空引用
-            return Brother.MinOffset.Lerp(Brother.MaxOffset, 1f);
+            // 节点未就绪时兜底为固定偏移，同样加上右移量
+            return Brother.MinOffset.Lerp(Brother.MaxOffset, 1f) + rightOffset;
         }
-        return Vector2.Right * nCreature.Hitbox.Size.X * 0.5f + Brother.MinOffset.Lerp(Brother.MaxOffset, 1f);
+
+        return Vector2.Right * nCreature.Hitbox.Size.X * 0.5f
+               + Brother.MinOffset.Lerp(Brother.MaxOffset, 1f)
+               + rightOffset;
     }
 }

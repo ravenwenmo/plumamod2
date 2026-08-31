@@ -264,13 +264,13 @@
   "PLUMA_CARD_MIXER_PACK.selectPrompt": "选择一张基酒牌",
 
   "PLUMA_CARD_RANDOM_MIXOLOGY_SET.title": "随机调酒组合",
-  "PLUMA_CARD_RANDOM_MIXOLOGY_SET.description": "[gold]随机基酒[/gold] 1。\n将1张[gold]{IfUpgraded:show:辅料组合包+|辅料组合包}[/gold]放入弃牌堆。",
+  "PLUMA_CARD_RANDOM_MIXOLOGY_SET.description": "[gold]随机基酒[/gold]{BaseSpiritAmount:diff()}。\n将1张[gold]{IfUpgraded:show:辅料组合包+|辅料组合包}[/gold]放入弃牌堆。",
 
   "PLUMA_CARD_DRINKS_FOR_TWO.title": "我喝两杯",
-  "PLUMA_CARD_DRINKS_FOR_TWO.description": "[gold]随机基酒[/gold] 2。\n将1张[gold]{IfUpgraded:show:辅料组合包+|辅料组合包}[/gold]分别放入抽牌堆和弃牌堆。",
+  "PLUMA_CARD_DRINKS_FOR_TWO.description": "[gold]随机基酒[/gold]{BaseSpiritAmount:diff()}。\n将1张[gold]{IfUpgraded:show:辅料组合包+|辅料组合包}[/gold]分别放入抽牌堆和弃牌堆。",
 
   "PLUMA_CARD_BARTENDERS_FLASK.title": "调酒师的小壶",
-  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有[gold]基酒[/gold]，\n[gold]随机基酒[/gold] 1；\n否则获得1张[gold]{IfUpgraded:show:辅料组合包+|辅料组合包}[/gold]。",
+  "PLUMA_CARD_BARTENDERS_FLASK.description": "若手牌中没有[gold]基酒[/gold]，\n[gold]随机基酒[/gold]{BaseSpiritAmount:diff()}；\n否则获得1张[gold]{IfUpgraded:show:辅料组合包+|辅料组合包}[/gold]。",
   "PLUMA_CARD_BARTENDERS_FLASK.selectPrompt": "选择一张基酒",
 
   "PLUMA_CARD_INSTANT_PAIR.title": "即时搭配",

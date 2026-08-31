@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using STS2RitsuLib.Cards.DynamicVars;
 
 namespace Pluma.Scripts.Cards;
 
@@ -14,7 +16,7 @@ namespace Pluma.Scripts.Cards;
 [RegisterCard(typeof(PlumaCardPool))]
 public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
 {
-    private const int energyCost = 2;
+    private const int energyCost = 1;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.Self;
@@ -23,13 +25,18 @@ public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
-
+/*
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        MyKeywords.MuscleMemory, // 本能
+        //MyKeywords.MuscleMemory, // 本能
         CardKeyword.Exhaust
     };
-
+*/
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("BaseSpiritAmount", 2)
+    };
+    
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
@@ -47,7 +54,7 @@ public class DrinksForTwo : ModCardTemplate, IBaseSpiritRelatedCard
         var rng = base.Owner.RunState.Rng.CombatCardGeneration;
 
         // 「随机基酒 2」：统一走 BaseSpiritGeneration（两张不重复，优先排除手牌已有种类）
-        var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 2, base.CombatState, rng);
+        var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, DynamicVars["BaseSpiritAmount"].IntValue, base.CombatState, rng);
         if (baseSpirits.Count > 0)
         {
             await CardPileCmd.AddGeneratedCardsToCombat(baseSpirits, PileType.Hand, player);

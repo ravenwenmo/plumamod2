@@ -10,6 +10,8 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using STS2RitsuLib.Cards.DynamicVars;
 
 namespace Pluma.Scripts;
 
@@ -33,6 +35,11 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
         MyKeywords.MuscleMemory
     };
     */
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("BaseSpiritAmount", 1)
+    };
+
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
@@ -86,7 +93,7 @@ public class BartendersFlask : ModCardTemplate, IBaseSpiritRelatedCard
                 // 此分支仅在手牌中没有基酒时进入，因此等价于从 6 种中随机选 1 种。
                 // 多人同步：使用局内确定性随机源（各端同一序列），严禁 new Random()
                 var rng = base.Owner.RunState.Rng.CombatCardGeneration;
-                var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 1, base.CombatState, rng);
+                var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, DynamicVars["BaseSpiritAmount"].IntValue, base.CombatState, rng);
                 if (baseSpirits.Count > 0)
                 {
                     await CardPileCmd.AddGeneratedCardsToCombat(new[] { baseSpirits[0] }, PileType.Hand, player);

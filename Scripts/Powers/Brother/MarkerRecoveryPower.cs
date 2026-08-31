@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Players;
-
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace Pluma.Scripts;
 
@@ -24,6 +24,12 @@ public class MarkerRecoveryPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/MarkerRecoveryPower.png"
     );
 
+    // 新增变量：鸡尾酒牌生成时获得的额外攻击段数
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        new DynamicVar("ExtraHitsPerCocktail", 0)
+    };
+    
     public override async Task AfterCardExhausted(
         PlayerChoiceContext choiceContext,
         CardModel card,
@@ -66,13 +72,24 @@ public class MarkerRecoveryPower : ModPowerTemplate
             return;
         }
 
-        // 鸡尾酒牌生成时，能力持有者获得 1 层额外攻击段数
+        // 鸡尾酒牌生成时，能力持有者获得 ExtraHitsPerCocktail 层额外攻击段数
         await PowerCmd.Apply<BrotherExtraHitsPower>(
             new ThrowingPlayerChoiceContext(),
             Owner,
-            1m,
+            DynamicVars["ExtraHitsPerCocktail"].BaseValue,  // 从变量读取
             null,
             card
         );
     }
+    
+    /// <summary>
+    /// 将“鸡尾酒生成时获得的额外攻击段数”变量 +1。
+    /// 由“标志物回收”卡牌在施加本能力后调用。
+    /// </summary>
+    public void IncrementExtraHitsPerCocktail()
+    {
+        DynamicVars["ExtraHitsPerCocktail"].BaseValue += 1m;
+    }
+    
+    
 }

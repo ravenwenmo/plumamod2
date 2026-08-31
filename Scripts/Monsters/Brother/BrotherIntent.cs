@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
 using Pluma.Scripts.Monsters;
+using Pluma.Scripts;
 
 namespace Pluma.Monsters;
 
@@ -30,6 +31,7 @@ public class BrotherBuffIntent : BuffIntent
     }
 }
 
+
 public class BrotherAttackIntent : AttackIntent
 {
     private readonly int _repeat;
@@ -38,7 +40,6 @@ public class BrotherAttackIntent : AttackIntent
 
     protected override LocString IntentLabelFormat => new LocString("intents", "FORMAT_DAMAGE_MULTI");
 
-    // 根据是否拥有范围攻击能力，使用不同的本地化前缀
     protected override string IntentPrefix =>
         _isAoe ? "PLUMA_BROTHER_ATTACK_AOE" : "PLUMA_BROTHER_ATTACK_SINGLE";
 
@@ -58,10 +59,6 @@ public class BrotherAttackIntent : AttackIntent
         _isAoe = isAoe;
     }
 
-    // 意图图标动画键必须存在于 IntentAnimData（合法键为 attack_1~attack_5、buff 等）。
-    // 基类 AttackIntent.GetAnimation 会拼上被覆盖的 IntentPrefix，生成不存在的键，
-    // 导致 NIntent.UpdateVisuals 抛 KeyNotFoundException（图标不显示/不刷新）。
-    // 这里按与基类相同的总伤害分档返回合法键。
     public override string GetAnimation(IEnumerable<Creature> targets, Creature owner)
     {
         int totalDamage = GetTotalDamage(targets, owner);
@@ -86,6 +83,17 @@ public class BrotherAttackIntent : AttackIntent
         LocString locString = new("intents", key);
         locString.Add("Damage", GetDamage(enemies, owner));
         locString.Add("Repeat", Repeats);
+
+        // 读取龙舌兰剩余攻击回合数，并传给本地化文本
+        int turnsRemaining = 0;
+
+        if (owner.PetOwner?.GetRelic<BrotherRelic>() is BrotherRelic brotherRelic)
+        {
+            turnsRemaining = (int)brotherRelic.DynamicVars["Turns"].BaseValue;
+        }
+        
+        locString.Add("TurnsRemaining", turnsRemaining);
+
         return locString;
     }
 

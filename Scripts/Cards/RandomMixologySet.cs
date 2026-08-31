@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using STS2RitsuLib.Cards.DynamicVars;
 
 namespace Pluma.Scripts;
 
@@ -24,6 +25,12 @@ public class RandomMixologySet : ModCardTemplate, IBaseSpiritRelatedCard
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
+    // 新增变量：获得随机基酒的数量
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("BaseSpiritAmount", 1)
+    };
+    
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[] { CardKeyword.Exhaust };
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
@@ -43,7 +50,7 @@ public class RandomMixologySet : ModCardTemplate, IBaseSpiritRelatedCard
 
         // 「随机基酒 1」
         var rng = base.Owner.RunState.Rng.CombatCardGeneration;
-        var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, 1, base.CombatState, rng);
+        var baseSpirits = BaseSpiritGeneration.GenerateRandomBaseSpirits(player, DynamicVars["BaseSpiritAmount"].IntValue, base.CombatState, rng);
         if (baseSpirits.Count > 0)
         {
             await CardPileCmd.AddGeneratedCardsToCombat(baseSpirits, PileType.Hand, player);
