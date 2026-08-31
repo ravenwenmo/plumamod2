@@ -33,7 +33,7 @@ public class StrategicAbandonment : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
-        new BlockVar(14m, ValueProp.Move)
+        new BlockVar(12m, ValueProp.Move)
     };
 
     public StrategicAbandonment() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -61,6 +61,6 @@ public class StrategicAbandonment : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(4m); // 14 → 18
+        DynamicVars.Block.UpgradeValueBy(3m); // 14 → 18
     }
 }
