@@ -14,6 +14,7 @@ using MegaCrit.Sts2.Core.Models;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.Entities.Ascension;
+using Godot;
 
 namespace Pluma.Scripts;
 
@@ -147,12 +148,13 @@ public static class BrotherRelicAncientEventPatch
             BrotherRelic relic = __instance.Owner.GetRelic<BrotherRelic>();
             if (relic != null)
             {
-                decimal amount = relic.DynamicVars["MaxHP"].BaseValue - relic.DynamicVars["HP"].BaseValue;
+                decimal amount = BrotherStateData.SavedMaxHp[relic] - BrotherStateData.SavedHp[relic];
                 if (RunManager.Instance.HasAscension(AscensionLevel.WearyTraveler))
                 {
                     amount *= 0.8m;
                 }
                 BrotherStateData.Heal(__instance.Owner, (int)amount);
+                GD.Print($"[BrotherRelicAncientEventPatch] Healed Brother for {amount} HP. Current HP: {BrotherStateData.SavedHp[relic]}");
             }
         }
     }
