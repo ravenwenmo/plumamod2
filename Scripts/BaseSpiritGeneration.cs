@@ -13,10 +13,13 @@ namespace Pluma.Scripts;
 
 /// <summary>
 /// 「随机基酒 X」术语的统一实现。
-/// 定义：获得 X 个不同的随机基酒。优先获得当前手牌中尚未拥有的基酒组；
-/// 基酒组包含基酒本身及其对应的鸡尾酒——例如手牌中有金汤力，也视为已拥有金酒。
-/// 如果当前手牌中已经拥有全部 6 组基酒，则忽略该限制，
+/// 定义：获得 X 个不同的随机基酒。优先获得当前手牌中尚未拥有的基酒种类；
+/// 如果当前手牌中已经拥有全部 6 种基酒（即一组完整基酒），则忽略该限制，
 /// 从 6 种基酒中随机选取不重复的基酒，相当于开始新的一组。
+///
+/// 悬浮提示对齐原版「召唤」（Summon）：原版通过 static_hover_tips 表实现该术语，
+/// 本术语同样从 static_hover_tips 表读取 RANDOM_BASE_SPIRIT 条目
+/// （见 pluma/localization/zhs/static_hover_tips.json）。
 /// </summary>
 public static class BaseSpiritGeneration
 {
@@ -53,9 +56,14 @@ public static class BaseSpiritGeneration
             return generated;
         }
 
-        var handSpiritTypes = GetHandBaseSpiritTypes(player);
+        var handSpiritTypes = PileType.Hand
+            .GetPile(player)
+            .Cards
+            .Where(card => card is IBaseSpiritCard)
+            .Select(card => card.GetType())
+            .ToHashSet();
 
-        // 手牌已集齐全部 6 组基酒 → 忽略排除，从 6 种中重新随机选取（开始新的一组）。
+        // 手牌已集齐全部 6 种基酒 → 忽略排除，从 6 种中重新随机选取（开始新的一组）。
         bool handHasAllSix = BaseSpiritCardTypes.All(handSpiritTypes.Contains);
         var available = (handHasAllSix
             ? BaseSpiritCardTypes
@@ -85,48 +93,6 @@ public static class BaseSpiritGeneration
         }
 
         return generated;
-    }
-
-    /// <summary>
-    /// 获取手牌中已拥有的基酒组（基酒 + 对应鸡尾酒）。
-    /// 例如手牌中有金汤力（GinTonic），也会把金酒（Gin）加入已拥有集合。
-    /// </summary>
-    private static HashSet<Type> GetHandBaseSpiritTypes(Player player)
-    {
-        var handCards = PileType.Hand.GetPile(player).Cards;
-        var spiritTypes = new HashSet<Type>();
-
-        foreach (var card in handCards)
-        {
-            if (card is IBaseSpiritCard)
-            {
-                spiritTypes.Add(card.GetType());
-            }
-            else if (card is ICocktailCard)
-            {
-                var baseSpiritType = GetBaseSpiritTypeForCocktail(card.GetType());
-                if (baseSpiritType != null)
-                {
-                    spiritTypes.Add(baseSpiritType);
-                }
-            }
-        }
-
-        return spiritTypes;
-    }
-
-    /// <summary>
-    /// 返回鸡尾酒对应的基酒类型；如果不是鸡尾酒，返回 null。
-    /// </summary>
-    private static Type? GetBaseSpiritTypeForCocktail(Type cocktailType)
-    {
-        if (cocktailType == typeof(GinTonic)) return typeof(Gin);
-        if (cocktailType == typeof(Margarita)) return typeof(Tequila);
-        if (cocktailType == typeof(OldFashioned)) return typeof(Whiskey);
-        if (cocktailType == typeof(Mojito)) return typeof(Rum);
-        if (cocktailType == typeof(Cosmopolitan)) return typeof(Vodka);
-        if (cocktailType == typeof(Sidecar)) return typeof(Brandy);
-        return null;
     }
 
     private static CardModel CreateSpirit(Type spiritType, ICombatState combatState, Player player)
