@@ -54,19 +54,13 @@ public class MarkerRecovery : ModCardTemplate
         Creature brother = base.Owner.Brother();
         Creature target = (brother != null && brother.IsAlive) ? brother : base.Owner.Creature;
 
-
-        var markerPower = await PowerCmd.Apply<MarkerRecoveryPower>(
+        await PowerCmd.Apply<MarkerRecoveryPower>(
             choiceContext,
             target,
             DynamicVars["MarkerRecoveryPower"].BaseValue,
             base.Owner.Creature,
             this
         );
-
-        if (markerPower != null)
-        {
-            markerPower.IncrementExtraHitsPerCocktail();
-        }
     }
 
     protected override void OnUpgrade()
