@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -15,8 +15,9 @@ namespace Pluma.Scripts;
 [RegisterPower]
 public class TheBeatPower : ModPowerTemplate, IPowerExtraIconAmountLabelSpecsProvider
 {
-    // 本能牌计数
-    private int _muscleMemoryCount;
+    // 本能牌计数。internal：CombatSolver 适配层需要直接读写预测克隆上的该字段
+    // （普通私有字段会随 MemberwiseClone 带入预测分支，根捕获时即携带实机进度）。
+    internal int MuscleMemoryCount;
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
@@ -31,12 +32,12 @@ public class TheBeatPower : ModPowerTemplate, IPowerExtraIconAmountLabelSpecsPro
         if (cardPlay.Card.Owner.Creature == base.Owner &&
             cardPlay.Card.Keywords.Contains(MyKeywords.MuscleMemory))
         {
-            _muscleMemoryCount++;
+            MuscleMemoryCount++;
 
-            if (_muscleMemoryCount >= 3)
+            if (MuscleMemoryCount >= 3)
             {
                 await PlayerCmd.GainEnergy(1, base.Owner.Player);
-                _muscleMemoryCount = 0; // 重置计数，开始下一轮
+                MuscleMemoryCount = 0; // 重置计数，开始下一轮
             }
 
             InvokeDisplayAmountChanged();
@@ -46,7 +47,7 @@ public class TheBeatPower : ModPowerTemplate, IPowerExtraIconAmountLabelSpecsPro
     // 角标显示：左下角显示还需打出的本能牌数（3 - 当前计数）
     public IReadOnlyList<ExtraIconAmountLabelSpec> GetPowerExtraIconAmountLabelSpecs()
     {
-        int remaining = 3 - _muscleMemoryCount;
+        int remaining = 3 - MuscleMemoryCount;
         if (remaining < 0) remaining = 0;
 
         return

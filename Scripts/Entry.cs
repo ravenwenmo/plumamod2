@@ -34,6 +34,12 @@ public class Entry
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
 
+#if PLUMA_COMBATSOLVER_ADAPTER
+        // CombatSolver 软适配：探测→版本自检→门禁放行→核心机制镜像登记。
+        // 任何失败都会记录 [鸡煲] 日志并干净回退为普通手动战斗。
+        CombatSolverAdapter.CombatSolverBridge.Initialize();
+#endif
+
         // 注册自定义目标类型"任意单位"（基酒/鸡尾酒牌使用），须在内容注册前完成
         _ = PlumaTargetTypes.AnyUnit;
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -24,7 +24,9 @@ namespace Pluma.Scripts;
 [RegisterRelic(typeof(PlumaRelicPool))]
 public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProvider
 {
-    private int _shuffleCount;
+    // internal：CombatSolver 适配层直接读写预测克隆上的字段（MemberwiseClone 携带进度，
+    // 进战斗房清零发生在根捕获之前，预测克隆天然从 0 开始）。
+    internal int ShuffleCount;
 
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
@@ -40,7 +42,7 @@ public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     {
         if (room is CombatRoom)
         {
-            _shuffleCount = 0;
+            ShuffleCount = 0;
             InvokeDisplayAmountChanged();
         }
         return Task.CompletedTask;
@@ -50,10 +52,10 @@ public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
     {
         if (shuffler != base.Owner) return;
 
-        _shuffleCount++;
-        if (_shuffleCount >= 2)
+        ShuffleCount++;
+        if (ShuffleCount >= 2)
         {
-            _shuffleCount = 0;
+            ShuffleCount = 0;
             Flash();
             await PlayerCmd.GainEnergy(1, base.Owner);
         }
@@ -62,7 +64,7 @@ public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
 
     public IReadOnlyList<ExtraIconAmountLabelSpec> GetRelicExtraIconAmountLabelSpecs()
     {
-        int remaining = 2 - _shuffleCount;
+        int remaining = 2 - ShuffleCount;
         if (remaining < 0) remaining = 0;
 
         return
