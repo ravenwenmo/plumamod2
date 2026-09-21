@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
+using MegaCrit.Sts2.Core.Rewards;
 using Pluma.Scripts.Monsters;
 
 namespace Pluma.Scripts.Option;
@@ -60,7 +61,24 @@ public class HealBrotherOption : RestSiteOption
 
     public override async Task<bool> OnSelect()
     {
-        await ExecuteRestSiteHeal(Owner);
+        // 羽毛笔的“休息”只回龙舌兰的血，羽毛笔自己一点血都不回（见 ReaperBadge/AquaDawn）。
+        // 但“休息”事件必须像原版 HealRestSiteOption 那样广播出去，
+        // 否则所有挂在休息上的原版内容都会失效：
+        //   · 石炉加湿器：+5 最大生命 —— 已由 StoneHumidifierBrotherPatch 改加给龙舌兰；
+        //   · 帝王枕头：休息回血 +15 —— 已由 BrotherRestSite.ModifyRestHealAmount 加给龙舌兰；
+        //   · 睡梦捕手、小邮箱：休息后发奖励 —— 这是羽毛笔自己的奖励，仍按原版发；
+        //   · BrotherRelic.AfterRestSiteHeal：龙舌兰回血 60%（见 BrotherRelic.cs，
+        //     所以这里不能再自己调 ExecuteRestSiteHeal，否则龙舌兰回两次血）。
+        await Hook.AfterRestSiteHeal(Owner.RunState, Owner, isMimicked: false);
+
+        // 复刻原版休息奖励结算（Hook 改奖励 + 发放）。
+        // 注意：不要改成 HealRestSiteOption.ExecuteRestSiteHeal——它除了广播 Hook，
+        // 还会先按 Hook.ModifyRestSiteHealAmount 给羽毛笔回血；
+        // ReaperBadge 的“归零”只是在遍历里返回 0，后面若还有帝王枕头(+15)之类的修正，
+        // 血量就会被加回来，和“无法在火堆处回复生命”矛盾。
+        List<Reward> rewards = new List<Reward>();
+        Hook.ModifyRestSiteHealRewards(Owner.RunState, Owner, rewards, isMimicked: false);
+        await RewardsCmd.OfferCustom(Owner, rewards);
 		return true;
     }
 
@@ -80,7 +98,9 @@ public class HealBrotherOption : RestSiteOption
 
     public static decimal GetHealAmount(Player player)
 	{
-		decimal healAmount = GetBaseHealAmount(player);
+		// 基数 60% 龙舌兰最大生命，再叠加原版“休息回血修正”类遗物的加成（帝王枕头 +15 等）：
+		// 羽毛笔的休息对象是龙舌兰，所以这些加成也归龙舌兰。
+		decimal healAmount = BrotherRestSite.ModifyRestHealAmount(player, GetBaseHealAmount(player));
 		GD.Print($"Final heal amount for Brother: {healAmount}");
 		return healAmount;
 	}

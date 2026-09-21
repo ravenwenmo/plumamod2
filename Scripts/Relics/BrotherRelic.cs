@@ -96,6 +96,10 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         return true;
     }
 
+    // 龙舌兰的“休息”回血（60% 最大生命）唯一结算点：
+    // 羽毛笔的休息选项 HealBrotherOption.OnSelect 会广播 Hook.AfterRestSiteHeal，
+    // 被队友“愈合”（MendRestSiteOption）以及原版模仿休息（MimicRestSiteHeal）也会走到这里。
+    // 不要再去 HealBrotherOption.OnSelect 里直接调用 ExecuteRestSiteHeal，那会变成回两次血。
     public override async Task AfterRestSiteHeal(Player player, bool isMimicked)
     {
         if (player != Owner || isMimicked) return;
