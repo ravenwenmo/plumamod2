@@ -21,6 +21,7 @@ using CombatSolver.Engine.InCombat.Mirrors.Hooks.Damage;
 using CombatSolver.Engine.InCombat.Simulation;
 using CombatSolver;
 using Pluma.Scripts;
+using Pluma.Scripts.Cards;
 
 namespace Pluma.Scripts.CombatSolverAdapter;
 
@@ -43,6 +44,7 @@ internal static class CombatSolverMirrors
         RegisterFlowEnginePowers();
         RegisterOtherPowers();
         RegisterRelics();
+        RegisterSpiritCards();
     }
 
     // ==================== 切割连击 + 创伤 ====================
@@ -524,21 +526,12 @@ internal static class CombatSolverMirrors
 
         if (!hasBaseSpirit)
         {
-            // 「随机基酒 1」：镜像 BaseSpiritGeneration.GenerateRandomBaseSpirits 的选择逻辑，
-            // 使用预测战斗卡生成 RNG 流，与实机调用次数一致。
-            var handSpiritTypes = handCards
-                .Where(c => c.Preview is IBaseSpiritCard)
-                .Select(c => c.Preview.GetType())
-                .ToHashSet();
-
-            bool handHasAllSix = BaseSpiritCardTypes.All(handSpiritTypes.Contains);
-            List<Type> available = (handHasAllSix
-                ? BaseSpiritCardTypes
-                : BaseSpiritCardTypes.Where(t => !handSpiritTypes.Contains(t))).ToList();
-
-            int index = context.Rng.CombatCardGeneration.NextInt(available.Count);
-            PredictedCard spirit = CreatePredictedSpirit(available[index], player);
-            context.Simulator.AddGeneratedCardsToCombat([spirit], PileType.Hand, player);
+            // 「随机基酒 1」：与实机 BaseSpiritGeneration 逐行对齐（预测 RNG 流）。
+            List<PredictedCard> spirits = GenerateRandomBaseSpirits(context, player, 1);
+            if (spirits.Count > 0)
+            {
+                context.Simulator.AddGeneratedCardsToCombat(spirits, PileType.Hand, player);
+            }
         }
         else
         {
@@ -1034,6 +1027,528 @@ internal static class CombatSolverMirrors
         }
 
         public object Fork(PredictionForkContext context) => MemberwiseClone();
+    }
+
+    // ==================== 卡牌：基酒/随机基酒家族 + 切割/居合 ====================
+
+    private static void RegisterSpiritCards()
+    {
+        // 切割（代币）：通用 AOE 攻击镜像。
+        CardOnPlayMirrors.Registry.Register<Slashing>(
+            static (card, context) => GeneralCardMirrors.GeneralAttackOnPlay(card, context));
+
+        CardOnPlayMirrors.Registry.Register<IaiSlash>(HandleIaiSlashOnPlay);
+        CardOnPlayMirrors.Registry.Register<DrinkSomething>(HandleDrinkSomethingOnPlay);
+        CardOnPlayMirrors.Registry.Register<DrinksForTwo>(HandleDrinksForTwoOnPlay);
+        CardOnPlayMirrors.Registry.Register<RandomMixologySet>(HandleRandomMixologySetOnPlay);
+        CardOnPlayMirrors.Registry.Register<AllIn>(HandleAllInOnPlay);
+        CardOnPlayMirrors.Registry.Register<MixerPack>(HandleMixerPackOnPlay);
+
+        CardOnPlayMirrors.Registry.Register<Gin>(HandleGinOnPlay);
+        CardOnPlayMirrors.Registry.Register<Tequila>(HandleTequilaOnPlay);
+        CardOnPlayMirrors.Registry.Register<Whiskey>(HandleWhiskeyOnPlay);
+        CardOnPlayMirrors.Registry.Register<Rum>(HandleRumOnPlay);
+        CardOnPlayMirrors.Registry.Register<Vodka>(HandleVodkaOnPlay);
+        CardOnPlayMirrors.Registry.Register<Brandy>(HandleBrandyOnPlay);
+
+        Entry.Logger.Info(
+            "[鸡煲] 已登记镜像: 卡牌（切割/居合/喝点什么/两人对饮/随机调酒套装/孤注一掷/辅料组合包/六种基酒）");
+    }
+
+    // ---------- 随机基酒共享实现（与 BaseSpiritGeneration 逐行对齐） ----------
+
+    private static List<PredictedCard> GenerateRandomBaseSpirits(
+        CardOnPlayMirrorContext context,
+        Player player,
+        int count)
+    {
+        List<PredictedCard> generated = [];
+        if (count <= 0 || player == null)
+        {
+            return generated;
+        }
+
+        var handCards = context.State.GetPlayerCombatState(player).Hand.Cards;
+        var handSpiritTypes = handCards
+            .Where(c => c.Preview is IBaseSpiritCard)
+            .Select(c => c.Preview.GetType())
+            .ToHashSet();
+
+        bool handHasAllSix = BaseSpiritCardTypes.All(handSpiritTypes.Contains);
+        List<Type> available = (handHasAllSix
+            ? BaseSpiritCardTypes
+            : BaseSpiritCardTypes.Where(t => !handSpiritTypes.Contains(t))).ToList();
+
+        var generatedTypes = new HashSet<Type>();
+        for (int i = 0; i < count; i++)
+        {
+            if (available.Count == 0)
+            {
+                available = BaseSpiritCardTypes.Where(t => !generatedTypes.Contains(t)).ToList();
+                if (available.Count == 0)
+                {
+                    available = BaseSpiritCardTypes.ToList();
+                }
+            }
+
+            int index = context.Rng.CombatCardGeneration.NextInt(available.Count);
+            Type spiritType = available[index];
+            available.RemoveAt(index);
+            generatedTypes.Add(spiritType);
+            generated.Add(CreatePredictedSpirit(spiritType, player));
+        }
+
+        return generated;
+    }
+
+    private static void HandleIaiSlashOnPlay(IaiSlash card, CardOnPlayMirrorContext context)
+    {
+        if (context.CombatState is not ICombatPredictionEffectSink effects)
+        {
+            throw new InvalidOperationException("居合镜像缺少可写的预测状态。");
+        }
+
+        Creature? target = context.CardPlay.Target;
+        if (target != null)
+        {
+            // 目标有创伤：先触发一次创伤（层数 × Amplify 无格挡伤害，然后 -1 层）。
+            OpenWoundPower? wound = GetPredictedPower<OpenWoundPower>(context.CombatState, target);
+            if (wound != null && wound.Amount > 0)
+            {
+                int amplify = card.DynamicVars["AmplifyStacks"].IntValue;
+                context.Simulator.Damage(
+                    target,
+                    wound.Amount * amplify,
+                    ValueProp.Unblockable | ValueProp.Unpowered,
+                    target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+
+                effects.SetPowerAmount(wound, Math.Max(0, wound.Amount - 1));
+                context.StateStore.GetPowerAmount(wound).Decrement();
+            }
+
+            // 主动攻击伤害。
+            DamageCmd.Attack(card.DynamicVars.Damage.BaseValue)
+                .FromCard(card, context.CardPlay)
+                .Targeting(target)
+                .Simulate(context.Simulator);
+        }
+    }
+
+    private static void HandleDrinkSomethingOnPlay(DrinkSomething card, CardOnPlayMirrorContext context)
+    {
+        Player player = card.Owner;
+        List<PredictedCard> spirits = GenerateRandomBaseSpirits(context, player, 1);
+        if (spirits.Count > 0)
+        {
+            context.Simulator.AddGeneratedCardsToCombat(spirits, PileType.Hand, player);
+        }
+
+        context.Simulator.Draw(player, card.DynamicVars.Cards.IntValue);
+    }
+
+    private static void HandleDrinksForTwoOnPlay(DrinksForTwo card, CardOnPlayMirrorContext context)
+    {
+        Player player = card.Owner;
+        List<PredictedCard> spirits = GenerateRandomBaseSpirits(context, player, 2);
+        if (spirits.Count > 0)
+        {
+            context.Simulator.AddGeneratedCardsToCombat(spirits, PileType.Hand, player);
+        }
+
+        // 两张辅料组合包：抽牌堆随机位置 + 弃牌堆。
+        PredictedCard mixerToDraw = PredictedCard.Create(CanonicalModels.Card<MixerPack>(), player);
+        PredictedCard mixerToDiscard = PredictedCard.Create(CanonicalModels.Card<MixerPack>(), player);
+        if (card.IsUpgraded)
+        {
+            context.Simulator.Upgrade(mixerToDraw);
+            context.Simulator.Upgrade(mixerToDiscard);
+        }
+
+        context.Simulator.AddGeneratedCardToCombat(
+            mixerToDraw, PileType.Draw, player, CardPilePosition.Random);
+        context.Simulator.AddGeneratedCardToCombat(
+            mixerToDiscard, PileType.Discard, player);
+    }
+
+    private static void HandleRandomMixologySetOnPlay(
+        RandomMixologySet card,
+        CardOnPlayMirrorContext context)
+    {
+        Player player = card.Owner;
+        List<PredictedCard> spirits = GenerateRandomBaseSpirits(context, player, 1);
+        if (spirits.Count > 0)
+        {
+            context.Simulator.AddGeneratedCardsToCombat(spirits, PileType.Hand, player);
+        }
+
+        PredictedCard mixerPack = PredictedCard.Create(CanonicalModels.Card<MixerPack>(), player);
+        if (card.IsUpgraded)
+        {
+            context.Simulator.Upgrade(mixerPack);
+        }
+
+        context.Simulator.AddGeneratedCardToCombat(mixerPack, PileType.Discard, player);
+    }
+
+    private static void HandleAllInOnPlay(AllIn card, CardOnPlayMirrorContext context)
+    {
+        int x = context.Card.ResolveEnergyXValue(context.State);
+        int amount = card.IsUpgraded ? x + 1 : x;
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        List<PredictedCard> spirits = GenerateRandomBaseSpirits(context, card.Owner, amount);
+        if (spirits.Count > 0)
+        {
+            context.Simulator.AddGeneratedCardsToCombat(spirits, PileType.Hand, card.Owner);
+        }
+    }
+
+    private static void HandleMixerPackOnPlay(MixerPack card, CardOnPlayMirrorContext context)
+    {
+        Player player = card.Owner;
+        var handCards = context.State.GetPlayerCombatState(player).Hand.Cards;
+        bool hasBaseSpirit = handCards.Any(c =>
+            c.Preview is Gin or Tequila or Whiskey or Rum or Vodka or Brandy);
+
+        if (!hasBaseSpirit)
+        {
+            // 手牌没有基酒：获得格挡。
+            context.Simulator.GainBlock(player.Creature, card.DynamicVars.Block.BaseValue, ValueProp.Move);
+        }
+        else
+        {
+            // 选牌分支（消耗一张基酒换对应鸡尾酒）需要 CardChoiceMirrors，
+            // 本批未登记：只保留抽牌并记风险。
+            context.History.RecordRisk(PredictionRiskReason.MethodMirrorIncomplete);
+        }
+
+        context.Simulator.Draw(player, card.DynamicVars["CardsToDraw"].IntValue);
+    }
+
+    // ---------- 六种基酒（Self/Enemy/Ally 三形态，按 SpiritTargeting.Resolve 分支） ----------
+
+    private static void HandleSpiritEnemyBranch(
+        CardModel card,
+        CardOnPlayMirrorContext context,
+        Creature target,
+        Creature owner)
+    {
+        // 敌人分支：攻击伤害 + 1 层虚弱。
+        DamageCmd.Attack(card.DynamicVars.Damage.BaseValue)
+            .FromCard(card, context.CardPlay)
+            .Targeting(target)
+            .Simulate(context.Simulator);
+        if (context.Simulator.HasPendingChoice)
+        {
+            return;
+        }
+
+        if (context.CombatState is ICombatPredictionEffectSink effects)
+        {
+            effects.ApplyPower(typeof(WeakPower), target, card.DynamicVars["WeakAmount"].IntValue, owner);
+        }
+    }
+
+    private static void HandleSpiritSelfDamage(CardOnPlayMirrorContext context, Creature owner)
+    {
+        // Self/Ally 分支的 1 点穿透自伤（对应实机 CreatureCmd.Damage）。
+        context.Simulator.Damage(owner, 1, ValueProp.Unblockable | ValueProp.Unpowered, owner);
+    }
+
+    private static ICombatPredictionEffectSink Effects(CardOnPlayMirrorContext context)
+        => context.CombatState as ICombatPredictionEffectSink
+            ?? throw new InvalidOperationException("基酒镜像缺少可写的预测状态。");
+
+    private static void HandleGinOnPlay(Gin card, CardOnPlayMirrorContext context)
+    {
+        Creature owner = card.Owner.Creature;
+        Creature? target = context.CardPlay.Target;
+        var effects = Effects(context);
+
+        switch (SpiritTargeting.Resolve(target, owner))
+        {
+            case SpiritTargetBranch.Self:
+                HandleSpiritSelfDamage(context, owner);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                effects.ApplyPower(typeof(FlexPotionPower), owner, card.DynamicVars["FlexAmount"].IntValue, owner);
+                break;
+
+            case SpiritTargetBranch.Enemy:
+                if (target != null)
+                {
+                    HandleSpiritEnemyBranch(card, context, target, owner);
+                }
+                break;
+
+            case SpiritTargetBranch.Ally:
+                if (target == null)
+                {
+                    return;
+                }
+                HandleSpiritSelfDamage(context, target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                effects.ApplyPower(typeof(FlexPotionPower), target, card.DynamicVars["FlexAmount"].IntValue, owner);
+                break;
+        }
+    }
+
+    private static void HandleTequilaOnPlay(Tequila card, CardOnPlayMirrorContext context)
+    {
+        Creature owner = card.Owner.Creature;
+        Creature? target = context.CardPlay.Target;
+        var effects = Effects(context);
+
+        switch (SpiritTargeting.Resolve(target, owner))
+        {
+            case SpiritTargetBranch.Self:
+                HandleSpiritSelfDamage(context, owner);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                effects.ApplyPower(typeof(RegenPower), owner, card.DynamicVars["RegenAmount"].IntValue, owner);
+                break;
+
+            case SpiritTargetBranch.Enemy:
+                if (target != null)
+                {
+                    HandleSpiritEnemyBranch(card, context, target, owner);
+                }
+                break;
+
+            case SpiritTargetBranch.Ally:
+                if (target == null)
+                {
+                    return;
+                }
+                HandleSpiritSelfDamage(context, target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                if (target.IsPet)
+                {
+                    // 龙舌兰宠物回春属封闭开关：记风险跳过。
+                    context.History.RecordRisk(PredictionRiskReason.MethodMirrorIncomplete);
+                }
+                else
+                {
+                    effects.ApplyPower(typeof(RegenPower), target, card.DynamicVars["RegenAmount"].IntValue, owner);
+                }
+                break;
+        }
+    }
+
+    private static void HandleWhiskeyOnPlay(Whiskey card, CardOnPlayMirrorContext context)
+    {
+        Creature owner = card.Owner.Creature;
+        Creature? target = context.CardPlay.Target;
+
+        switch (SpiritTargeting.Resolve(target, owner))
+        {
+            case SpiritTargetBranch.Self:
+                HandleSpiritSelfDamage(context, owner);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                context.Simulator.GainBlock(owner, card.DynamicVars.Block.BaseValue, ValueProp.Move);
+                break;
+
+            case SpiritTargetBranch.Enemy:
+                if (target != null)
+                {
+                    HandleSpiritEnemyBranch(card, context, target, owner);
+                }
+                break;
+
+            case SpiritTargetBranch.Ally:
+                if (target == null)
+                {
+                    return;
+                }
+                HandleSpiritSelfDamage(context, target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                decimal block = target.IsPet
+                    ? card.DynamicVars["PetBlockAmount"].BaseValue
+                    : card.DynamicVars.Block.BaseValue;
+                context.Simulator.GainBlock(target, block, ValueProp.Move);
+                break;
+        }
+    }
+
+    private static void HandleRumOnPlay(Rum card, CardOnPlayMirrorContext context)
+    {
+        Creature owner = card.Owner.Creature;
+        Creature? target = context.CardPlay.Target;
+        var effects = Effects(context);
+
+        switch (SpiritTargeting.Resolve(target, owner))
+        {
+            case SpiritTargetBranch.Self:
+                HandleSpiritSelfDamage(context, owner);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                context.Simulator.Draw(card.Owner, card.DynamicVars.Cards.IntValue);
+                break;
+
+            case SpiritTargetBranch.Enemy:
+                if (target != null)
+                {
+                    HandleSpiritEnemyBranch(card, context, target, owner);
+                }
+                break;
+
+            case SpiritTargetBranch.Ally:
+                if (target == null)
+                {
+                    return;
+                }
+                HandleSpiritSelfDamage(context, target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                if (target.IsPet)
+                {
+                    // 龙舌兰额外攻击段数属封闭开关：记风险跳过。
+                    context.History.RecordRisk(PredictionRiskReason.MethodMirrorIncomplete);
+                }
+                else
+                {
+                    effects.ApplyPower(
+                        typeof(TemporaryExtraHitsPower),
+                        target,
+                        card.DynamicVars["ExtraHitsAmount"].IntValue,
+                        owner);
+                }
+                break;
+        }
+    }
+
+    private static void HandleVodkaOnPlay(Vodka card, CardOnPlayMirrorContext context)
+    {
+        Creature owner = card.Owner.Creature;
+        Creature? target = context.CardPlay.Target;
+
+        switch (SpiritTargeting.Resolve(target, owner))
+        {
+            case SpiritTargetBranch.Self:
+                HandleSpiritSelfDamage(context, owner);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                context.Simulator.GainEnergy(card.Owner, 2);
+                break;
+
+            case SpiritTargetBranch.Enemy:
+                if (target != null)
+                {
+                    HandleSpiritEnemyBranch(card, context, target, owner);
+                }
+                break;
+
+            case SpiritTargetBranch.Ally:
+                if (target == null)
+                {
+                    return;
+                }
+                HandleSpiritSelfDamage(context, target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                if (target.IsPet)
+                {
+                    // 龙舌兰特性属封闭开关：记风险跳过。
+                    context.History.RecordRisk(PredictionRiskReason.MethodMirrorIncomplete);
+                }
+                else if (target.Player != null)
+                {
+                    context.Simulator.GainEnergy(target.Player, 2);
+                }
+                break;
+        }
+    }
+
+    private static void HandleBrandyOnPlay(Brandy card, CardOnPlayMirrorContext context)
+    {
+        Creature owner = card.Owner.Creature;
+        Creature? target = context.CardPlay.Target;
+        var effects = Effects(context);
+
+        switch (SpiritTargeting.Resolve(target, owner))
+        {
+            case SpiritTargetBranch.Self:
+                HandleSpiritSelfDamage(context, owner);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                effects.ApplyPower(
+                    typeof(SpeedPotionPower), owner, card.DynamicVars["SpeedPotionAmount"].IntValue, owner);
+                break;
+
+            case SpiritTargetBranch.Enemy:
+                if (target != null)
+                {
+                    HandleSpiritEnemyBranch(card, context, target, owner);
+                }
+                break;
+
+            case SpiritTargetBranch.Ally:
+                if (target == null)
+                {
+                    return;
+                }
+                HandleSpiritSelfDamage(context, target);
+                if (context.Simulator.HasPendingChoice)
+                {
+                    return;
+                }
+                if (target.IsPet)
+                {
+                    // 龙舌兰覆甲/特性属封闭开关：记风险跳过。
+                    context.History.RecordRisk(PredictionRiskReason.MethodMirrorIncomplete);
+                }
+                else
+                {
+                    effects.ApplyPower(
+                        typeof(SpeedPotionPower), target, card.DynamicVars["SpeedPotionAmount"].IntValue, owner);
+
+                    // 随机消耗一张非保留手牌（战斗目标随机源，与实机同一 RNG 流）。
+                    List<PredictedCard> nonRetain = context.State
+                        .GetPlayerCombatState(target.Player)
+                        .Hand.Cards
+                        .Where(c => !c.Preview.Keywords.Contains(CardKeyword.Retain))
+                        .ToList();
+                    if (nonRetain.Count > 0)
+                    {
+                        int index = context.Rng.CombatCardSelection.NextInt(nonRetain.Count);
+                        context.Simulator.Exhaust(nonRetain[index]);
+                    }
+                }
+                break;
+        }
     }
 
     // ==================== 共用辅助 ====================

@@ -38,6 +38,11 @@ public class Entry
         // CombatSolver 软适配：探测→版本自检→门禁放行→核心机制镜像登记。
         // 任何失败都会记录 [鸡煲] 日志并干净回退为普通手动战斗。
         CombatSolverAdapter.CombatSolverBridge.Initialize();
+#else
+        // 本次构建没有编入 CombatSolver 适配（pluma.csproj 的 PlumaCombatSolver 开关默认关闭）。
+        // 只有编入适配时 pluma.dll 才会引用 CombatSolver 程序集；关掉它可以让 pluma 在
+        // CombatSolver 被禁用/未安装时也能正常加载。
+        Logger.Info("[鸡煲] 本次构建未编入 CombatSolver 适配，按普通手动战斗运行");
 #endif
 
         // 注册自定义目标类型"任意单位"（基酒/鸡尾酒牌使用），须在内容注册前完成
