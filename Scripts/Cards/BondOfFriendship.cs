@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -14,8 +14,13 @@ using MegaCrit.Sts2.Core.HoverTips;
 namespace Pluma.Scripts;
 
 // 友情与羁绊：1费先古能力，获得50层渐入佳境，回合结束时移除所有渐入佳境。本能，消耗。升级后费用为0。
+// 类名不能叫 Friendship：游戏 ModelId 只由 CLR 类型名派生（类别=AbstractModel 之下第一层基类，
+// 条目=Slugify(类型名)），而原版死灵法师已有一张 MegaCrit.Sts2.Core.Models.Cards.Friendship，
+// 两者都会得到 CARD.FRIENDSHIP。改名前只要运行时环境让 RitsuLib 的模组 ID 前缀失效
+// （例如 CombatSolver 0.44 的 ModelDbGetIdCachePatch 缓存了 ModelDb.GetId），
+// 这张卡就会被判为 ID 冲突并在启动时抛 DuplicateModelException。故改名保留唯一类型名。
 [RegisterCard(typeof(PlumaCardPool))]
-public class Friendship : ModCardTemplate
+public class BondOfFriendship : ModCardTemplate
 {
     private const int energyCost = 1;
     private const CardType type = CardType.Power;
@@ -34,7 +39,7 @@ public class Friendship : ModCardTemplate
         //CardKeyword.Exhaust
     };
 
-    public Friendship() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public BondOfFriendship() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
 

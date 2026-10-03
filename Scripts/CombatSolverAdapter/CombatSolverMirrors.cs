@@ -1229,7 +1229,9 @@ internal static class CombatSolverMirrors
             context.History.RecordRisk(PredictionRiskReason.MethodMirrorIncomplete);
         }
 
-        context.Simulator.Draw(player, card.DynamicVars["CardsToDraw"].IntValue);
+        // 只抽本牌自己的 DrawBase 张：调酒之韵的额外 1 张由该能力的 AfterCardPlayed 镜像结算。
+        // （CardsToDraw 是给卡面显示用的计算变量，不参与结算。）
+        context.Simulator.Draw(player, card.DynamicVars["DrawBase"].IntValue);
     }
 
     // ---------- 六种基酒（Self/Enemy/Ally 三形态，按 SpiritTargeting.Resolve 分支） ----------

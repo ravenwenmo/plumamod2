@@ -14,7 +14,7 @@ namespace Pluma.Scripts;
 public class MakeUseOfEverythingPower : ModPowerTemplate
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Single; // 不可叠加，层数表示格挡值
+    public override PowerStackType StackType => PowerStackType.Counter;
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/MakeUseOfEverythingPower.png",

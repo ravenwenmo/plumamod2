@@ -70,7 +70,7 @@ public class MarkerRecoveryPower : ModPowerTemplate
         await PowerCmd.Apply<BrotherExtraHitsPower>(
             new ThrowingPlayerChoiceContext(),
             Owner,
-            1m,
+            Amount/25m,
             null,
             card
         );

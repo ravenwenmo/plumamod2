@@ -102,6 +102,14 @@ public class Brother : ModMonsterTemplate
         await PowerCmd.Apply<BrotherAttackTurnsPower>(new ThrowingPlayerChoiceContext(), Creature, attackTurnsRemaining, null, null);
         await PowerCmd.Apply<TraitPower>(new ThrowingPlayerChoiceContext(), Creature, BrotherStateData.GetTrait(Creature.PetOwner), null, null);
 
+        await PowerCmd.Apply<MarkerRecoveryPower>(
+            new ThrowingPlayerChoiceContext(),
+            Creature,
+            10m,
+            null,
+            null
+        );
+        
         // 关键：根据持久化数据恢复意图状态机与动画
         if (attackTurnsRemaining > 0)
         {

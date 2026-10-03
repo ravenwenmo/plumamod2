@@ -34,7 +34,7 @@ public class LiberiVigilance : ModCardTemplate
     // 创伤层数动态变量（基础2，升级后+1）
     protected override IEnumerable<DynamicVar> CanonicalVars => new[]
     {
-        ModCardVars.Int("OpenWound", 3)
+        ModCardVars.Int("OpenWound", 5)
     };
     
     public override IEnumerable<CardKeyword> CanonicalKeywords => [
@@ -91,6 +91,6 @@ public class LiberiVigilance : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["OpenWound"].UpgradeValueBy(1m); // 2 → 3
+        DynamicVars["OpenWound"].UpgradeValueBy(2m); // 2 → 3
     }
 }
