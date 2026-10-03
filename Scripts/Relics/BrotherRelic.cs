@@ -151,7 +151,12 @@ public static class BrotherRelicAncientEventPatch
             BrotherRelic relic = __instance.Owner.GetRelic<BrotherRelic>();
             if (relic != null)
             {
-                decimal amount = relic.DynamicVars["MaxHP"].BaseValue - relic.DynamicVars["HP"].BaseValue;
+                // 多人同步修复：回血量必须从权威持久化状态 BrotherStateData 计算。
+                // 不能读 relic.DynamicVars["HP"]——那是仅供 UI 展示的缓存值，主机与客机
+                // 可能不一致；古代事件入场回血在两端算出不同的治疗量（如 6 vs 31），
+                // 导致两个玩家的 BrotherRelic_SavedHp 在 checksum 中错位（7 vs 32），
+                // 触发 StateDivergence 被强制踢出房间。
+                decimal amount = BrotherStateData.GetMaxHp(__instance.Owner) - BrotherStateData.GetHp(__instance.Owner);
                 if (RunManager.Instance.HasAscension(AscensionLevel.WearyTraveler))
                 {
                     amount *= 0.8m;
