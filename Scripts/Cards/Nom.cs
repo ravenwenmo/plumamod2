@@ -56,7 +56,7 @@ public class Nom : ModCardTemplate
             this
         );
         // 若龙舌兰当前处于强化循环，则让它进入持续1回合的攻击循环
-        if (brother.Monster is Brother b && !b.IntendsToAttack)
+        if (brother.Monster is Brother b && !b.IsInAttackCycle)
         {
             await PowerCmd.Apply<BrotherAttackTurnsPower>(
                 choiceContext,

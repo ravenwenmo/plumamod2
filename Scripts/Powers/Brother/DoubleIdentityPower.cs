@@ -41,7 +41,7 @@ public class DoubleIdentityPower : ModPowerTemplate
     // 获得能力时：若龙舌兰正处于强化循环且未冷却，立即触发一次
     public override async Task AfterApplied(Creature? applier, CardModel? cardSource)
     {
-        if (Owner.Monster is Brother brother && !brother.IntendsToAttack)
+        if (Owner.Monster is Brother brother && !brother.IsInAttackCycle)
         {
             await TriggerTraitGain();
         }

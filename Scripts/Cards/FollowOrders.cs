@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -15,7 +16,8 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts.Cards;
 
-// 服从指挥：2费本能稀有攻击牌，切割。造成5×1点伤害，每当你抽到这张牌，该牌攻击段数+1。升级后基础伤害变为7×1。
+// 服从指挥：1费本能稀有攻击牌，切割。造成6×1点伤害并获得1层渐入佳境，
+// 每当你抽到这张牌，该牌攻击段数+1。升级后基础伤害变为8，渐入佳境变为2层。
 [RegisterCard(typeof(PlumaCardPool))]
 public class FollowOrders : ModCardTemplate
 {
@@ -29,17 +31,18 @@ public class FollowOrders : ModCardTemplate
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );
 
-    // 伤害变量、攻击段数变量
+    // 伤害变量、攻击段数变量、渐入佳境层数变量
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(6m, ValueProp.Move),
-        ModCardVars.Int("Hits", 1)
+        new DamageVar(4m, ValueProp.Move),
+        ModCardVars.Int("Hits", 2),
+        //ModCardVars.Int("FlowStateAmount", 1)
     };
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         MyKeywords.MuscleMemory, // 本能
-        MyKeywords.Slashing        // 切割
+        //MyKeywords.Slashing        // 切割
     };
 
     public FollowOrders()
@@ -59,7 +62,14 @@ public class FollowOrders : ModCardTemplate
             .Targeting(cardPlay.Target)
             .WithHitCount(hits)
             .Execute(choiceContext);
+        // 获得渐入佳境（1 层，升级后 2 层）
     }
+
+    // 渐入佳境悬浮提示
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
 
     // 每次抽到这张牌，攻击段数+1
     public override Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
@@ -75,6 +85,7 @@ public class FollowOrders : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m); // 6 → 8
+        //DynamicVars.Damage.UpgradeValueBy(2m);            // 6 → 8
+        DynamicVars["Hits"].UpgradeValueBy(1m); // 1 → 2 层
     }
 }

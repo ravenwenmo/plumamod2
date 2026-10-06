@@ -28,12 +28,25 @@ public class BrotherSupportPower : ModPowerTemplate
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
-        if (!participants.Contains(Owner)) return;
-
         if (Owner.Player == null)
         {
             throw new Exception("BrotherSupportPower: Only players can have BrotherSupportPower.");
         }
+
+        // 敌方回合结束：敌人已全部攻击完毕，此时才真正结束龙舌兰的攻击循环。
+        // 攻击循环最后一击打完时只做标记（见 Brother.TakeTurn），延后到这里切回强化循环，
+        // 从而让最后一回合的攻击循环也能替玩家格挡伤害（DieForYou）。
+        if (side != CombatSide.Player)
+        {
+            if (Owner.Player.IsBrotherAlive() &&
+                Owner.Player.Brother().Monster is Brother brother)
+            {
+                await brother.FinishPendingAttackCycleEnd();
+            }
+            return;
+        }
+
+        if (!participants.Contains(Owner)) return;
 
         if (!Owner.Player.IsBrotherAlive())
         {

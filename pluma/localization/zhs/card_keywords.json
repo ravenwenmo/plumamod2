@@ -5,10 +5,10 @@
   "PLUMA_KEYWORD_SLASHING.description": "每段攻击都会附着连续打出切割牌数量的创伤（最高5层）",
   "PLUMA_KEYWORD_SLASHING.title": "切割",
 
-  "PLUMA_KEYWORD_BASE_SPIRIT.title": "基酒",
+  "PLUMA_KEYWORD_BASE_SPIRIT.title": "基酒（右键）",
   "PLUMA_KEYWORD_BASE_SPIRIT.description": "基酒是调制鸡尾酒的基础，不占用手牌数量。可以对任意单位释放，可以右键切换文字描述。",
 
-  "PLUMA_KEYWORD_COCKTAIL.title": "鸡尾酒",
+  "PLUMA_KEYWORD_COCKTAIL.title": "鸡尾酒（右键）",
   "PLUMA_KEYWORD_COCKTAIL.description": "鸡尾酒由基酒经过辅料调制。可以对任意单位释放，可以右键切换文字描述。",
 
   "PLUMA_KEYWORD_BROTHER.title": "龙舌兰支援",

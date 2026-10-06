@@ -8,7 +8,9 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Scripts;
 using Pluma.Scripts.Monsters;
+using STS2RitsuLib.Combat.Ui.ExtraCornerAmountLabels;
 
 namespace Pluma.Monsters;
 
@@ -30,11 +32,15 @@ public class BrotherBuffIntent : BuffIntent
     }
 }
 
-public class BrotherAttackIntent : AttackIntent
+public class BrotherAttackIntent : AttackIntent, IIntentExtraCornerAmountLabelSpecsProvider
 {
     private readonly int _repeat;
     private readonly Func<int>? _repeatCalc;
     private readonly bool _isAoe;
+
+    // 龙舌兰本体引用：角标需要在渲染时实时读取其身上的 BrotherAttackTurnsPower（攻击循环剩余回合）。
+    // 意图对象每次切换意图时都会重建（见 Brother.GetAttackIntent），所以这里直接持有怪物实例是安全的。
+    private readonly Brother? _brother;
 
     protected override LocString IntentLabelFormat => new LocString("intents", "FORMAT_DAMAGE_MULTI");
 
@@ -44,18 +50,39 @@ public class BrotherAttackIntent : AttackIntent
 
     public override int Repeats => _repeatCalc?.Invoke() ?? _repeat;
 
-    public BrotherAttackIntent(int damage, int repeat, bool isAoe = false)
+    public BrotherAttackIntent(int damage, int repeat, bool isAoe = false, Brother? brother = null)
     {
         base.DamageCalc = () => damage;
         _repeat = repeat;
         _isAoe = isAoe;
+        _brother = brother;
     }
 
-    public BrotherAttackIntent(int damage, Func<int> repeatCalc, bool isAoe = false)
+    public BrotherAttackIntent(int damage, Func<int> repeatCalc, bool isAoe = false, Brother? brother = null)
     {
         base.DamageCalc = () => damage;
         _repeatCalc = repeatCalc;
         _isAoe = isAoe;
+        _brother = brother;
+    }
+
+    // 在攻击意图图标的右上角显示攻击循环的剩余回合数（数据来自 BrotherAttackTurnsPower）。
+    // 回合数归零时不再显示（此时攻击循环已打完最后一击，只剩“回合结束后切回强化循环”这一步）。
+    public IReadOnlyList<ExtraIconAmountLabelSpec> GetIntentExtraCornerAmountLabelSpecs()
+    {
+        int turns = _brother?.Creature?.GetPowerAmount<BrotherAttackTurnsPower>() ?? 0;
+        if (turns <= 0)
+        {
+            return [];
+        }
+
+        return
+        [
+            ExtraIconAmountLabelSpec.RichText(
+                ExtraIconAmountLabelCorner.TopRight,
+                $"[font_size=14]剩{turns}回合[/font_size]"
+            )
+        ];
     }
 
     // 意图图标动画键必须存在于 IntentAnimData（合法键为 attack_1~attack_5、buff 等）。

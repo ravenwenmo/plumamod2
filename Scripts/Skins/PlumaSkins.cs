@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Multiplayer.Game.Lobby;
@@ -42,7 +42,9 @@ public static class PlumaSkins
             IconPath = "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
             IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",
             PortraitPath = "res://pluma/images/scenes/test_background.png",
-            BackgroundColor = new Color(0.209f, 0.623f, 0.734f)
+            BackgroundColor = new Color(0.209f, 0.623f, 0.734f),
+            // 商店/篝火等世界场景使用的"空手版"骨架（含 Relax / Sit 动画）
+            WorldSkeletonDataPath = "res://pluma/images/spineAni/ori/空手版/new_spine_skeleton_data_resource.tres"
         },
         new()
         {
@@ -53,7 +55,9 @@ public static class PlumaSkins
             IconPath = "res://pluma/images/spineAni/ori/icon/test_icon.tscn",
             IconTexturePath = "res:///pluma/images/spineAni/ori/icon/head.png",
             PortraitPath = "res://pluma/images/scenes/test_background.png",
-            BackgroundColor = new Color(0.5f, 0.2f, 0.8f)
+            BackgroundColor = new Color(0.5f, 0.2f, 0.8f),
+            // 商店/篝火等世界场景使用的"空手版"骨架（含 Relax / Sit 动画）
+            WorldSkeletonDataPath = "res://pluma/images/spineAni/sum/空手版/new_spine_skeleton_data_resource.tres"
         }
     };
 
@@ -139,5 +143,7 @@ public static class PlumaSkins
         public string IconTexturePath { get; init; }
         public string PortraitPath { get; init; }
         public Color BackgroundColor { get; init; }
+        // 世界场景（商店/篝火）使用的空手版骨架数据资源路径
+        public string WorldSkeletonDataPath { get; init; }
     }
 }

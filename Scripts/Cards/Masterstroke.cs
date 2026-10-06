@@ -33,7 +33,7 @@ public class Masterstroke : ModCardTemplate
     {
         new CalculationBaseVar(0m),
         new ExtraDamageVar(1m),
-        ModCardVars.Int("FlowStateAmount", 1),
+        ModCardVars.Int("FlowStateAmount", 2),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, target) =>
             card?.Owner?.Creature?.GetPowerAmount<FlowState>() ?? 0
         )
@@ -41,11 +41,6 @@ public class Masterstroke : ModCardTemplate
 
     };
     
-    // 本能关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
-    {
-        MyKeywords.MuscleMemory
-    };
 
     public Masterstroke() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
@@ -73,6 +68,7 @@ public class Masterstroke : ModCardTemplate
     protected override void OnUpgrade()
     {
         //base.EnergyCost.UpgradeBy(-1); // 3费 → 2费
-        DynamicVars["FlowStateAmount"].UpgradeValueBy(1m);
+        //DynamicVars["FlowStateAmount"].UpgradeValueBy(1m);
+        AddKeyword(MyKeywords.MuscleMemory);
     }
 }

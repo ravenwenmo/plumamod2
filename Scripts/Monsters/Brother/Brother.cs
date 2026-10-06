@@ -50,11 +50,24 @@ public class Brother : ModMonsterTemplate
 	public static Vector2 MaxOffset => new Vector2(50f, -10f);
     public override bool IsHealthBarVisible => true;
 
-    // 攻击循环意图期间为玩家吸收未格挡的攻击伤害（见 BrotherPower / DamageBlockInternalPatch）
-    public bool DieForYou { get; set; } = false;
+    // 攻击循环的最后一击打完后置为 true，表示"该切回强化循环了"，但实际切换推迟到敌方回合结束。
+    // 这样攻击循环的最后一回合依然会替玩家格挡伤害（DieForYou），见 FinishPendingAttackCycleEnd。
+    // 注意：能力归零时引擎会自动把它移除，所以这段窗口必须靠本标记补上（见 IsInAttackCycle）。
+    private bool _pendingPowerUpSwitch;
 
-    // 新增：内部布尔值，表示是否处于攻击循环意图
-    private bool _isAttackIntent;
+    // 是否处于攻击循环 —— 唯一真相是身上的 BrotherAttackTurnsPower（层数 = 剩余攻击回合）。
+    // 旧实现另外维护了一个 _isAttackIntent 布尔值，两者会脱节并造成两类卡死：
+    //   · 布尔=false 而身上残留/缺少能力 → TriggerWhenGainTrait 被门槛挡掉，特性卡在 200 也不进攻击循环；
+    //   · 布尔=true 而没有能力 → BrotherAttackTurnsPower.AfterApplied 里的 SwitchToAttackIntent
+    //     因布尔已是 true 而静默 return，日志上看不到"进入攻击循环"，但它也不攻击、不清特性。
+    // 现在改为派生属性，不再单独维护，任何一处状态变化都由能力本身承载。
+    public bool IsInAttackCycle => _pendingPowerUpSwitch || Creature.HasPower<BrotherAttackTurnsPower>();
+
+    // 攻击循环内剩余的攻击回合数（0 表示本循环已打完最后一击，正在等敌方回合结束）
+    public int AttackTurnsRemaining => Creature.GetPowerAmount<BrotherAttackTurnsPower>();
+
+    // 攻击循环意图期间为玩家吸收未格挡的攻击伤害（见 BrotherPower / DamageBlockInternalPatch）
+    public bool DieForYou => IsInAttackCycle;
 
     // 怪物场景
     public override MonsterAssetProfile AssetProfile => new(
@@ -81,7 +94,10 @@ public class Brother : ModMonsterTemplate
     public override async Task AfterAddedToRoom()
     {
         int attackTurnsRemaining = BrotherStateData.GetAttackTurnsRemaining(Creature.PetOwner);
-        GD.Print($"[Brother] AfterAddedToRoom: attackTurnsRemaining={attackTurnsRemaining}, _isAttackIntent={_isAttackIntent}");
+        GD.Print($"[Brother] AfterAddedToRoom: 存档剩余攻击回合={attackTurnsRemaining}");
+
+        // 重新入场时清掉上一场战斗遗留的"待切回强化循环"标记
+        _pendingPowerUpSwitch = false;
         
         await CreatureCmd.SetMaxHp(Creature, Math.Max(1, BrotherStateData.GetMaxHp(Creature.PetOwner)));
         await CreatureCmd.SetCurrentHp(Creature, Math.Max(1, BrotherStateData.GetHp(Creature.PetOwner)));
@@ -110,22 +126,22 @@ public class Brother : ModMonsterTemplate
             null
         );
         
-        // 关键：根据持久化数据恢复意图状态机与动画
-        if (attackTurnsRemaining > 0)
+        // 关键：根据持久化数据恢复意图状态机与动画。
+        // 判定统一走 IsInAttackCycle（= 身上有没有 BrotherAttackTurnsPower），
+        // 不再看旧的 _isAttackIntent 标志，避免"有剩余回合却显示强化意图"这类脱节。
+        if (IsInAttackCycle)
         {
-            SetMoveImmediate(GetAttackIntent());
-            _isAttackIntent = true;   // 同步内部标志
-            DieForYou = true;
+            await SwitchToAttackIntent();   // 幂等：Apply 能力时 AfterApplied 多半已经切过一次
 
+            // 入场时动画还停在召唤用的 "Start" 状态（约 1 秒），这里再显式触发一次，
+            // 保证 Skill_1_Start / Skill_2_Start 一定被播到（与旧实现一致，勿删）。
             string startAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Start" : "Skill_1_Start";
-            GD.Print($"[Brother] AfterAddedToRoom: executing TriggerAnim '{startAnim}', creatureNode={(NCombatRoom.Instance?.GetCreatureNode(Creature) != null ? "exists" : "null")}");
+            GD.Print($"[Brother] AfterAddedToRoom: 恢复攻击循环，剩余 {AttackTurnsRemaining} 回合，TriggerAnim '{startAnim}'，creatureNode={(NCombatRoom.Instance?.GetCreatureNode(Creature) != null ? "exists" : "null")}");
             await CreatureCmd.TriggerAnim(Creature, startAnim, 0.3f);
         }
         else
         {
             SetMoveImmediate(GetPowerUpIntent());
-            _isAttackIntent = false;   // 同步内部标志
-            DieForYou = false;
         }
 
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
@@ -133,20 +149,40 @@ public class Brother : ModMonsterTemplate
         {
             brotherNode?.ToggleIsInteractable(true);
         }
-        GD.Print($"[Brother] AfterAddedToRoom: _isAttackIntent={_isAttackIntent}");
+        GD.Print($"[Brother] AfterAddedToRoom: 攻击循环={IsInAttackCycle}, 剩余攻击回合={AttackTurnsRemaining}, 特性={Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
     }
 
-    // 测试牌重复打出时：回满生命值并切换为攻击循环意图
+    // 测试牌重复打出时：回满生命值并进入攻击循环
     public async Task OrderBrother()
     {
         await CreatureCmd.SetCurrentHp(Creature, Creature.MaxHp);
-        await SwitchToAttackIntent();
+
+        // 统一入口：只负责挂上"剩余攻击回合"能力，意图切换交给
+        // BrotherAttackTurnsPower.AfterApplied → SwitchToAttackIntent，
+        // 避免出现"已切到攻击意图但身上没有该能力"的脱节状态（旧实现就是直接调 SwitchToAttackIntent）。
+        if (!IsInAttackCycle)
+        {
+            await PowerCmd.Apply<BrotherAttackTurnsPower>(
+                new ThrowingPlayerChoiceContext(),
+                Creature,
+                ATTACK_INTENT_TURNS,
+                Creature,
+                null
+            );
+        }
     }
 
     // 回合开始（由 BrotherSupportPower 驱动）
     public async Task PlayerTurnStart()
     {
-        if (_isAttackIntent) return;
+        // 意图对账：状态与显示不一致时以状态为准修正（能力被外力移除/添加都能自愈）
+        await ReconcileIntent();
+
+        if (IsInAttackCycle)
+        {
+            GD.Print($"[Brother] 回合开始：攻击循环中，剩余 {AttackTurnsRemaining} 回合，特性 {Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
+            return;
+        }
 
         int traitGain = GetCurrentTraitPerTurn();
 
@@ -158,15 +194,49 @@ public class Brother : ModMonsterTemplate
             null
         );
 
-        GD.Print($"[Brother] Power-up turn start: trait {Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
+        GD.Print($"[Brother] 强化循环回合开始：特性 {Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}（本轮 +{traitGain}），攻击循环={IsInAttackCycle}");
+
+        // 兜底：特性已达阈值但没进攻击循环时强制触发一次。
+        // 正常情况下特性变化会经 BrotherPower.AfterPowerAmountChanged → TriggerWhenGainTrait 自动切换，
+        // 但特性顶到 200 上限后再怎么加都不再产生"有效"变化时，上面这条路可能整场都不再触发，
+        // 于是龙舌兰会一直显示 200/200 却停在强化循环里（本次日志里出现过的卡死）。
+        await TriggerWhenGainTrait();
+    }
+
+    // 让"显示的意图"与"实际状态"对齐（幂等，可随时调用）
+    private async Task ReconcileIntent()
+    {
+        if (IsInAttackCycle)
+        {
+            if (!IntendsToAttack)
+            {
+                GD.Print("[Brother] 意图对账：处于攻击循环但显示的是强化意图，补切攻击意图");
+                await SwitchToAttackIntent();
+            }
+        }
+        else if (IntendsToAttack)
+        {
+            GD.Print("[Brother] 意图对账：已不在攻击循环但仍显示攻击意图，切回强化意图");
+            await SwitchToPowerUpIntent(force: true);
+        }
     }
 
     // 回合结束（由 BrotherSupportPower 驱动）
     public async Task TakeTurn(PlayerChoiceContext choiceContext)
     {
-        if (!_isAttackIntent)
+        // 强化循环期间回合结束无动作
+        if (!IsInAttackCycle)
         {
-            return; // 强化循环期间回合结束无动作
+            return;
+        }
+
+        // 本循环已打完最后一击（只剩"等敌方回合结束切回强化循环"），不再攻击。
+        // 这里也顺手补一次攻击意图显示，避免 SetMoveImmediate 被
+        // NextMove.CanTransitionAway 挡掉后一直显示强化意图。
+        if (AttackTurnsRemaining <= 0)
+        {
+            await ReconcileIntent();
+            return;
         }
 
         int hits = ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>();
@@ -175,7 +245,13 @@ public class Brother : ModMonsterTemplate
         string attackAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Loop" : "Attack";
         await CreatureCmd.TriggerAnim(Creature, attackAnim, 0.3f);
 
-        await PowerCmd.Decrement(Creature.GetPower<BrotherAttackTurnsPower>());
+        BrotherAttackTurnsPower? turnsPower = Creature.GetPower<BrotherAttackTurnsPower>();
+        if (turnsPower != null)
+        {
+            await PowerCmd.Decrement(turnsPower);
+        }
+
+        GD.Print($"[Brother] 攻击循环结算：造成 {damage} 点伤害 ×{hits} 段，剩余攻击回合 {AttackTurnsRemaining}");
 
         for (int i = 0; i < hits; i++)
         {
@@ -211,32 +287,56 @@ public class Brother : ModMonsterTemplate
             }
         }
 
-        if (Creature.GetPowerAmount<BrotherAttackTurnsPower>() <= 0)
+        // 注意：能力归零时引擎会自动移除它（PowerModel.ShouldRemoveDueToAmount），
+        // 所以这里不能用 HasPower 判断，只能看层数。
+        if (AttackTurnsRemaining <= 0)
         {
-            // 只有在特性层数达到200时才移除
-            if (Creature.GetPowerAmount<TraitPower>() >= 200)
-            {
-                await PowerCmd.Remove<TraitPower>(Creature);
-            }
-            await SwitchToPowerUpIntent();
+            // 本轮攻击循环已打完：不立刻切回强化循环，只做标记，
+            // 实际切换推迟到敌方回合结束（FinishPendingAttackCycleEnd）——
+            // 否则最后一回合攻击一打完就进入强化循环（DieForYou=false），
+            // 紧接着的敌方回合里龙舌兰就不再替玩家格挡伤害了。
+            _pendingPowerUpSwitch = true;
+            GD.Print("[Brother] 攻击循环已打完最后一击，等敌方回合结束后切回强化循环");
         }
     }
 
-    // 切换为攻击循环意图
+    // 敌方回合结束时调用（由 BrotherSupportPower 驱动）：此时敌人已全部攻击完毕。
+    // 若本轮攻击循环已打完最后一击，在这里才真正切回强化循环。
+    public async Task FinishPendingAttackCycleEnd()
+    {
+        if (!_pendingPowerUpSwitch)
+        {
+            return;
+        }
+
+        _pendingPowerUpSwitch = false;
+
+        // 只有在特性层数达到阈值时才移除
+        if (Creature.GetPowerAmount<TraitPower>() >= TraitThreshold)
+        {
+            await PowerCmd.Remove<TraitPower>(Creature);
+        }
+
+        // force：此刻能力多半已被引擎移除，_pendingPowerUpSwitch 也已清掉，
+        // 默认的 IsInAttackCycle 判定会直接 return，所以这里必须强制走完收尾。
+        await SwitchToPowerUpIntent(force: true);
+
+        GD.Print($"[Brother] 敌方回合结束，攻击循环收尾完成：特性={Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}, 攻击循环={IsInAttackCycle}");
+    }
+
+    // 切换为攻击循环意图（幂等：已经显示攻击意图时不重复播开始动画）
     public async Task SwitchToAttackIntent()
     {
-        if (_isAttackIntent)
+        if (IntendsToAttack)
         {
             return;
         }
 
         SetMoveImmediate(GetAttackIntent());
-        _isAttackIntent = true;   // 同步内部标志
 
         string startAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Start" : "Skill_1_Start";
-        GD.Print($"[Brother] SwitchToAttackIntent: _isAttackIntent={_isAttackIntent}, TriggerAnim '{startAnim}'");
+        GD.Print($"[Brother] SwitchToAttackIntent: 剩余攻击回合={AttackTurnsRemaining}, TriggerAnim '{startAnim}'");
         await CreatureCmd.TriggerAnim(Creature, startAnim, 0.3f);
-        DieForYou = true;
 
         if (Creature.GetPower<DoubleIdentityPower>() is DoubleIdentityPower doubleIdentity)
         {
@@ -244,21 +344,31 @@ public class Brother : ModMonsterTemplate
         }
     }
 
-    // 切换为强化循环意图
-    public async Task SwitchToPowerUpIntent()
+    // 切换为强化循环意图。
+    // force=true 用于攻击循环收尾（此时能力已被引擎移除，IsInAttackCycle 已为 false）。
+    public async Task SwitchToPowerUpIntent(bool force = false)
     {
-        if (!_isAttackIntent)
+        if (!force && !IsInAttackCycle)
         {
             return;
         }
 
+        _pendingPowerUpSwitch = false;
+        if (Creature.HasPower<BrotherAttackTurnsPower>())
+        {
+            await PowerCmd.Remove<BrotherAttackTurnsPower>(Creature);
+        }
+
+        if (!IntendsToAttack)
+        {
+            return; // 本来就没显示攻击意图，不需要播收尾动画
+        }
+
         SetMoveImmediate(GetPowerUpIntent());
-        _isAttackIntent = false;   // 同步内部标志
-        await PowerCmd.Remove<BrotherAttackTurnsPower>(Creature);
-        
+
         string endAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_End" : "Skill_1_End";
+        GD.Print($"[Brother] SwitchToPowerUpIntent: TriggerAnim '{endAnim}'");
         await CreatureCmd.TriggerAnim(Creature, endAnim, 0.3f);
-        DieForYou = false;
 
         if (Creature.GetPower<DoubleIdentityPower>() is DoubleIdentityPower doubleIdentity)
         {
@@ -266,9 +376,12 @@ public class Brother : ModMonsterTemplate
         }
     }
 
+    // 特性变化时调用（BrotherPower.AfterPowerAmountChanged），也由 PlayerTurnStart 兜底调用。
+    // 判定统一走 IsInAttackCycle —— 旧实现用 HasPower<BrotherAttackTurnsPower>()，
+    // 一旦状态脱节就会出现"特性 200 却永远不进攻击循环"。
     public async Task TriggerWhenGainTrait()
     {
-        if (Creature.HasPower<BrotherAttackTurnsPower>())
+        if (IsInAttackCycle)
         {
             return;
         }
@@ -278,6 +391,8 @@ public class Brother : ModMonsterTemplate
             int attackTurns = Creature.HasPower<BrotherAoePower>()
                 ? BrotherAoePower.AttackIntentTurns
                 : ATTACK_INTENT_TURNS;
+
+            GD.Print($"[Brother] 特性达到阈值 {TraitThreshold}，进入攻击循环（{attackTurns} 回合）");
 
             await PowerCmd.Apply<BrotherAttackTurnsPower>(
                 new ThrowingPlayerChoiceContext(),
@@ -325,7 +440,8 @@ public class Brother : ModMonsterTemplate
             new BrotherAttackIntent(
                 BasicDamage,
                 () => ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>(),
-                Creature.HasPower<BrotherAoePower>()
+                Creature.HasPower<BrotherAoePower>(),
+                this   // 传给意图：用于在图标右上角显示攻击循环剩余回合
             )            
         );
 

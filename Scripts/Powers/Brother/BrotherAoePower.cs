@@ -52,7 +52,7 @@ public class BrotherAoePower : ModPowerTemplate
                 cardSource
             );
 
-            if (Owner.Monster is Brother brother && !brother.IntendsToAttack)
+            if (Owner.Monster is Brother brother && !brother.IsInAttackCycle)
             {
                 // 使用 Owner（Creature）操作
                 if (Owner.HasPower<ChargingPower>())

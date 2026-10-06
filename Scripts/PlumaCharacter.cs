@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using MegaCrit.Sts2.Core.Animation;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models.Relics;
@@ -39,11 +39,11 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
                 // 使用当前皮肤的模型路径
                 //VisualsPath: PlumaSkins.Current.VisualsPath,
                 // 能量表盘tscn路径。
-                EnergyCounterPath: "res://pluma/images/scenes/TestEnergy.tscn"
-                // 商店人物场景。
-                //MerchantAnimPath: "res://pluma/scenes/test_character_merchant.tscn",
-                // 篝火休息场景。
-                //RestSiteAnimPath: "res://pluma/scenes/test_character_rest_site.tscn"
+                EnergyCounterPath: "res://pluma/images/scenes/TestEnergy.tscn",
+                // 商店人物场景（默认皮肤 ori；其他皮肤由 PlumaWorldVisualsSkinPatch 在运行时替换骨骼）。
+                MerchantAnimPath: "res://pluma/images/spineAni/ori/pluma_merchant.tscn",
+                // 篝火休息场景（默认皮肤 ori；其他皮肤由 PlumaWorldVisualsSkinPatch 在运行时替换骨骼）。
+                RestSiteAnimPath: "res://pluma/images/spineAni/ori/pluma_rest_site.tscn"
             ),
             Ui: new(
 
