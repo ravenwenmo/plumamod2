@@ -1,4 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -53,7 +53,7 @@ public class SharpenBlade : ModCardTemplate
         bool giveTrait = creature != null
                          && creature.IsAlive
                          && creature.Monster is Brother brother
-                         && !brother.IntendsToAttack;
+                         && !brother.IsInAttackCycle;
 
         if (giveTrait && creature.Monster is Brother traitBrother)
         {

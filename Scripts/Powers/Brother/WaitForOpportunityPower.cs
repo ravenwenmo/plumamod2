@@ -57,7 +57,7 @@ public class WaitForOpportunityPower : ModPowerTemplate
         }
 
         // 只在龙舌兰处于蓄力循环（非攻击循环）时触发
-        if (brother.IntendsToAttack)
+        if (brother.IsInAttackCycle)
         {
             return;
         }
