@@ -21,7 +21,7 @@ namespace Pluma.Scripts;
 [RegisterCard(typeof(PlumaCardPool))]
 public class LiberiVigilance : ModCardTemplate
 {
-    private const int energyCost = 2;
+    private const int energyCost = 3;
     private const CardType type = CardType.Skill;
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.Self;
@@ -91,6 +91,7 @@ public class LiberiVigilance : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["OpenWound"].UpgradeValueBy(2m); // 2 → 3
+        base.EnergyCost.UpgradeBy(-1); // 2费 → 1费
+        //DynamicVars["OpenWound"].UpgradeValueBy(2m); // 2 → 3
     }
 }

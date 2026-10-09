@@ -66,13 +66,15 @@ public class MarkerRecoveryPower : ModPowerTemplate
             return;
         }
 
-        // 鸡尾酒牌生成时，能力持有者获得 1 层额外攻击段数
-        await PowerCmd.Apply<BrotherExtraHitsPower>(
-            new ThrowingPlayerChoiceContext(),
-            Owner,
-            Amount/25m,
-            null,
-            card
-        );
+        if (Amount / 25m > 0)
+        {
+            await PowerCmd.Apply<BrotherExtraHitsPower>(
+                new ThrowingPlayerChoiceContext(),
+                Owner,
+                Amount / 25m,
+                null,
+                card
+            );
+        }
     }
 }

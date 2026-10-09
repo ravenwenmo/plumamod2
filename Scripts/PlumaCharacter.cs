@@ -1,12 +1,15 @@
 using Godot;
 using MegaCrit.Sts2.Core.Animation;
+using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Entities.Characters;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using STS2RitsuLib.Data.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Godot;
+using STS2RitsuLib.Scaffolding.Visuals.StateMachine;
 using MegaCrit.Sts2.Core.Context;
 namespace Pluma.Scripts;
 
@@ -157,6 +160,37 @@ public class PlumaCharacter : ModCharacterTemplate<PlumaCardPool, PlumaRelicPool
     }
     // 如果你的人物不需要时间线小故事，加上这句。
     public override bool RequiresEpochAndTimeline => false;
+
+    // 商店/篝火世界场景的状态机：把原版世界动画触发器（relaxed_loop / 三幕 act 循环都映射成 "Relaxed"）
+    // 映射到空手版骨架里的实际动画名（商店=Relax，篝火=Sit）。
+    // 我们的世界场景根节点是纯 Node2D（RitsuLib 会在运行时包成 NMerchantCharacter / NRestSiteCharacter），
+    // SpineSprite 在根节点下面一层，所以这里递归找。
+    protected override ModAnimStateMachine? SetupCustomMerchantAnimationStateMachine(Node merchantRoot, CharacterModel character)
+    {
+        Node? spine = Patch.PlumaWorldVisualsSkinPatch.FindSpineSprite(merchantRoot);
+        if (spine == null)
+        {
+            return null;
+        }
+        return ModAnimStateMachineBuilder.Create()
+            .AddState("Relax", loop: true).Done()
+            .AddAnyState("Relaxed", "Relax")
+            .AddAnyState("Relax", "Relax")
+            .BuildSpine(new MegaSprite(spine));
+    }
+
+    protected override ModAnimStateMachine? SetupCustomRestSiteAnimationStateMachine(Node restSiteRoot, CharacterModel character)
+    {
+        Node? spine = Patch.PlumaWorldVisualsSkinPatch.FindSpineSprite(restSiteRoot);
+        if (spine == null)
+        {
+            return null;
+        }
+        return ModAnimStateMachineBuilder.Create()
+            .AddState("Sit", loop: true).Done()
+            .AddAnyState("Relaxed", "Sit")
+            .BuildSpine(new MegaSprite(spine));
+    }
 
     // 自动转换人物场景，让你不需要手动挂脚本。复制即可。
     //protected override NCreatureVisuals? TryCreateCreatureVisuals() => RitsuGodotNodeFactories.CreateFromScenePath<NCreatureVisuals>(AssetProfile.Scenes!.VisualsPath!);

@@ -80,6 +80,6 @@ public class Interrupt : ModCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(4m);        // 7 → 11
-        DynamicVars["OpenWound"].UpgradeValueBy(2m);   // 4 → 6
+        //DynamicVars["OpenWound"].UpgradeValueBy(2m);   // 4 → 6
     }
 }
