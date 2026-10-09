@@ -1,4 +1,4 @@
-﻿using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -32,6 +32,10 @@ public class Workhorse : ModCardTemplate
     private const TargetType targetType = TargetType.AnyEnemy;
     // 是否在卡牌图鉴中显示
     private const bool shouldShowInCardLibrary = true;
+
+    // 打出本牌会获得格挡：Nimble 附魔（菲涅尔透镜）的筛选条件就是 card.GainsBlock，
+    // 原版所有格挡牌都显式声明为 true；同时它也是自动带出「格挡」HoverTip 的开关。
+    public override bool GainsBlock => true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

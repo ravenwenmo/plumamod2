@@ -59,6 +59,11 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
         _ => new LocString("cards", "PLUMA_CARD_WHISKEY_SELF_DESC")
     };
 
+    // 打出本牌会获得格挡（分支可能给龙舌兰，语义上仍是"这张牌带来格挡"）：
+    // Nimble 附魔（菲涅尔透镜）的筛选条件就是 card.GainsBlock，原版所有格挡牌都显式声明为 true；
+    // 同时它也是自动带出「格挡」HoverTip 的开关。
+    public override bool GainsBlock => true;
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
     );

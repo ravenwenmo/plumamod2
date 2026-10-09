@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -26,6 +26,10 @@ public class MuscleMemory : ModCardTemplate
     private const CardRarity rarity = CardRarity.Uncommon;
     private const TargetType targetType = TargetType.Self;
     private const bool shouldShowInCardLibrary = true;
+
+    // 打出本牌会获得格挡：Nimble 附魔（菲涅尔透镜）的筛选条件就是 card.GainsBlock，
+    // 原版所有格挡牌都显式声明为 true；同时它也是自动带出「格挡」HoverTip 的开关。
+    public override bool GainsBlock => true;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://pluma/images/cards/{GetType().Name}.png"
