@@ -35,7 +35,8 @@ public class Nom : ModCardTemplate
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
-        CardKeyword.Exhaust  // 消耗
+        CardKeyword.Exhaust,  // 消耗
+        MyKeywords.MuscleMemory
     };
 
     public Nom()

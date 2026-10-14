@@ -99,6 +99,14 @@ public class BrotherPower : ModPowerTemplate
     // 战斗结束时再次更新，确保保存的状态是最新的
     public override async Task AfterCombatVictory(CombatRoom combatRoom)
     {
+        // 存档之前先补收尾：攻击循环的最后一击恰好斩杀最后一个敌人时，战斗当场结束，
+        // 敌方回合不会再来，Brother.FinishPendingAttackCycleEnd 永远不会被调用。
+        // 不收尾就会把"特性 200 + 剩余回合 0"存进下一场战斗，那边一开场又会重开一轮攻击循环。
+        if (Owner.Monster is Brother brother)
+        {
+            await brother.FinalizeFinishedAttackCycleAtCombatEnd();
+        }
+
         BrotherStateData.SetFromBrother(Owner.PetOwner, Owner);
     }
 

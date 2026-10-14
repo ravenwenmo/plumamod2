@@ -125,6 +125,20 @@ public class Brother : ModMonsterTemplate
             null,
             null
         );
+
+        // 兜底：正常情况下不该出现"特性已满 + 没有攻击循环"——
+        // 特性只在攻击循环期间保留，打完最后一击就该清零（见 FinalizeFinishedAttackCycleAtCombatEnd）。
+        // 万一某条路径漏了收尾，这里清掉特性，避免下一场战斗一开场又被 PlayerTurnStart 的兜底
+        // 按 200 特性重新开一轮攻击循环。
+        if (!IsInAttackCycle && Creature.GetPowerAmount<TraitPower>() >= TraitThreshold)
+        {
+            GD.Print($"[Brother] AfterAddedToRoom: 存档里特性已满（{Creature.GetPowerAmount<TraitPower>()}）却没有攻击循环，按已收尾处理并清零");
+            await PowerCmd.Remove<TraitPower>(Creature);
+            if (Creature.PetOwner != null)
+            {
+                BrotherStateData.SetTrait(Creature.PetOwner, 0);
+            }
+        }
         
         // 关键：根据持久化数据恢复意图状态机与动画。
         // 判定统一走 IsInAttackCycle（= 身上有没有 BrotherAttackTurnsPower），
@@ -242,7 +256,13 @@ public class Brother : ModMonsterTemplate
         int hits = ATTACK_BASE_HITS + Creature.GetPowerAmount<BrotherExtraHitsPower>();
         decimal damage = BasicDamage;
 
-        string attackAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_Loop" : "Attack";
+        // 剑走偏锋可能在本轮攻击循环中途才生效：先保证骨骼动画处在与当前攻击形态一致的链上，
+        // 否则 Skill_2_Loop 触发器会因为当前状态没有该分支而被 CreatureAnimator 静默丢弃
+        //（表现就是"攻击动画没切成剑走偏锋的动画"）。
+        bool hasAoe = HasAoeAttack;
+        await EnsureAttackAnimChain(hasAoe);
+
+        string attackAnim = hasAoe ? "Skill_2_Loop" : "Attack";
         await CreatureCmd.TriggerAnim(Creature, attackAnim, 0.3f);
 
         BrotherAttackTurnsPower? turnsPower = Creature.GetPower<BrotherAttackTurnsPower>();
@@ -266,7 +286,7 @@ public class Brother : ModMonsterTemplate
             }
 
             IReadOnlyList<Creature> targets;
-            if (Creature.HasPower<BrotherAoePower>())
+            if (hasAoe)
             {
                 targets = aliveOpponents;
             }
@@ -324,10 +344,103 @@ public class Brother : ModMonsterTemplate
         GD.Print($"[Brother] 敌方回合结束，攻击循环收尾完成：特性={Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}, 攻击循环={IsInAttackCycle}");
     }
 
+    // 战斗（胜利）结束时调用（由 BrotherPower.AfterCombatVictory 驱动，存档之前）。
+    // 场景：攻击循环的最后一击恰好斩杀了最后一个敌人 —— 战斗当场结束，敌方回合不会再来，
+    // FinishPendingAttackCycleEnd 永远不会被调用，于是"特性 200 + 剩余回合 0"会被写进存档；
+    // 下一场战斗 PlayerTurnStart 的兜底又会按 200 特性重新开一轮 4 回合攻击循环。
+    // 这里就地收尾（只改状态，不碰意图/动画——战斗都结束了，下一场 AfterAddedToRoom 会按新状态重建）。
+    // 注意：只处理"已打完最后一击"的情况；循环还有剩余回合时按设计跨战斗继续。
+    public async Task FinalizeFinishedAttackCycleAtCombatEnd()
+    {
+        if (!_pendingPowerUpSwitch)
+        {
+            return;
+        }
+
+        _pendingPowerUpSwitch = false;
+
+        if (Creature.HasPower<BrotherAttackTurnsPower>())
+        {
+            await PowerCmd.Remove<BrotherAttackTurnsPower>(Creature);
+        }
+
+        if (Creature.GetPowerAmount<TraitPower>() >= TraitThreshold)
+        {
+            await PowerCmd.Remove<TraitPower>(Creature);
+        }
+
+        GD.Print($"[Brother] 战斗结束收尾已打完的攻击循环：特性={Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}, 剩余攻击回合={AttackTurnsRemaining}");
+    }
+
+    // ===== 攻击形态（单体 / 范围攻击）与骨骼动画链 =====
+    // 骨骼有两条互不相通的状态链：Skill_1_*（单体）与 Skill_2_*（剑走偏锋的范围攻击）。
+    // 触发器和"当前状态"必须匹配，否则 CreatureAnimator.SetTrigger 会静默丢弃，
+    // 动画就不会切换。剑走偏锋能在这两条链之外被中途打出，所以下面这些辅助函数负责对齐。
+
+    // 范围攻击（剑走偏锋 / BrotherAoePower）是否生效
+    public bool HasAoeAttack => Creature != null && Creature.HasPower<BrotherAoePower>();
+
+    private enum AnimChain
+    {
+        None,    // 通用 Idle/Start 等，两条链的 Start 触发器都接受
+        Single,  // Skill_1_*
+        Aoe      // Skill_2_*
+    }
+
+    // 骨骼当前播放的动画属于哪条链（直接读动画名，动画名与 AnimState.Id 一致）
+    private AnimChain CurrentAnimChain()
+    {
+        NCreature? node = NCombatRoom.Instance?.GetCreatureNode(Creature);
+        if (node == null || !GodotObject.IsInstanceValid(node))
+        {
+            return AnimChain.None;
+        }
+
+        using MegaTrackEntry? track = node.SpineAnimation.GetCurrentTrack();
+        string anim = track?.GetAnimationName() ?? string.Empty;
+        if (anim.StartsWith("Skill_2", StringComparison.Ordinal))
+        {
+            return AnimChain.Aoe;
+        }
+        // "Attack" 是 Skill_1 链上的攻击动画（NextState 回到 Skill_1_Idle），算单体链，
+        // 否则攻击动画播放期间会被误判成 None 而多触发一次 Skill_1_Start。
+        if (anim.StartsWith("Skill_1", StringComparison.Ordinal) || anim == "Attack")
+        {
+            return AnimChain.Single;
+        }
+        return AnimChain.None;
+    }
+
+    // 需要时把动画切到与攻击形态一致的链上（Start 播完会自动接到同链的 Idle；
+    // 两条链的 Start 分支都已注册，见 GenerateAnimator）
+    private async Task EnsureAttackAnimChain(bool wantAoe)
+    {
+        AnimChain chain = CurrentAnimChain();
+        if (wantAoe ? chain == AnimChain.Aoe : chain == AnimChain.Single)
+        {
+            return; // 已经在正确的链上
+        }
+
+        string startAnim = wantAoe ? "Skill_2_Start" : "Skill_1_Start";
+        GD.Print($"[Brother] 攻击形态与动画链不一致（范围攻击={wantAoe}, 当前链={chain}），切链 TriggerAnim '{startAnim}'");
+        await CreatureCmd.TriggerAnim(Creature, startAnim, 0.3f);
+    }
+
+    // 攻击形态变化时调用（由 BrotherAoePower.AfterApplied 驱动）：
+    // 本轮攻击循环中途打出剑走偏锋，就让动画立刻切到 Skill_2 链，剩下的攻击也走范围攻击动画。
+    public async Task OnAttackFormChanged()
+    {
+        if (!IsInAttackCycle)
+        {
+            return; // 不在攻击循环里：等下次 SwitchToAttackIntent 时按当时的形态选 Start 动画即可
+        }
+
+        await EnsureAttackAnimChain(HasAoeAttack);
+    }
+
     // 切换为攻击循环意图（幂等：已经显示攻击意图时不重复播开始动画）
     public async Task SwitchToAttackIntent()
-    {
-        if (IntendsToAttack)
+    {        if (IntendsToAttack)
         {
             return;
         }
@@ -366,8 +479,12 @@ public class Brother : ModMonsterTemplate
 
         SetMoveImmediate(GetPowerUpIntent());
 
-        string endAnim = Creature.HasPower<BrotherAoePower>() ? "Skill_2_End" : "Skill_1_End";
-        GD.Print($"[Brother] SwitchToPowerUpIntent: TriggerAnim '{endAnim}'");
+        // 收尾动画必须跟"骨骼当前所在的动画链"一致，不能按范围攻击状态选：
+        // 触发器和当前状态不匹配时 SetTrigger 会静默丢弃，于是停在 Skill_x_Idle
+        // 回不到通用 Idle（例：单体攻击循环中途打出剑走偏锋，动画还在 Skill_1 链上，
+        // 这时若按范围攻击选 Skill_2_End，就切不回蓄力循环动画了）。
+        string endAnim = CurrentAnimChain() == AnimChain.Aoe ? "Skill_2_End" : "Skill_1_End";
+        GD.Print($"[Brother] SwitchToPowerUpIntent: 当前动画链={CurrentAnimChain()}, 范围攻击={HasAoeAttack}, TriggerAnim '{endAnim}'");
         await CreatureCmd.TriggerAnim(Creature, endAnim, 0.3f);
 
         if (Creature.GetPower<DoubleIdentityPower>() is DoubleIdentityPower doubleIdentity)
@@ -522,6 +639,8 @@ public override CreatureAnimator GenerateAnimator(MegaSprite controller)
 
     // Skill_1 状态链
     castAnimState.NextState = castIdleAnimState;
+    // 切链后可能紧接着就要打这一下：Start 状态也直接接受攻击触发器，否则会被静默丢弃
+    castAnimState.AddBranch("Attack", castAttackAnimState);
     castIdleAnimState.AddBranch("Attack", castAttackAnimState);
     castIdleAnimState.AddBranch("Skill_1_End", castEndAnimState);
     castIdleAnimState.AddBranch("Dead", deadAnimState);
@@ -532,6 +651,7 @@ public override CreatureAnimator GenerateAnimator(MegaSprite controller)
 
     // Skill_2 状态链
     cast2AnimState.NextState = cast2IdleAnimState;
+    cast2AnimState.AddBranch("Skill_2_Loop", cast2AttackAnimState);
     cast2IdleAnimState.AddBranch("Skill_2_Loop", cast2AttackAnimState);
     cast2IdleAnimState.AddBranch("Skill_2_End", cast2EndAnimState);
     cast2IdleAnimState.AddBranch("Dead", deadAnimState);
@@ -539,6 +659,15 @@ public override CreatureAnimator GenerateAnimator(MegaSprite controller)
     cast2AttackAnimState.AddBranch("Skill_2_End", cast2EndAnimState);
     cast2AttackAnimState.AddBranch("Dead", deadAnimState);
     cast2EndAnimState.NextState = idleAnimState;
+
+    // 跨链分支：剑走偏锋（BrotherAoePower）可能在本轮攻击循环中途才生效（或中途失去），
+    // 此时骨骼停在另一条链的 Idle/攻击动画上，必须能直接切过去——
+    // 否则 Skill_2_Loop / Skill_2_End 这类触发器会因为没有分支被 SetTrigger 静默丢弃，
+    // 表现就是"打了剑走偏锋但攻击动画没变、循环结束后也回不到蓄力循环动画"。
+    castIdleAnimState.AddBranch("Skill_2_Start", cast2AnimState);
+    castAttackAnimState.AddBranch("Skill_2_Start", cast2AnimState);
+    cast2IdleAnimState.AddBranch("Skill_1_Start", castAnimState);
+    cast2AttackAnimState.AddBranch("Skill_1_Start", castAnimState);
 
     CreatureAnimator creatureAnimator = new CreatureAnimator(summonAnimState, controller);
     return creatureAnimator;

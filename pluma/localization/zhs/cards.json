@@ -42,7 +42,7 @@
   "PLUMA_CARD_WORKHORSE.description": "造成{Damage:diff()}点伤害。\n获得{Block:diff()}点[gold]格挡[/gold]\n抽{Cards:diff()}张牌。",
 
   "PLUMA_CARD_QUICK_DRAW.title": "玻利瓦尔拔刀",
-  "PLUMA_CARD_QUICK_DRAW.description": "造成{CalculationBase:diff()}点基础伤害，加上{ExtraDamage:diff()}点额外伤害。你本回合每打出过一次攻击牌，额外伤害减少{ReduceAmount:diff()}点。",
+  "PLUMA_CARD_QUICK_DRAW.description": "对所有敌人造成{CalculationBase:diff()}点基础伤害，加上{ExtraDamage:diff()}点额外伤害。你本回合每打出过一次攻击牌，额外伤害减少{ReduceAmount:diff()}点。",
   
   "PLUMA_CARD_CRAMPED_SCRAP.title": "短兵相接",
   "PLUMA_CARD_CRAMPED_SCRAP.description": "造成{Damage:diff()}点伤害3次，\n失去{HpLoss:diff()}点生命。",

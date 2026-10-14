@@ -32,6 +32,19 @@ public class BrotherAoePower : ModPowerTemplate
         IconPath: "res://pluma/images/powers/BrotherAoePower.png",
         BigIconPath: "res://pluma/images/powers/BrotherAoePower.png"
     );
+
+    // 获得本能力（打出剑走偏锋）时通知龙舌兰：本轮攻击循环中途换形态的话，
+    // 骨骼动画要立刻从 Skill_1 链切到 Skill_2 链，否则剩下的攻击仍会用单体动画
+    //（触发器与当前状态不匹配会被 CreatureAnimator 静默丢弃）。
+    // 意图文本不用在这里刷新：BrotherAttackIntent 的攻击形态是实时读的。
+    public override async Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        if (Owner.Monster is Brother brother)
+        {
+            await brother.OnAttackFormChanged();
+        }
+    }
+
     public override async Task AfterPowerAmountChanged(
         PlayerChoiceContext choiceContext,
         PowerModel power,

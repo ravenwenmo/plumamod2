@@ -43,9 +43,14 @@ public class BrotherAttackIntent : AttackIntent, IIntentExtraValueText
 
     protected override LocString IntentLabelFormat => new LocString("intents", "FORMAT_DAMAGE_MULTI");
 
+    // 攻击形态必须实时判断：剑走偏锋（BrotherAoePower）可以在本轮攻击循环中途才生效，
+    // 而意图对象只在"切意图"时重建（SwitchToAttackIntent 有 IntendsToAttack 早退保护），
+    // 构造时快照的 _isAoe 不会跟着变——这就是"打出剑走偏锋后意图文本仍是单体版"的原因。
+    private bool IsAoe => _brother?.HasAoeAttack ?? _isAoe;
+
     // 根据是否拥有范围攻击能力，使用不同的本地化前缀
     protected override string IntentPrefix =>
-        _isAoe ? "PLUMA_BROTHER_ATTACK_AOE" : "PLUMA_BROTHER_ATTACK_SINGLE";
+        IsAoe ? "PLUMA_BROTHER_ATTACK_AOE" : "PLUMA_BROTHER_ATTACK_SINGLE";
 
     public override int Repeats => _repeatCalc?.Invoke() ?? _repeat;
 
@@ -104,7 +109,7 @@ public class BrotherAttackIntent : AttackIntent, IIntentExtraValueText
     protected override LocString GetIntentDescription(IEnumerable<Creature> targets, Creature owner)
     {
         IEnumerable<Creature> enemies = owner.CombatState.GetOpponentsOf(owner);
-        bool isAoe = _isAoe;
+        bool isAoe = IsAoe;
 
         string key = isAoe
             ? "PLUMA_BROTHER_ATTACK_AOE.description"

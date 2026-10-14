@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -12,12 +15,41 @@ using MegaCrit.Sts2.Core.Entities.Players;
 namespace Pluma.Scripts;
 
 // 标记回收：每当能力持有者（玩家或其召唤物）的主人消耗基酒牌或辅料牌（MixerPack）时，
-// 能力持有者获得等于该能力层数的特性。每当鸡尾酒牌生成时，能力持有者获得 1 层额外攻击段数。
+// 能力持有者获得等于该能力层数的特性。每当鸡尾酒牌生成时，能力持有者获得 (层数 ÷ 25) 层额外攻击段数。
+//
+// 层数规则：龙舌兰入场时由 Brother.AfterAddedToRoom 施加 InitialAmount(10) 层；
+// 每打出一张同名能力牌（MarkerRecovery，+25）叠加 AmountPerCard(25) 层。
+// 初始 10 层时 10 ÷ 25 = 0，喝鸡尾酒并不会真的拿到额外攻击段数，
+// 所以层数 ≤ 25 的描述里不显示那一段（见 SmartDescriptionLocKey）。
 [RegisterPower]
 public class MarkerRecoveryPower : ModPowerTemplate
 {
+    // 初始层数（龙舌兰入场时施加）
+    public const int InitialAmount = 10;
+
+    // 每张同名能力牌叠加的层数（MarkerRecovery 的 MarkerRecoveryPower 变量）
+    public const int AmountPerCard = 25;
+
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
+
+    // 生成鸡尾酒牌时给出的额外攻击段数 = 层数 ÷ 25（向下取整，与下面 AfterCardGeneratedForCombat 一致）
+    public static int ExtraHitsFor(int amount) => amount / AmountPerCard;
+
+    // 层数大于 25（即至少打出过一张同名能力牌）才展示"生成鸡尾酒获得额外攻击段数"那段文本
+    public bool ShowsExtraHits => Amount > AmountPerCard;
+
+    // 描述里 {ExtraHits} 需要跟着层数实时变化，所以用一个取值时现算的派生变量
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        new DerivedIntVar("ExtraHits", () => ExtraHitsFor(Amount))
+    };
+
+    // 按层数在两套描述之间切换：初始 10 层只说特性，>25 层才补上多段斩那一段
+    protected override string SmartDescriptionLocKey =>
+        ShowsExtraHits
+            ? base.SmartDescriptionLocKey
+            : base.SmartDescriptionLocKey + "NoExtraHits";
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/MarkerRecoveryPower.png",
@@ -66,15 +98,35 @@ public class MarkerRecoveryPower : ModPowerTemplate
             return;
         }
 
-        if (Amount / 25m > 0)
+        // 额外攻击段数按整数算：初始 10 层时 10/25 = 0，就不该施加能力
+        //（旧写法用 10m/25 = 0.4 判断 > 0，会真的给龙舌兰挂上一个 0 层的多段斩，图标上显示 0）
+        int extraHits = ExtraHitsFor(Amount);
+        if (extraHits > 0)
         {
             await PowerCmd.Apply<BrotherExtraHitsPower>(
                 new ThrowingPlayerChoiceContext(),
                 Owner,
-                Amount / 25m,
+                extraHits,
                 null,
                 card
             );
         }
+    }
+
+    // 只用于描述显示：取值时现算，因此 {ExtraHits} 会随层数变化
+    // （照原版 CalculatedVar 的做法，同时重写 GetBaseValueForIConvertible 与 ToString）
+    private sealed class DerivedIntVar : DynamicVar
+    {
+        private readonly Func<int> _value;
+
+        public DerivedIntVar(string name, Func<int> value)
+            : base(name, 0m)
+        {
+            _value = value;
+        }
+
+        protected override decimal GetBaseValueForIConvertible() => _value();
+
+        public override string ToString() => _value().ToString();
     }
 }
