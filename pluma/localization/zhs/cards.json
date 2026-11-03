@@ -93,7 +93,7 @@
   "PLUMA_CARD_LIBERI_BITE.description": "施加{OpenWound:diff()}层[gold]创伤[/gold]。",
 
   "PLUMA_CARD_FULL_SPEED_SLASH.title": "全速斩击",
-  "PLUMA_CARD_FULL_SPEED_SLASH.description": "造成{Damage:diff()}点伤害{BaseHits:diff()}次。额外造成[gold]渐入佳境[/gold]层数一半的段数。",
+  "PLUMA_CARD_FULL_SPEED_SLASH.description": "造成{Damage:diff()}点伤害{TotalHits:diff()}次。\n每有2层[gold]渐入佳境[/gold]额外命中1次。\n失去{Decline:diff()}层[gold]渐入佳境[/gold]。",
 
   "PLUMA_CARD_SLASHING_MASTER.title": "切割大师",
   "PLUMA_CARD_SLASHING_MASTER.description": "生成{Cards:diff()}张[gold]切割[/gold]。",

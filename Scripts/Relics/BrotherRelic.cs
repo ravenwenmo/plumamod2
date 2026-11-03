@@ -1,8 +1,14 @@
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Entities.RestSite;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.ValueProps;
 using Pluma.Scripts.Commands;
 using Pluma.Scripts.Monsters;
 using Pluma.Scripts.Option;
@@ -60,7 +66,9 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         new DynamicVar("HP", BrotherStateData.SavedHp[this]),
         new DynamicVar("MaxHP", BrotherStateData.SavedMaxHp[this]),
         new DynamicVar("Trait", BrotherStateData.SavedTrait[this]),
-        new DynamicVar("Turns", BrotherStateData.SavedAttackTurnsRemaining[this])
+        new DynamicVar("Turns", BrotherStateData.SavedAttackTurnsRemaining[this]),
+        // 基础攻击力：构造时只能给白值，真正的数值由 UpdateDisplay 走伤害管线实时算出来
+        new DynamicVar("BasicDamage", Brother.BasicDamage)
     ];
 
     public override RelicAssetProfile AssetProfile => new(
@@ -107,12 +115,67 @@ public class BrotherRelic : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         await HealBrotherOption.ExecuteRestSiteHeal(player);
     }
 
+    // 龙舌兰的“基础攻击力”：直接把它结算伤害时用的那条管线跑一遍（Hook.ModifyDamage），
+    // 与攻击意图 BrotherAttackIntent.GetDamage 用的是同一套调用，所以力量、活力、特性
+    // 等一切“结算时才生效”的加成都会自动算进来，这里不需要逐个手写加成来源。
+    // target 传 null：只想显示单体白值，不带易伤等目标侧修正。
+    private int CalculateBasicDamage()
+    {
+        int baseDamage = Brother.BasicDamage;
+
+        Player? owner = Owner;
+        Creature? brother = owner?.Brother();
+        ICombatState? combatState = owner?.Creature?.CombatState;
+
+        // 非战斗（商店 / 休息处 / 结算界面）或龙舌兰不在场时没有战斗上下文，
+        // 退回用持久化的特性层数按同一公式估算：特性每层 +1%（见 TraitPower.ModifyDamageMultiplicative），
+        // 这样成长过的数值在战斗外也看得到，而不是永远显示 4。
+        if (owner?.RunState == null || combatState == null || brother == null || !brother.IsAlive)
+        {
+            decimal traitScaled = baseDamage * (1m + BrotherStateData.SavedTrait[this] / 100m);
+            return Math.Max(0, (int)traitScaled);
+        }
+
+        decimal num = Hook.ModifyDamage(
+            owner.RunState,
+            combatState,
+            null,
+            brother,
+            baseDamage,
+            ValueProp.Move,
+            null,
+            null,
+            ModifyDamageHookType.All,
+            CardPreviewMode.None,
+            out IEnumerable<AbstractModel> _
+        );
+
+        return Math.Max(0, (int)num);
+    }
+
+    // 龙舌兰身上的能力层数变化（特性、力量、活力……）都会改变它的基础攻击力，就地刷新一次描述。
+    public override Task AfterPowerAmountChanged(
+        PlayerChoiceContext choiceContext,
+        PowerModel power,
+        decimal amount,
+        Creature? applier,
+        CardModel? cardSource)
+    {
+        if (Owner?.Brother() == power.Owner)
+        {
+            UpdateDisplay();
+        }
+
+        return Task.CompletedTask;
+    }
+
     private void UpdateDisplay()
     {
         DynamicVars["HP"].BaseValue = BrotherStateData.SavedHp[this];
         DynamicVars["MaxHP"].BaseValue = BrotherStateData.SavedMaxHp[this];
         DynamicVars["Trait"].BaseValue = BrotherStateData.SavedTrait[this];
         DynamicVars["Turns"].BaseValue = BrotherStateData.SavedAttackTurnsRemaining[this];
+        DynamicVars["BasicDamage"].BaseValue = CalculateBasicDamage();
         InvokeDisplayAmountChanged();
     }
 

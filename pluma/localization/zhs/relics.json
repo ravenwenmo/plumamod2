@@ -16,7 +16,7 @@
   "PLUMA_RELIC_MOD_SHARD.flavor": "某个数值给的很抠的模组的一部分，但它的触发条件为什么反而变简单了？",
 
   "PLUMA_RELIC_GOLDEN_PLAINS.title": "黄金平原",
-  "PLUMA_RELIC_GOLDEN_PLAINS.description": "每洗牌两次，获得获得[blue]{Energy:energyIcons()}[/blue]。",
+  "PLUMA_RELIC_GOLDEN_PLAINS.description": "每洗牌两次，获得[blue]{Energy:energyIcons()}[/blue]。",
   "PLUMA_RELIC_GOLDEN_PLAINS.flavor": "“黄金平原怎么会在这？你怎么找到它的？”“拉菲艾拉毕竟是一名调酒师，大概冥冥之中有种感应......”",
   
   "PLUMA_RELIC_PRIMA_REGOLA.title": "第一法则",
@@ -28,7 +28,7 @@
   "PLUMA_RELIC_SPINACH_CAN.flavor": "“很多卡特斯相信吃下这盒罐头，他们就会变得力大无穷。出色的广告效果，业界经典成功案例。”",
 
   "PLUMA_RELIC_BROTHER_RELIC.title": "龙舌兰",
-  "PLUMA_RELIC_BROTHER_RELIC.description": "[gold]龙舌兰[/gold]将在战斗中协助你并替你格挡致命伤害。龙舌兰的生命值与特性效果跨战斗继承。\n先古之民会为龙舌兰回复生命。其他玩家可[gold]愈合[/gold]龙舌兰。\n[green]生命值:{HP}/{MaxHP}[/green]\n[red]特性:{Trait}[/red]\n[gold]解放回合:{Turns}[/gold]",
+  "PLUMA_RELIC_BROTHER_RELIC.description": "[gold]龙舌兰[/gold]将在战斗中协助你并替你格挡致命伤害。龙舌兰的生命值与特性效果跨战斗继承。\n先古之民会为龙舌兰回复生命。其他玩家可[gold]愈合[/gold]龙舌兰。\n基础伤害:{BasicDamage}\n[green]生命值:{HP}/{MaxHP}[/green]\n[red]特性:{Trait}[/red]\n[gold]解放回合:{Turns}[/gold]",
   "PLUMA_RELIC_BROTHER_RELIC.flavor": "羽毛笔险路遇敌，羽毛笔陷入苦战，羽毛笔昏招频出，羽毛笔血条蹦迪，羽毛笔和龙舌兰发表获胜感言。",
 
   "SEA_GLASS.PLUMA_CHARACTER_PLUMA_CHARACTER.title": "戈多玻璃"

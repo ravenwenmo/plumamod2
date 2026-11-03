@@ -31,6 +31,7 @@ public class RecallStrike : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [
         CardKeyword.Exhaust, // 添加原版关键词
         MyKeywords.Slashing,
+        MyKeywords.MuscleMemory,
     ];
     protected override IEnumerable<DynamicVar> CanonicalVars => new[] { new DamageVar(6m, ValueProp.Move) };
 
@@ -67,8 +68,8 @@ public class RecallStrike : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        //DynamicVars.Damage.UpgradeValueBy(2m); // 3 → 5
+        DynamicVars.Damage.UpgradeValueBy(3m); // 3 → 5
         //RemoveKeyword(CardKeyword.Exhaust);
-        base.EnergyCost.UpgradeBy(-1);
+        //base.EnergyCost.UpgradeBy(-1);
     }
 }

@@ -87,7 +87,16 @@ public class FlowState : ModPowerTemplate
         // 如果伤害来自 ButFocused，本能力不重复计算
         if (cardSource is ButFocused)
             return 1m;
-
+        
+        if (dealer == base.Owner
+            && cardSource != null
+            && cardSource.Type == CardType.Attack
+            && base.Amount >= 24
+            && props.IsPoweredAttack())
+        {
+            // 叠满 24 层后 +50% 伤害
+            return 1.5m;
+        }
         if (dealer == base.Owner
             && cardSource != null
             && cardSource.Type == CardType.Attack
@@ -139,6 +148,25 @@ public class FlowState : ModPowerTemplate
         {
             _discountedCards.Clear();
         }
+        return Task.CompletedTask;
+    }
+
+    // 渐入佳境被移除时（例如被「全速斩击」一次清空层数），把当时还享受 -1 打折的牌转成卡片自身的临时降费。
+    // 折扣原本是靠本能力的 TryModifyEnergyCostInCombatLate 动态算的，能力一消失这些牌就会立刻恢复原价，
+    // 玩家会觉得"刚刚明明显示 0 费，突然变回 1 费"。转成 EnergyCost 的临时修改后，
+    // 回合结束或打出时由本体自动清理（PlayerCombatState.EndOfTurnCleanup / CardModel.AfterCardPlayedCleanup）。
+    public override Task AfterRemoved(Creature oldOwner)
+    {
+        foreach (var card in _discountedCards)
+        {
+            if (card.IsMutable)
+            {
+                card.EnergyCost.AddThisTurnOrUntilPlayed(-1, reduceOnly: true);
+                // 本体加局部降费不会主动发这个事件，这里补一下，手牌上的费用数字才会立刻刷新。
+                card.InvokeEnergyCostChanged();
+            }
+        }
+        _discountedCards.Clear();
         return Task.CompletedTask;
     }
 

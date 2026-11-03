@@ -20,10 +20,14 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 第一法则：每洗牌两次，获得2点能量。主计数显示还需洗牌次数。
+// 第一法则：每洗牌两次，获得2点能量。
+// 主计数显示“本次战斗已洗牌次数”（0 → 1 → 归零），与本体计数遗物一致（同 GoldenPlains）。
 [RegisterRelic(typeof(PlumaRelicPool))]
 public class PrimaRegola : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProvider
 {
+    // 触发所需洗牌次数。
+    public const int ShufflesPerTrigger = 2;
+
     // internal：CombatSolver 适配层直接读写预测克隆上的字段（同 GoldenPlains）。
     internal int ShuffleCount;
 
@@ -52,7 +56,7 @@ public class PrimaRegola : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProv
         if (shuffler != base.Owner) return;
 
         ShuffleCount++;
-        if (ShuffleCount >= 2)
+        if (ShuffleCount >= ShufflesPerTrigger)
         {
             ShuffleCount = 0;
             Flash();
@@ -63,14 +67,15 @@ public class PrimaRegola : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProv
 
     public IReadOnlyList<ExtraIconAmountLabelSpec> GetRelicExtraIconAmountLabelSpecs()
     {
-        int remaining = 2 - ShuffleCount;
-        if (remaining < 0) remaining = 0;
+        // 显示已洗牌次数（0/1），第 2 次洗牌时归零 —— 与本体计数遗物一致。
+        int progress = ShuffleCount % ShufflesPerTrigger;
+        if (progress < 0) progress = 0;
 
         return
         [
             ExtraIconAmountLabelSpec.RichText(
                 ExtraIconAmountLabelCorner.BottomRight,   // 使用主计数位置
-                $"{remaining}"
+                $"{progress}"
             )
         ];
     }

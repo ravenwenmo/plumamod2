@@ -20,10 +20,16 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 黄金平原：每洗牌两次，获得1点能量。主计数显示还需洗牌次数。
+// 黄金平原：每洗牌两次，获得1点能量。
+// 主计数显示“本次战斗已洗牌次数”（0 → 1 → 归零），与本体遗物（星尘 GalacticDust、钓鱼竿 FishingRod
+// 都是 DisplayAmount = 进度 % N）一致：第 2 次洗牌瞬间归零并给能量。不要改成显示“还需洗牌次数”，
+// 那样开局就显示 2，看起来像已经攒满 2 层却没触发。
 [RegisterRelic(typeof(PlumaRelicPool))]
 public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsProvider
 {
+    // 触发所需洗牌次数。
+    public const int ShufflesPerTrigger = 2;
+
     // internal：CombatSolver 适配层直接读写预测克隆上的字段（MemberwiseClone 携带进度，
     // 进战斗房清零发生在根捕获之前，预测克隆天然从 0 开始）。
     internal int ShuffleCount;
@@ -53,7 +59,7 @@ public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
         if (shuffler != base.Owner) return;
 
         ShuffleCount++;
-        if (ShuffleCount >= 2)
+        if (ShuffleCount >= ShufflesPerTrigger)
         {
             ShuffleCount = 0;
             Flash();
@@ -64,14 +70,15 @@ public class GoldenPlains : ModRelicTemplate, IRelicExtraIconAmountLabelSpecsPro
 
     public IReadOnlyList<ExtraIconAmountLabelSpec> GetRelicExtraIconAmountLabelSpecs()
     {
-        int remaining = 2 - ShuffleCount;
-        if (remaining < 0) remaining = 0;
+        // 显示已洗牌次数（0/1），第 2 次洗牌时归零 —— 与本体计数遗物一致。
+        int progress = ShuffleCount % ShufflesPerTrigger;
+        if (progress < 0) progress = 0;
 
         return
         [
             ExtraIconAmountLabelSpec.RichText(
                 ExtraIconAmountLabelCorner.BottomRight,   // 使用主计数位置
-                $"{remaining}"
+                $"{progress}"
             )
         ];
     }
