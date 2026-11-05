@@ -1,34 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
-using STS2RitsuLib.Cards.DynamicVars;
-using STS2RitsuLib.Interop.AutoRegistration;
-using STS2RitsuLib.Scaffolding.Content;
-using MegaCrit.Sts2.Core.HoverTips;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
-using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 放空：弃掉所有手牌并洗牌，移除所有渐入佳境，每失去5层获得1能量，抽牌。升级后多抽1张。
+// 放空：手牌中所有「本能」牌本回合费用变为 0。升级后 1 费 → 0 费。
+// （历史：曾经是"失去所有渐入佳境"，后来改成"消耗所有非本能牌换能量与抽牌"，现在改为减费。）
 [RegisterCard(typeof(PlumaCardPool))]
 public class EmptyMind : ModCardTemplate
 {
@@ -49,55 +30,32 @@ public class EmptyMind : ModCardTemplate
         CardKeyword.Exhaust
     };
 
-    // 动态变量：抽牌数（基础4，升级后5）
-
-    // 卡牌基础数值
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(1),
-        //new CardsVar(2)
-    ];
-
     public EmptyMind() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
 
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    protected override Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var player = base.Owner; // Player 类型
-        if (player == null) return;
+        var player = base.Owner;
 
-        // 获取当前渐入佳境层数
-        var flowPower = base.Owner.Creature.Powers.OfType<FlowState>().FirstOrDefault();
-        int lostFlowAmount = flowPower != null ? (int)flowPower.Amount : 0;
+        // 手牌中所有本能牌（本牌打出时已不在手牌里，所以不会算到自己）
+        var memoryCards = PileType.Hand.GetPile(player).Cards
+            .Where(card => card.Keywords.Contains(MyKeywords.MuscleMemory))
+            .ToList();
 
-        // 1. 弃掉所有手牌（只弃不抽）
-        /*
-        var handCards = PileType.Hand.GetPile(player).Cards;
-        await CardCmd.DiscardAndDraw(choiceContext, handCards, 0);
-        */
-        
-        // 2. 洗牌
-        //await CardPileCmd.Shuffle(choiceContext, player);
-
-        // 3. 失去所有渐入佳境
-        await PowerCmd.Remove<FlowState>(base.Owner.Creature);
-
-        // 4. 每失去1层，获得1点能量
-        int loseAmount = lostFlowAmount;
-        if (loseAmount > 0)
+        foreach (var card in memoryCards)
         {
-            await PlayerCmd.GainEnergy(loseAmount, base.Owner);
+            if (!card.IsMutable) continue;
+
+            // SetThisTurnOrUntilPlayed：本回合内、或打出该牌之前有效，
+            // 回合结束 / 打出时由本体自动清理（LocalCostModifierExpiration.EndOfTurn | WhenPlayed）。
+            card.EnergyCost.SetThisTurnOrUntilPlayed(0);
+            // 本体加局部降费不会主动发这个事件，这里补一下，手牌上的费用数字才会立刻刷新。
+            card.InvokeEnergyCostChanged();
         }
 
-        // 5. 抽牌（基础4张，升级后5张）
-        await CardPileCmd.Draw(choiceContext,loseAmount, base.Owner);
+        return Task.CompletedTask;
     }
-
-    // 悬浮提示：渐入佳境（方便查看效果）
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
-    {
-        HoverTipFactory.FromPower<FlowState>()
-    };
 
     protected override void OnUpgrade()
     {

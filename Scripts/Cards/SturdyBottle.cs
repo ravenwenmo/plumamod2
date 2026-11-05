@@ -48,7 +48,8 @@ public class SturdyBottle : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(6m, ValueProp.Move),   // 基础伤害3，升级后6
+        new DamageVar(4m, ValueProp.Move),   // 原 6 的 2/3（对敌方才会结算）
+        ModCardVars.Int("OpenWound", 2),   // 原 6 的 1/3：削掉的伤害换成创伤
         ModCardVars.Int("WeakAmount", 1)
     };
     /*
@@ -62,7 +63,8 @@ public class SturdyBottle : ModCardTemplate
     ];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<WeakPower>()
+        HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
 
     public SturdyBottle()
@@ -83,7 +85,15 @@ public class SturdyBottle : ModCardTemplate
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
 
-        // 施加虚弱
+        // 施加虚弱与创伤（伤害已按 2/3 计，削掉的部分换成创伤）
+        await PowerCmd.Apply<OpenWoundPower>(
+            choiceContext,
+            cardPlay.Target,
+            DynamicVars["OpenWound"].BaseValue,
+            base.Owner.Creature,
+            this
+        );
+
         await PowerCmd.Apply<WeakPower>(
             choiceContext,
             cardPlay.Target,
@@ -95,6 +105,7 @@ public class SturdyBottle : ModCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m); // 3 → 6
+        DynamicVars.Damage.UpgradeValueBy(2m);   // 伤害 4 → 6（原 9 的 2/3）
+        DynamicVars["OpenWound"].UpgradeValueBy(1m);   // 创伤 2 → 3
     }
 }

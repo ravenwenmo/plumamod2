@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -29,6 +29,9 @@ public class ReaperHealingPower : ModPowerTemplate
     {
         // 只处理自己造成的伤害
         if (dealer != base.Owner) return;
+
+        // ValueProp.Unpowered = 遗物/药水/能力造成的伤害，不算"割出来的血"，不吸血
+        if (props.HasFlag(ValueProp.Unpowered)) return;
 
         // 只要目标不是自己（避免自伤回血），就回血
         if (target == base.Owner) return;

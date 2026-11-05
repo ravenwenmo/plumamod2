@@ -5,20 +5,21 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using Pluma.Scripts;
 using Pluma.Scripts.Monsters;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Localization;
 
-using STS2RitsuLib.Scaffolding.Content;
-
 namespace Pluma.Scripts.Cards;
 
-// 本能稀有技能牌：若龙舌兰在场，清空其特性，你获得等量磨刀，并将龙舌兰切换至强化循环（不消耗）。
-// 若龙舌兰不在场或死亡，你获得200层磨刀，且本牌消耗。
+// 本能稀有技能牌：若龙舌兰在场，清空其全部特性并进入强化意图，
+// 其每失去 TraitStepAmount 点特性，你获得 FlowPerStep 层渐入佳境（不消耗）。
+// 若龙舌兰不在场或死亡，你获得 SharpenAmount 层磨刀，且本牌消耗。
 // 描述根据龙舌兰是否在场自动切换（通过 ISpiritModeCard + SpiritModeDescriptionPatch）。
 [RegisterCard(typeof(PlumaCardPool))]
 public class InstinctCleanse : ModCardTemplate, ISpiritModeCard
@@ -37,10 +38,18 @@ public class InstinctCleanse : ModCardTemplate, ISpiritModeCard
     {
         MyKeywords.MuscleMemory // 本能（无 Exhaust，消耗逻辑在 OnPlay 中手动处理）
     };
-    
+
+    // 动态变量：每多少点特性折算一次、每次折算获得几层渐入佳境、不在场时的磨刀层数
+    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
+    {
+        ModCardVars.Int("TraitStepAmount", 50),
+        ModCardVars.Int("FlowPerStep", 1),
+        ModCardVars.Int("SharpenAmount", 200)
+    };
+
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromPower<SharpenBladePower>()
+        HoverTipFactory.FromPower<FlowState>()
     };
 
     public LocString SpiritModeDescription
@@ -79,29 +88,35 @@ public class InstinctCleanse : ModCardTemplate, ISpiritModeCard
 
             if (traitAmount > 0)
             {
-                // 清空龙舌兰特性
+                // 清空龙舌兰特性（先记下失去的层数，用于折算渐入佳境）
                 await PowerCmd.Remove<TraitPower>(brotherCreature);
 
-                // 自己获得等量磨刀
-                await PowerCmd.Apply<SharpenBladePower>(
-                    choiceContext,
-                    base.Owner.Creature,
-                    (decimal)traitAmount,
-                    base.Owner.Creature,
-                    this
-                );
+                // 龙舌兰每失去 TraitStepAmount 点特性，你获得 FlowPerStep 层渐入佳境
+                int flowLayers = (traitAmount / DynamicVars["TraitStepAmount"].IntValue)
+                    * DynamicVars["FlowPerStep"].IntValue;
+
+                if (flowLayers > 0)
+                {
+                    await PowerCmd.Apply<FlowState>(
+                        choiceContext,
+                        base.Owner.Creature,
+                        flowLayers,
+                        base.Owner.Creature,
+                        this
+                    );
+                }
             }
 
-            // 切换至强化循环（若已在强化循环则内部无操作）
+            // 进入强化意图（若已在强化循环则内部无操作）
             await brother.SwitchToPowerUpIntent();
         }
         else
         {
-            // 龙舌兰不在场或死亡：获得200层磨刀并消耗本牌
+            // 龙舌兰不在场或死亡：获得磨刀并消耗本牌
             await PowerCmd.Apply<SharpenBladePower>(
                 choiceContext,
                 base.Owner.Creature,
-                200m,
+                DynamicVars["SharpenAmount"].BaseValue,
                 base.Owner.Creature,
                 this
             );

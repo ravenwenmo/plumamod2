@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -11,7 +11,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 专业吧台：1费罕见能力牌。每两个回合获得一张辅料组合包。升级后改为获得升级过的辅料组合包。
+// 专业吧台：1费罕见能力牌。每当你施加创伤时获得一张辅料组合包。升级后改为获得升级过的辅料组合包。
 [RegisterCard(typeof(PlumaCardPool))]
 public class ProfessionalBar : ModCardTemplate
 {
@@ -27,7 +27,8 @@ public class ProfessionalBar : ModCardTemplate
     
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
-        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded)
+        HoverTipFactory.FromCard<MixerPack>(upgrade: base.IsUpgraded),
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
     
     public ProfessionalBar() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

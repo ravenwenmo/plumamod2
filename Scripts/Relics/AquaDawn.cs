@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Commands;
@@ -41,6 +41,9 @@ public class AquaDawn : ModRelicTemplate
     {
         // 必须是遗物持有者自己造成的伤害
         if (dealer != base.Owner.Creature) return;
+
+        // ValueProp.Unpowered = 遗物/药水/能力造成的伤害，不算"割出来的血"，不吸血
+        if (props.HasFlag(ValueProp.Unpowered)) return;
 
         // 只要目标不是自己（避免自伤回血）
         if (target == base.Owner.Creature) return;

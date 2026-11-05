@@ -15,8 +15,8 @@
   "PLUMA_POWER_CHARGING_POWER.description": "你的攻击牌打出次数+1，打出后消耗1层蓄力；回合结束时移除。\n若由龙舌兰持有：回合结束不移除，改为攻击循环即将结束时消耗1层并延长1回合。",
   "PLUMA_POWER_CHARGING_POWER.smartDescription": "攻击牌打出次数+1，打出后消耗1层。龙舌兰持有时，攻击循环结束消耗1层并延长1回合。",
 
-  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌，叠满12层后获得10%伤害加成，叠满36层后获得50%伤害加成。",
-  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌，叠满12层后获得10%伤害加成，叠满36层后获得50%伤害加成。",
+  "PLUMA_POWER_FLOW_STATE.description": "层数增加时抽取攻击牌或本能牌，若手牌已达上限，新抽到的牌会挤掉高费用的手牌，叠满12层后获得10%伤害加成。",
+  "PLUMA_POWER_FLOW_STATE.smartDescription": "层数增加时抽取攻击牌或本能牌，若手牌已达上限，新抽到的牌会挤掉高费用的手牌，叠满12层后获得10%伤害加成。",
   "PLUMA_POWER_FLOW_STATE.title": "渐入佳境",
 
   "PLUMA_POWER_THE_BEAT_POWER.title": "节奏感",
@@ -36,8 +36,8 @@
   "PLUMA_POWER_CONSTANT_FLOW_POWER.smartDescription": "每回合获得 [blue]{Amount}[/blue] 层 渐入佳境 。",
 
   "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.title": "优良机动",
-  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.description": "每层提供：每当获得渐入佳境时，获得1点格挡。",
-  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.smartDescription": "每当获得渐入佳境时，获得 [blue]{Amount}[/blue] 点格挡。",
+  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.description": "每当获得1层[gold]渐入佳境[/gold]时，获得 [blue]{Amount}[/blue] 点格挡。",
+  "PLUMA_POWER_EXCELLENT_MOBILITY_POWER.smartDescription": "每当获得1层[gold]渐入佳境[/gold]时，获得 [blue]{Amount}[/blue] 点格挡。",
 
   "PLUMA_POWER_REMOVE_FLOW_AT_TURN_END_POWER.title": "透支",
   "PLUMA_POWER_REMOVE_FLOW_AT_TURN_END_POWER.description": "回合结束时，移除所有 渐入佳境 。",
@@ -77,12 +77,12 @@
   "PLUMA_POWER_INSTANT_PAIR_UPGRADED_POWER.description": "每当获得一张基酒牌时，将1张升级过的辅料组合包加入抽牌堆。",
 
   "PLUMA_POWER_PROFESSIONAL_BAR_POWER.title": "专业吧台",
-  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.description": "每两个回合，获得 1 张 辅料组合包 。",
-  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.smartDescription": "每两个回合获得 1 张 辅料组合包 。",
+  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.description": "场上每有单位被施加2层及以上[gold]创伤[/gold]时，获得 1 张 辅料组合包 。",
+  "PLUMA_POWER_PROFESSIONAL_BAR_POWER.smartDescription": "场上每有单位被施加2层及以上[gold]创伤[/gold]时，获得 1 张 辅料组合包 。",
 
   "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.title": "专业吧台+",
-  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.description": "每两个回合，获得 1 张 升级过的辅料组合包 。",
-  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.smartDescription": "每两个回合，获得 1 张 升级过的辅料组合包 。",
+  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.description": "场上每有单位被施加2层及以上[gold]创伤[/gold]时，获得 1 张 升级过的辅料组合包 。",
+  "PLUMA_POWER_PROFESSIONAL_BAR_UPGRADED_POWER.smartDescription": "场上每有单位被施加2层及以上[gold]创伤[/gold]时，获得 1 张 升级过的辅料组合包 。",
 
   "PLUMA_POWER_MAKE_USE_OF_EVERYTHING_POWER.title": "物尽其用",
   "PLUMA_POWER_MAKE_USE_OF_EVERYTHING_POWER.description": "辅料组合包额外获得等同于层数的格挡。",
@@ -104,6 +104,10 @@
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.description": "你手中每有一张[gold]鸡尾酒[/gold]，手牌上限额外+1。",
   "PLUMA_POWER_RHODES_ISLAND_BAR_POWER.smartDescription": "手中的鸡尾酒使手牌上限额外+1。",
 
+  "PLUMA_POWER_FEATHERLIGHT_POWER.title": "轻盈",
+  "PLUMA_POWER_FEATHERLIGHT_POWER.description": "手牌上限-{Amount}。超过上限时不再抽牌，已有手牌不受影响。",
+  "PLUMA_POWER_FEATHERLIGHT_POWER.smartDescription": "手牌上限[red]-{Amount}[/red]。",
+
   "PLUMA_POWER_RESTOCK_CALL_POWER.title": "补货联络",
   "PLUMA_POWER_RESTOCK_CALL_POWER.description": "在接下来的2个你的回合开始时，各获得[gold]随机基酒[/gold] 1。",
   "PLUMA_POWER_RESTOCK_CALL_POWER.smartDescription": "在接下来的 [blue]2[/blue] 个你的回合开始时，各获得[gold]随机基酒[/gold] 1。",
@@ -113,7 +117,7 @@
   "PLUMA_POWER_PREMONITION_POWER.smartDescription": "下回合获得[blue]{Amount}[/blue]层渐入佳境 。",
 
   "PLUMA_POWER_BROTHER_SUPPORT_POWER.title": "义兄妹の羁绊",
-  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]攻击意图[/gold]或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。",
+  "PLUMA_POWER_BROTHER_SUPPORT_POWER.description": "龙舌兰处于[gold]攻击意图[/gold]或你即将受到[gold]致命伤害[/gold]时，龙舌兰将吸收所有未被格挡的伤害。\n若该伤害会击倒龙舌兰而你扛得住，则改为由你自己承受。\n龙舌兰处于[gold]攻击意图[/gold]时受到[gold]致命伤害[/gold]且你扛得住，则由你替它承受。",
 
   "PLUMA_POWER_BROTHER_POWER.title": "解放者",
   "PLUMA_POWER_BROTHER_POWER.description": "详情见[gold]龙舌兰[/gold]遗物。",

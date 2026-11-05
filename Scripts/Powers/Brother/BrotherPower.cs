@@ -56,29 +56,92 @@ public class BrotherPower : ModPowerTemplate
         BigIconPath: "res://pluma/images/powers/BrotherPower.png"
     );
 
+    // 未格挡伤害的目标重定向 —— 双向代抗都写在这一个 override 里，绝不能拆成两个能力/两个 override：
+    // Hook.ModifyUnblockedDamageTarget（src/Core/Hooks/Hook.cs:2057）只遍历一次监听器并链式传参，
+    // 两个反方向的监听器会把对方的结果改回去（谁赢取决于监听器顺序，等于随机），
+    // 写在同处时进入的 target 必定是原目标（玩家或龙舌兰），不存在"已被改过"的歧义。
+    // 也不会有循环/连锁：CreatureCmd.Damage 每个目标只调一次本钩子，重定向后的溢出伤害
+    // （OverkillDamage）由 CreatureCmd 直接打回原目标、不会再跑一遍本钩子，
+    // 所以"龙舌兰替羽毛笔抗死 → 羽毛笔再替龙舌兰抗"在框架层面不存在，这里无需额外防递归。
     public override Creature ModifyUnblockedDamageTarget(Creature target, decimal unblockedDamage, ValueProp props, Creature? _)
     {
-        if (!(Owner.Monster as Brother).DieForYou && unblockedDamage < Owner.PetOwner.Creature.CurrentHp)
+        Creature? player = Owner.PetOwner?.Creature;
+        if (player == null)
         {
             return target;
         }
 
-        if (target != base.Owner.PetOwner?.Creature)
+        if (Owner.Monster is not Brother brother)
         {
             return target;
         }
 
-        if (base.Owner.IsDead)
-        {
-            return target;
-        }
-
+        // 只有"有来源的攻击"才触发代抗（中毒、失去生命等不受影响）
         if (!props.IsPoweredAttack())
         {
             return target;
         }
 
-        return base.Owner;
+        // 方向一：羽毛笔即将受到致命伤害，或龙舌兰正处于攻击意图 → 龙舌兰代抗。
+        if (target == player)
+        {
+            bool lethalForPlayer = unblockedDamage >= player.CurrentHp;
+
+            if (!brother.DieForYou && !lethalForPlayer)
+            {
+                return target;
+            }
+
+            if (Owner.IsDead)
+            {
+                return target;
+            }
+
+            // 自保：这一下会击倒龙舌兰，但羽毛笔自己扛得住 → 不许白白牺牲龙舌兰。
+            // （旧逻辑在攻击意图下会照单全收，实战中就是"羽毛笔满血、龙舌兰 8 血硬吃一发 8 点、
+            //  当场阵亡，羽毛笔只吃到溢出的 0~1 点"。日志里表现为 OIL_SPRAY_MOVE 之后紧跟
+            //  pluma_monster_brother_die 音效、且没有任何 HP 变化打印——因为致命那一击是单段伤害。）
+            if (unblockedDamage >= Owner.CurrentHp && !lethalForPlayer)
+            {
+                GD.Print($"[BrotherPower] 放弃代抗（会击倒龙舌兰而羽毛笔扛得住）: 伤害 {unblockedDamage}, 龙舌兰 HP {Owner.CurrentHp}, 羽毛笔 HP {player.CurrentHp}");
+                return target;
+            }
+
+            GD.Print($"[BrotherPower] 龙舌兰代抗: 伤害 {unblockedDamage}, 龙舌兰 HP {Owner.CurrentHp}, 羽毛笔 HP {player.CurrentHp}");
+            return Owner;
+        }
+
+        // 方向二（新增）：龙舌兰处于攻击意图时，这一下会打死它 → 羽毛笔代抗。
+        if (target == Owner)
+        {
+            if (!brother.DieForYou)
+            {
+                return target;
+            }
+
+            if (Owner.IsDead || !player.IsAlive)
+            {
+                return target;
+            }
+
+            // 只有致命伤才接：扛得住的伤害仍由龙舌兰自己吃
+            if (unblockedDamage < Owner.CurrentHp)
+            {
+                return target;
+            }
+
+            // 羽毛笔自己也会被这一下打死（伤害 >= 当前生命）就放弃代抗，
+            // 让龙舌兰走正常流程 —— 避免"两边都接不下"时互推或白送一条命。
+            if (unblockedDamage >= player.CurrentHp)
+            {
+                return target;
+            }
+
+            GD.Print($"[BrotherPower] 羽毛笔代抗致命伤害: 伤害 {unblockedDamage}, 龙舌兰 HP {Owner.CurrentHp}, 羽毛笔 HP {player.CurrentHp}");
+            return player;
+        }
+
+        return target;
     }
 
     public override async Task AfterCurrentHpChanged(Creature creature, decimal delta)

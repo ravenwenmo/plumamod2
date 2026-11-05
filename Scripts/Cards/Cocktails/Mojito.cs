@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -20,7 +23,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace Pluma.Scripts;
 
 // 莫吉托：0费生成技能牌，鸡尾酒。目标为任意单位（敌人/自己/友方），实际效果由所选目标的阵营决定；右键仅在本机循环切换提示与光效，不影响实际效果。
-// 效果：对敌人造成10点伤害并施加1层虚弱；对自己/友方造成1点穿透伤害后获得6层渐入佳境。升级后伤害+3并获得保留。
+// 效果：对敌人造成12点伤害并施加1层虚弱；对自己/友方玩家从抽牌堆或弃牌堆中指定抽2张牌；
+// 对龙舌兰则给 2 层额外攻击段数。升级后伤害+6。
 [RegisterCard(typeof(TokenCardPool))]
 public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, ICocktailCard, IBaseSpiritRelatedCard
 {
@@ -78,10 +82,11 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
 
     // 伤害变量（基础10，升级+5）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(12m, ValueProp.Move),
+        new DamageVar(8m, ValueProp.Move),
+        ModCardVars.Int("OpenWound", 4),   // 原 12 的 1/3：削掉的伤害换成创伤
         //ModCardVars.Int("FlowSelfAmount", 6),
         //ModCardVars.Int("FlowAllyAmount", 6),
-        new CardsVar(6),
+        new CardsVar(2),
         ModCardVars.Int("WeakAmount", 1),
         ModCardVars.Int("ExtraHitsAmount", 2)   // 新增：龙舌兰获得的额外攻击段数
     ];
@@ -89,7 +94,8 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.Cocktail),
-        HoverTipFactory.FromPower<WeakPower>()
+        HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
 
     // 卡牌类型固定为技能（不再随模式切换，避免多人模式下动作不同步）
@@ -149,18 +155,20 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
                 // 获得 5 层渐入佳境
                 //await PowerCmd.Apply<FlowState>(choiceContext, base.Owner.Creature, DynamicVars["FlowSelfAmount"].BaseValue, base.Owner.Creature, this);
                 
-                await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
+                await PickCardsFromDrawOrDiscard(choiceContext, base.Owner);
                 
                 // ---- 旧效果（对自己获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(base.Owner.Creature, 3m, ValueProp.Move, cardPlay);
                 break;
 
             case SpiritTargetBranch.Enemy:
-                // 对敌人造成 {Damage} 点攻击伤害，并施加 1 层虚弱
+                // 对敌人：伤害已按 2/3 计，削掉的部分换成等层数的创伤，再施加虚弱
                 await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
+                await PowerCmd.Apply<OpenWoundPower>(choiceContext, cardPlay.Target, DynamicVars["OpenWound"].BaseValue,
+                    base.Owner.Creature, this);
                 await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
@@ -179,13 +187,8 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
                     break;
                 }
 
-                // 友方玩家：抽牌（保持原效果）
-                await CardPileCmd.DrawWithoutBlockingOnOtherPlayers(
-                    choiceContext,
-                    base.DynamicVars.Cards.BaseValue,
-                    cardPlay.Target!.Player,
-                    this
-                );
+                // 友方玩家：改为从抽牌堆/弃牌堆中指定抽取
+                await PickCardsFromDrawOrDiscard(choiceContext, cardPlay.Target!.Player);
 
                 // ---- 旧效果（对友方获得3点格挡，已注释保留）----
                 // await CreatureCmd.GainBlock(cardPlay.Target!, 3m, ValueProp.Move, cardPlay);
@@ -193,8 +196,35 @@ public class Mojito : ModCardTemplate, IModRightClickableCard, ISpiritModeCard, 
         }
     }
 
+    // 从抽牌堆 + 弃牌堆中指定挑选 {Cards} 张牌加入手牌（原先是直接抽 {Cards} 张）。
+    // 用 FromSimpleGrid 而不是 FromCombatPile：后者一次只能选一个牌堆，而这里玩家要能同时看到
+    // 抽牌堆和弃牌堆的牌再挑两张。ChoicesParadox（本体遗物）就是在战斗中用 FromSimpleGrid 的先例。
+    // 两张堆的拼接顺序必须稳定（抽牌堆在前、弃牌堆在后），因为联机时同步的是下标。
+    private async Task PickCardsFromDrawOrDiscard(PlayerChoiceContext choiceContext, Player player)
+    {
+        var candidates = PileType.Draw.GetPile(player).Cards
+            .Concat(PileType.Discard.GetPile(player).Cards)
+            .ToList();
+
+        int count = DynamicVars.Cards.IntValue;
+        if (candidates.Count == 0) return;
+
+        var selected = await CardSelectCmd.FromSimpleGrid(
+            choiceContext,
+            candidates,
+            player,
+            new CardSelectorPrefs(SelectionPrompt, count)
+        );
+
+        await CardPileCmd.Add(selected, PileType.Hand);
+    }
+
+    // 选牌界面的提示语（本体规范：卡牌本地化键 <类名>.selectionScreenPrompt，这里沿用模组的 .selectPrompt 写法）
+    private static LocString SelectionPrompt => new LocString("cards", "PLUMA_CARD_MOJITO.selectPrompt");
+
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(6m); // 伤害 10 → 15
+        DynamicVars.Damage.UpgradeValueBy(4m);   // 伤害 8 → 12（原 18 的 2/3）
+        DynamicVars["OpenWound"].UpgradeValueBy(2m);   // 创伤 4 → 6
     }
 }

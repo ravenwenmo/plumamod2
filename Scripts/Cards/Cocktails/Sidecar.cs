@@ -81,7 +81,8 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
     }
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(12m, ValueProp.Move),
+        new DamageVar(8m, ValueProp.Move),
+        ModCardVars.Int("OpenWound", 4),   // 原 12 的 1/3：削掉的伤害换成创伤
         ModCardVars.Int("DexterityAmount", 3),
         ModCardVars.Int("WeakAmount", 1),
         // 龙舌兰实际获得的覆甲层数 = DexterityAmount × 2
@@ -94,7 +95,8 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
     {
         HoverTipFactory.FromKeyword(MyKeywords.Cocktail),
-        HoverTipFactory.FromPower<WeakPower>()
+        HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<OpenWoundPower>()
     };
 
     // 卡牌类型固定为技能（不再随模式切换，避免多人模式下动作不同步）
@@ -183,11 +185,13 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
                 break;
 
             case SpiritTargetBranch.Enemy:
-                // 对敌人造成 {Damage} 点攻击伤害，并施加 1 层虚弱
+                // 对敌人：伤害已按 2/3 计，削掉的部分换成等层数的创伤，再施加虚弱
                 await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
+                await PowerCmd.Apply<OpenWoundPower>(choiceContext, cardPlay.Target, DynamicVars["OpenWound"].BaseValue,
+                    base.Owner.Creature, this);
                 await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
@@ -252,6 +256,7 @@ public class Sidecar : ModCardTemplate, IModRightClickableCard, ISpiritModeCard,
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(6m); // 伤害 10 → 15
+        DynamicVars.Damage.UpgradeValueBy(4m);   // 伤害 8 → 12（原 18 的 2/3）
+        DynamicVars["OpenWound"].UpgradeValueBy(2m);   // 创伤 4 → 6
     }
 }

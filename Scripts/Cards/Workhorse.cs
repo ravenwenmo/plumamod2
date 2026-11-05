@@ -51,8 +51,14 @@ public class Workhorse : ModCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(8m, ValueProp.Move),
         new BlockVar(8m, ValueProp.Move),
-        new CardsVar(2),
+        new PowerVar<FlowState>(2m),
     ];
+
+    // 悬浮提示：渐入佳境
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => new[]
+    {
+        HoverTipFactory.FromPower<FlowState>()
+    };
     
 
     
@@ -71,7 +77,14 @@ public class Workhorse : ModCardTemplate
         
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
 
-        await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, Owner);
+        // 原来的"抽2张牌"改成"获得2层渐入佳境"
+        await PowerCmd.Apply<FlowState>(
+            choiceContext,
+            base.Owner.Creature,
+            DynamicVars["FlowState"].BaseValue,
+            base.Owner.Creature,
+            this
+        );
 
     }
     

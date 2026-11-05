@@ -28,8 +28,9 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace Pluma.Scripts;
 
-// 辅料组合包：0费生成技能牌，消耗。选择一张基酒牌并消耗，将对应的鸡尾酒加入手牌；若手牌没有基酒，则获得5点格挡。
-// 额外效果：本牌自己抽 DrawBase 张（未升级 0、升级 1）。
+// 辅料组合包：0费生成技能牌，消耗。获得 3 点格挡（无条件）。
+// 若手牌有基酒：选择一张基酒牌并消耗，将对应的鸡尾酒加入手牌。
+// 额外效果：本牌自己抽 DrawBase 张（未升级 0、升级 1）——同样是无条件的。
 // 持有「调酒之韵」（BartenderRhymePower）时打出会再多抽 1 张，那 1 张由能力自己结算，
 // 但卡面显示的抽牌数（CardsToDraw）把它算进去，所以未升级显示「抽1张牌」、升级后显示「抽2张牌」。
 [RegisterCard(typeof(TokenCardPool))]
@@ -52,7 +53,7 @@ public class MixerPack : ModCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => new[]
     {
         CardKeyword.Exhaust,
-        //MyKeywords.MuscleMemory
+        MyKeywords.MuscleMemory
     };
 
     public MixerPack() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -61,7 +62,7 @@ public class MixerPack : ModCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new BlockVar(5m, ValueProp.Move),
+        new BlockVar(3m, ValueProp.Move),
 
         // 本牌实际抽几张（效果用）：未升级 0，升级 +1。
         // 和下面显示用的 CardsToDraw 分开：调酒之韵那 1 张由能力自己抽，
@@ -82,7 +83,7 @@ public class MixerPack : ModCardTemplate
         // 这里若也算进 Block 就会重复结算。
         ModCardVars.Computed(
             "BlockDisplay",
-            5m,
+            3m,
             static (card, _) => DisplayBlock(card),
             static (card, _, _, _) => DisplayBlock(card))
     };
@@ -90,52 +91,51 @@ public class MixerPack : ModCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var player = base.Owner;
+
+        // 格挡和抽牌是无条件效果：不管手里有没有基酒都会生效（抽牌数未升级为 0、升级后为 1）
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
+
         var handPile = PileType.Hand.GetPile(player);
 
         bool hasBaseSpirit = handPile.Cards.Any(card => card is Gin or Tequila or Whiskey or Rum or Vodka or Brandy);
 
-        // 没有基酒牌可选时，获得 5 点格挡
-        if (!hasBaseSpirit)
+        // 有基酒才走"消耗基酒换鸡尾酒"这条分支；没有就只留下上面的格挡和抽牌
+        if (hasBaseSpirit)
         {
-            await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-            // 仍然继续抽牌（抽牌是独立效果）
-            await CardPileCmd.Draw(choiceContext, DynamicVars["DrawBase"].BaseValue, player);
-            return;
-        }
+            // 从手牌选择一张基酒牌
+            var selectPrompt = new LocString("cards", "PLUMA_CARD_MIXER_PACK.selectPrompt");
+            var selected = await CardSelectCmd.FromHand(
+                context: choiceContext,
+                player: player,
+                prefs: new CardSelectorPrefs(selectPrompt, 1),
+                filter: card => card is Gin or Tequila or Whiskey or Rum or Vodka or Brandy,
+                source: this
+            );
 
-        // 从手牌选择一张基酒牌
-        var selectPrompt = new LocString("cards", "PLUMA_CARD_MIXER_PACK.selectPrompt");
-        var selected = await CardSelectCmd.FromHand(
-            context: choiceContext,
-            player: player,
-            prefs: new CardSelectorPrefs(selectPrompt, 1),
-            filter: card => card is Gin or Tequila or Whiskey or Rum or Vodka or Brandy,
-            source: this
-        );
+            var baseCard = selected.FirstOrDefault();
 
-        var baseCard = selected.FirstOrDefault();
-
-        if (baseCard != null)
-        {
-            // 消耗选中的基酒牌
-            await CardCmd.Exhaust(choiceContext, baseCard);
-
-            // 基酒 -> 鸡尾酒映射
-            CardModel? cocktail = baseCard switch
+            if (baseCard != null)
             {
-                Gin     => base.CombatState.CreateCard<GinTonic>(player),
-                Tequila => base.CombatState.CreateCard<Margarita>(player),
-                Whiskey => base.CombatState.CreateCard<OldFashioned>(player),
-                Rum     => base.CombatState.CreateCard<Mojito>(player),
-                Vodka   => base.CombatState.CreateCard<Cosmopolitan>(player),
-                Brandy  => base.CombatState.CreateCard<Sidecar>(player),
-                _       => null
-            };
+                // 消耗选中的基酒牌
+                await CardCmd.Exhaust(choiceContext, baseCard);
 
-            // 加入手牌
-            if (cocktail != null)
-            {
-                await CardPileCmd.AddGeneratedCardsToCombat(new[] { cocktail }, PileType.Hand, player);
+                // 基酒 -> 鸡尾酒映射
+                CardModel? cocktail = baseCard switch
+                {
+                    Gin     => base.CombatState.CreateCard<GinTonic>(player),
+                    Tequila => base.CombatState.CreateCard<Margarita>(player),
+                    Whiskey => base.CombatState.CreateCard<OldFashioned>(player),
+                    Rum     => base.CombatState.CreateCard<Mojito>(player),
+                    Vodka   => base.CombatState.CreateCard<Cosmopolitan>(player),
+                    Brandy  => base.CombatState.CreateCard<Sidecar>(player),
+                    _       => null
+                };
+
+                // 加入手牌
+                if (cocktail != null)
+                {
+                    await CardPileCmd.AddGeneratedCardsToCombat(new[] { cocktail }, PileType.Hand, player);
+                }
             }
         }
 
@@ -179,7 +179,7 @@ public class MixerPack : ModCardTemplate
             return 0m;
         }
 
-        int baseBlock = card.DynamicVars.GetIntOrDefault("Block", 5);
+        int baseBlock = card.DynamicVars.GetIntOrDefault("Block", 3);
         return baseBlock + (OwnerCreature(card) is { } owner
             ? owner.GetPowerAmount<MakeUseOfEverythingPower>()
             : 0m);

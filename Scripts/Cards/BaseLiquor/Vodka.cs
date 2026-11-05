@@ -82,7 +82,8 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
 
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(6m, ValueProp.Move),
+        new DamageVar(4m, ValueProp.Move),
+        ModCardVars.Int("OpenWound", 2),   // 原 6 的 1/3：削掉的伤害换成创伤
         ModCardVars.Int("WeakAmount", 1),
         // 龙舌兰实际获得的力量层数（Ally 分支将 2 点能量转换为等量力量）
         ModCardVars.Int("PetStrengthAmount", 2),
@@ -93,6 +94,7 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
         HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<OpenWoundPower>(),
         // 预览对应的鸡尾酒牌
         SpiritModeHoverPreview.FromCard<Cosmopolitan>(CurrentSpiritBranch)
     };
@@ -168,11 +170,13 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
                 break;
 
             case SpiritTargetBranch.Enemy:
-                // 对敌人造成 {Damage} 点攻击伤害，并施加 1 层虚弱
+                // 对敌人：伤害已按 2/3 计，削掉的部分换成等层数的创伤，再施加虚弱
                 await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
+                await PowerCmd.Apply<OpenWoundPower>(choiceContext, cardPlay.Target, DynamicVars["OpenWound"].BaseValue,
+                    base.Owner.Creature, this);
                 await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
@@ -201,6 +205,7 @@ public class Vodka : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard, I
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m); // 伤害 3 → 6
+        DynamicVars.Damage.UpgradeValueBy(2m);   // 伤害 4 → 6（原 9 的 2/3）
+        DynamicVars["OpenWound"].UpgradeValueBy(1m);   // 创伤 2 → 3
     }
 }

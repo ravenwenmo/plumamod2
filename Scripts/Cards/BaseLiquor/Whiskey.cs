@@ -88,7 +88,8 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
     // 伤害变量（基础3，无升级变化）
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
-        new DamageVar(6m, ValueProp.Move),          // 原有伤害变量，保持不变
+        new DamageVar(4m, ValueProp.Move),          // 原 6 的 2/3（对敌方才会结算）
+        ModCardVars.Int("OpenWound", 2),   // 原 6 的 1/3：削掉的伤害换成创伤
         ModCardVars.Int("WeakAmount", 1),           // 原有虚弱层数
         new BlockVar(10m, ValueProp.Move),          // 友方/自己格挡值
         ModCardVars.Int("PetBlockAmount", 15)       // 龙舌兰格挡值
@@ -97,6 +98,7 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
     {
         HoverTipFactory.FromKeyword(MyKeywords.BaseSpirit),
         HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<OpenWoundPower>(),
         // 预览对应的鸡尾酒牌
         SpiritModeHoverPreview.FromCard<OldFashioned>(CurrentSpiritBranch)
     };
@@ -175,11 +177,13 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
                 break;
 
             case SpiritTargetBranch.Enemy:
-                // 对敌人造成 {Damage} 点攻击伤害，并施加 1 层虚弱
+                // 对敌人：伤害已按 2/3 计，削掉的部分换成等层数的创伤，再施加虚弱
                 await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                     .FromCard(this, cardPlay)
                     .Targeting(cardPlay.Target!)
                     .Execute(choiceContext);
+                await PowerCmd.Apply<OpenWoundPower>(choiceContext, cardPlay.Target, DynamicVars["OpenWound"].BaseValue,
+                    base.Owner.Creature, this);
                 await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakAmount"].BaseValue,
                     base.Owner.Creature, this);
                 break;
@@ -214,6 +218,7 @@ public class Whiskey : ModCardTemplate, IModRightClickableCard, IBaseSpiritCard,
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m); // 伤害 3 → 6
+        DynamicVars.Damage.UpgradeValueBy(2m);   // 伤害 4 → 6（原 9 的 2/3）
+        DynamicVars["OpenWound"].UpgradeValueBy(1m);   // 创伤 2 → 3
     }
 }

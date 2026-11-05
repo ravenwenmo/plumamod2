@@ -46,7 +46,7 @@ public class RapidSlashingMax : ModCardTemplate
 
     // 卡牌基础数值
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(15m, ValueProp.Move),
+        new DamageVar(12m, ValueProp.Move),
         new IntVar("Threshold", 2m),   // 初始阈值 2 次
 
     ];
@@ -87,7 +87,7 @@ public class RapidSlashingMax : ModCardTemplate
         await PowerCmd.Apply<FlowState>(
             choiceContext,
             base.Owner.Creature,
-            1,
+            2,
             base.Owner.Creature,
             this
         );
@@ -116,6 +116,6 @@ public class RapidSlashingMax : ModCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(5m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 }

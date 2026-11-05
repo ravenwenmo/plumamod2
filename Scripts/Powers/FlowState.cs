@@ -15,6 +15,8 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Players;
+using STS2RitsuLib;
 
 namespace Pluma.Scripts;
 
@@ -23,6 +25,13 @@ namespace Pluma.Scripts;
 public class FlowState : ModPowerTemplate
 {
     private readonly HashSet<CardModel> _discountedCards = new();
+
+    // 最近一次触发里"渐入佳境实际拿到的牌"（进手牌的和自动打出的都算），
+    // 给「感应」这类需要判断"渐入佳境抽到了什么"的牌用。
+    private readonly List<CardModel> _recentlyDrawn = new();
+    public IReadOnlyList<CardModel> RecentlyDrawnCards => _recentlyDrawn;
+    public void ClearRecentlyDrawn() => _recentlyDrawn.Clear();
+
 // 放在 FlowState 类的字段区域
     internal static bool AutoSkipCounterSelect = false;
     // 防重入锁及待处理层数
@@ -52,17 +61,21 @@ public class FlowState : ModPowerTemplate
             }
         }
         
-        // 如果持有者拥有“优良机动”，则获得相应层数的格挡（在抽牌前触发）
+        // 如果持有者拥有“优良机动”，则获得格挡（在抽牌前触发）。
+        // 一次增加多层时按层数逐次触发：获得 N 层就触发 N 次，每次获得等同于"优良机动"层数的格挡。
         var excellentMobility = base.Owner.Powers.OfType<ExcellentMobilityPower>().FirstOrDefault();
         if (excellentMobility != null && excellentMobility.Amount > 0)
         {
-            await CreatureCmd.GainBlock(
-                base.Owner,
-                excellentMobility.Amount,
-                ValueProp.Unpowered,
-                null,
-                fast: true
-            );
+            for (int i = 0; i < (int)amount; i++)
+            {
+                await CreatureCmd.GainBlock(
+                    base.Owner,
+                    excellentMobility.Amount,
+                    ValueProp.Unpowered,
+                    null,
+                    fast: true
+                );
+            }
         }
         
         // 如果持有者拥有“风中之羽”，则不抽牌
@@ -91,19 +104,10 @@ public class FlowState : ModPowerTemplate
         if (dealer == base.Owner
             && cardSource != null
             && cardSource.Type == CardType.Attack
-            && base.Amount >= 24
-            && props.IsPoweredAttack())
-        {
-            // 叠满 24 层后 +50% 伤害
-            return 1.5m;
-        }
-        if (dealer == base.Owner
-            && cardSource != null
-            && cardSource.Type == CardType.Attack
             && base.Amount >= 12
             && props.IsPoweredAttack())
         {
-            // 叠满 12 层后 +50% 伤害
+            // 叠满 12 层后 +10% 伤害
             return 1.1m;
         }
 
@@ -170,8 +174,13 @@ public class FlowState : ModPowerTemplate
         return Task.CompletedTask;
     }
 
-    private async Task DrawAttackCard(PlayerChoiceContext choiceContext, decimal amount)
+    private async Task DrawAttackCard(PlayerChoiceContext choiceContext, decimal amount, bool clearRecent = true)
     {
+        if (clearRecent)
+        {
+            _recentlyDrawn.Clear();
+        }
+
         _isDrawing = true;
         try
         {
@@ -217,6 +226,10 @@ public class FlowState : ModPowerTemplate
                 }
                 else
                 {
+                    // 手牌满上限时，本体 CardPileCmd.Add 会把新抽到的牌直接塞进弃牌堆（HAND_FULL）。
+                    // 这里改成先弃掉手牌里当前费用最高的一张，腾出位置，让渐入佳境抽到的牌真的进手。
+                    await MakeRoomInHand(choiceContext, player);
+
                     await CardPileCmd.Add(targetCard, PileType.Hand);
                     // 渐入佳境是自定义选牌（绕过 CardPileCmd.Draw 的抽牌主体），
                     // 这里在成功把牌加入手牌后补齐正常抽牌在 Add 之后会触发的钩子/事件，
@@ -231,6 +244,9 @@ public class FlowState : ModPowerTemplate
                         _discountedCards.Add(targetCard);
                 }
 
+                // 不管进手牌还是自动打出，都记进"本批次拿到的牌"
+                _recentlyDrawn.Add(targetCard);
+
                 remaining--;
             }
         }
@@ -244,7 +260,7 @@ public class FlowState : ModPowerTemplate
             if (pending > 0)
             {
                 // 抽完当前待处理层数后，再递归处理新产生的层数
-                await DrawAttackCard(choiceContext, pending);
+                await DrawAttackCard(choiceContext, pending, clearRecent: false);
             }
         }
     }
@@ -257,5 +273,42 @@ public class FlowState : ModPowerTemplate
                 return card;
         }
         return null;
+    }
+
+    // 手牌已满时弃掉一张腾位置：优先当前费用最高的牌（含所有临时减费后的实际费用），
+    // 费用相同时弃最左边那张（遍历顺序就是手牌从左到右，严格大于才替换）。
+    // 无法打出的牌（状态牌、诅咒等 Unplayable）视为最高费用，永远最先被弃。
+    private static async Task MakeRoomInHand(PlayerChoiceContext choiceContext, Player player)
+    {
+        var hand = PileType.Hand.GetPile(player).Cards;
+
+        // 必须用 RitsuLib 的实时上限：本模组有改手牌上限的东西（基酒、罗德岛酒吧、轻盈），
+        // 而 CardPile.MaxCardsInHand 是本体里写死 10 的静态属性——RitsuLib 只改写游戏本体程序集里的读取点，
+        // 不会改写 mod 程序集里的，所以在 mod 代码里直接读它拿到的是 10，不是真实上限。
+        int maxHandSize = RitsuLibFramework.GetMaxHandSize(player);
+        if (hand.Count < maxHandSize) return;
+
+        CardModel? toDiscard = null;
+        int highestCost = int.MinValue;
+        foreach (var card in hand)
+        {
+            int cost = GetDiscardPriorityCost(card);
+            if (cost > highestCost)
+            {
+                highestCost = cost;
+                toDiscard = card;
+            }
+        }
+
+        if (toDiscard != null)
+        {
+            await CardCmd.Discard(choiceContext, toDiscard);
+        }
+    }
+
+    private static int GetDiscardPriorityCost(CardModel card)
+    {
+        if (card.Keywords.Contains(CardKeyword.Unplayable)) return int.MaxValue;
+        return card.EnergyCost.GetWithModifiers(CostModifiers.All);
     }
 }
