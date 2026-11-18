@@ -46,6 +46,13 @@ desktop.ini
 packages/
 *.nupkg
 
+# ============= 明日方舟素材解包中间产物 =============
+# .tmp_rt 是解包脚本与 UnityPy 依赖（约 146MB），arknights_assets 是从游戏本体
+# 解出的立绘/小人原文件（约 19MB），都不进仓库，需要时重新解包生成。
+.tmp_rt/
+arknights_assets/
+pluma.pck
+
 # ============= 其他 =============
 .gen/
 *.tmp_proj

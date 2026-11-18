@@ -48,7 +48,8 @@ public class Brother : ModMonsterTemplate
     public override int MaxInitialHp => INITIAL_HP;
     public static Vector2 MinOffset => new Vector2(10f, -10f);
 	public static Vector2 MaxOffset => new Vector2(50f, -10f);
-    public override bool IsHealthBarVisible => true;
+    // 0.113 起 MonsterModel.IsHealthBarVisible 被删除，换成 IsInteractable（默认 true，
+    // 语义 = 可交互且显示血条）。龙舌兰要的就是默认行为，因此不再重写。
 
     // 攻击循环的最后一击打完后置为 true，表示"该切回强化循环了"，但实际切换推迟到敌方回合结束。
     // 这样攻击循环的最后一回合依然会替玩家格挡伤害（DieForYou），见 FinishPendingAttackCycleEnd。
@@ -161,7 +162,7 @@ public class Brother : ModMonsterTemplate
         NCreature brotherNode = NCombatRoom.Instance?.GetCreatureNode(Creature);
         if (LocalContext.IsMe(Creature.PetOwner))
         {
-            brotherNode?.ToggleIsInteractable(true);
+            brotherNode?.SetIsInteractable(on: true, changeVisibilityImmediately: true);
         }
         GD.Print($"[Brother] AfterAddedToRoom: 攻击循环={IsInAttackCycle}, 剩余攻击回合={AttackTurnsRemaining}, 特性={Creature.GetPowerAmount<TraitPower>()}/{TraitThreshold}");
     }

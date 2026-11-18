@@ -8,6 +8,7 @@ using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
+using Pluma.Scripts.Vfx;
 
 namespace Pluma.Scripts;
 
@@ -37,5 +38,8 @@ public class ReaperHealingPower : ModPowerTemplate
         if (target == base.Owner) return;
         // 回复 = 层数
         await CreatureCmd.Heal(base.Owner, base.Amount);
+
+        // 银白十字特效（原版通过特性治疗时有同样的十字高光）
+        FlowVfx.PlayHeal(base.Owner);
     }
 }

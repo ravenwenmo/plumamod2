@@ -13,6 +13,10 @@ namespace Pluma.Scripts;
 /// <summary>
 /// 追踪 StartRunLobby 的创建（两个构造函数重载），让皮肤同步代码能找到当前大厅。
 /// 目标是 RitsuLib 自身的 RunSavedDataStartRunLobbyCtorPatch 也覆盖的同一批入口。
+///
+/// 0.113 起两个构造函数都在 gameMode 之后插入了 bool isCustom
+/// （StartRunLobby.cs:124 五参 / :155 六参），参数表必须同步更新，
+/// 否则这两条可选补丁会应用失败（日志里的 ...ctor__1/__2 - Failed ✗）。
 /// </summary>
 internal sealed class PlumaStartRunLobbyCtorPatch : IPatchMethod
 {
@@ -26,16 +30,18 @@ internal sealed class PlumaStartRunLobbyCtorPatch : IPatchMethod
     {
         return new ModPatchTarget[2]
         {
-            new ModPatchTarget(typeof(StartRunLobby), ".ctor", new Type[4]
+            new ModPatchTarget(typeof(StartRunLobby), ".ctor", new Type[5]
             {
                 typeof(GameMode),
+                typeof(bool),
                 typeof(INetGameService),
                 typeof(IStartRunLobbyListener),
                 typeof(int)
             }, (MethodType)3),
-            new ModPatchTarget(typeof(StartRunLobby), ".ctor", new Type[5]
+            new ModPatchTarget(typeof(StartRunLobby), ".ctor", new Type[6]
             {
                 typeof(GameMode),
+                typeof(bool),
                 typeof(INetGameService),
                 typeof(IStartRunLobbyListener),
                 typeof(TimeServerResult),

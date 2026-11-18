@@ -32,6 +32,14 @@ public class BattleRecorder : HookedSingletonModel
     {
     }
 
+    // 0.113 起单例是每局一个克隆实例（构造函数不执行），引用字段要在克隆时清掉，
+    // 否则会把上一局的战前快照带进新局。
+    protected override void DeepCloneFields()
+    {
+        base.DeepCloneFields();
+        _pending = null;
+    }
+
     public override Task AfterRoomEntered(AbstractRoom room)
     {
         if (room is CombatRoom combatRoom)
@@ -120,7 +128,9 @@ public class BattleRecorder : HookedSingletonModel
         {
             schema_version = 1,
             timestamp_unix_ms = start.timestamp_unix_ms,
-            character_id = Entry.ModId,
+            // 记录实际游玩的角色 id：之前硬写 Entry.ModId，导致原版角色（甚至别的 mod 角色）
+            // 的对局也被标成 pluma，统计时无法区分。
+            character_id = player.Character?.Id.Entry ?? Entry.ModId,
             seed_string = start.seed_string,
             seed_ulong = start.seed_ulong,
             act_index = start.act_index,

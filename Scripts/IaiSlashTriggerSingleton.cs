@@ -26,6 +26,15 @@ public class IaiSlashTriggerSingleton : HookedSingletonModel
         Instance = this;
     }
 
+    // 0.113 起单例是每局一个克隆实例（构造函数不执行），
+    // 这里重置标记并把静态引用指向当前局实例。
+    protected override void DeepCloneFields()
+    {
+        base.DeepCloneFields();
+        _isAutoPlaying = false;
+        Instance = this;
+    }
+
     public static bool CanTrigger(Creature? target, Creature? dealer)
         => target is { IsPlayer: true } && dealer is { IsMonster: true };
 

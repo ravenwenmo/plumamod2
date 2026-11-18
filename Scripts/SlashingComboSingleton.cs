@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -24,11 +24,22 @@ public class SlashingComboSingleton : HookedSingletonModel
     public static SlashingComboSingleton Instance { get; private set; }
 
     // 为每个玩家维护独立的连击计数器
-    private readonly Dictionary<Player, int> _comboCounters = new();
+    // 注意：0.113 起 RitsuLib 的单例是「每局一个克隆实例」，实例由 MemberwiseClone 生成、
+    // 构造函数不会执行，所以这个字段不能是 readonly，且必须在 DeepCloneFields 里重建，
+    // 否则所有实例会共用同一份字典（状态跨局泄漏）。
+    private Dictionary<Player, int> _comboCounters = new();
 
     public SlashingComboSingleton() : base(HookType.Combat)
     {
-        // 每次构造时更新静态实例（理论上只会构造一次）
+        // 规范实例（canonical）构造时先把静态引用指过来；每局的真正实例见 DeepCloneFields
+        Instance = this;
+    }
+
+    // 每局的克隆实例创建时：重建引用字段，并把静态 Instance 指向当前局的实例
+    protected override void DeepCloneFields()
+    {
+        base.DeepCloneFields();
+        _comboCounters = new Dictionary<Player, int>();
         Instance = this;
     }
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://x3dal1a4f7m6"]
 
 [ext_resource type="Texture2D" uid="uid://ba0hpvswj6jei" path="res://pluma/images/1img/char_late/character2.png" id="1_h0lxd"]
-[ext_resource type="Script" uid="uid://b3qn5rss6xq5f" path="res://Scripts/Skins/SkinSelector.cs" id="1_mk4u1"]
+[ext_resource type="Script" uid="uid://yk10qgy8usvt" path="res://Scripts/Skins/SkinSelector.cs" id="1_mk4u1"]
 [ext_resource type="Texture2D" uid="uid://ow5dxjrkq6x" path="res://pluma/images/1img/char/Character_Portrait.png" id="2_mk4u1"]
 [ext_resource type="Texture2D" uid="uid://bwdgrwwj1ovem" path="res://pluma/images/scenes/ori_icon.png" id="3_fibvn"]
 [ext_resource type="Texture2D" uid="uid://dyyjy1htf2548" path="res://pluma/images/scenes/sum_icon.png" id="4_jtm23"]

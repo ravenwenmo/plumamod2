@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -46,10 +48,28 @@ public class MarkerRecoveryPower : ModPowerTemplate
     };
 
     // 按层数在两套描述之间切换：初始 10 层只说特性，>25 层才补上多段斩那一段
-    protected override string SmartDescriptionLocKey =>
-        ShowsExtraHits
-            ? base.SmartDescriptionLocKey
-            : base.SmartDescriptionLocKey + "NoExtraHits";
+    // 0.113 的 DynamicVar 只读 PreviewValue（非虚属性），不能再靠重写取值方法现算，
+    // 所以在这里（每次显示悬浮提示都会走）顺手把 {ExtraHits} 刷新到最新层数。
+    protected override string SmartDescriptionLocKey
+    {
+        get
+        {
+            RefreshExtraHits();
+            return ShowsExtraHits
+                ? base.SmartDescriptionLocKey
+                : base.SmartDescriptionLocKey + "NoExtraHits";
+        }
+    }
+
+    // 把派生变量的数值同步到当前层数
+    private void RefreshExtraHits()
+    {
+        if (DynamicVars.TryGetValue("ExtraHits", out DynamicVar? extraHitsVar)
+            && extraHitsVar is DerivedIntVar derivedVar)
+        {
+            derivedVar.Refresh();
+        }
+    }
 
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://pluma/images/powers/MarkerRecoveryPower.png",
@@ -113,8 +133,9 @@ public class MarkerRecoveryPower : ModPowerTemplate
         }
     }
 
-    // 只用于描述显示：取值时现算，因此 {ExtraHits} 会随层数变化
-    // （照原版 CalculatedVar 的做法，同时重写 GetBaseValueForIConvertible 与 ToString）
+    // 只用于描述显示：数值由 Refresh() 现算并写回 BaseValue/PreviewValue。
+    // 0.113 的 DynamicVar 删掉了 GetBaseValueForIConvertible，显示一律走 PreviewValue，
+    // 因此这里改成「读的时候刷新」而不是「重写取值方法」。
     private sealed class DerivedIntVar : DynamicVar
     {
         private readonly Func<int> _value;
@@ -125,7 +146,17 @@ public class MarkerRecoveryPower : ModPowerTemplate
             _value = value;
         }
 
-        protected override decimal GetBaseValueForIConvertible() => _value();
+        // BaseValue 的 setter 会顺带 ResetToBase()，把 PreviewValue 一起同步
+        public void Refresh() => BaseValue = _value();
+
+        public override void UpdateCardPreview(
+            CardModel card,
+            CardPreviewMode previewMode,
+            Creature? target,
+            bool runGlobalHooks)
+        {
+            Refresh();
+        }
 
         public override string ToString() => _value().ToString();
     }

@@ -82,7 +82,33 @@ public class Entry
         }
 
         var harmony = new Harmony("com.lapluma.patch"); // patch的ID，和别人写的不一致防撞车
-        harmony.PatchAll();
+        // 逐个补丁类应用，而不是 harmony.PatchAll()：
+        // PatchAll 是「一个类出错就整体中止」，曾因某个临时探针类的目标方法存在重载
+        // （AmbiguousMatchException: Void UpdateTrack()）导致它之后的补丁（包括创伤）全都没装上，
+        // 而 Init 又照常结束，表现成「补丁莫名其妙不生效」。逐个应用可让失败只影响它自己。
+        int patchedOk = 0;
+        int patchedFail = 0;
+        foreach (Type patchType in typeof(Entry).Assembly.GetTypes())
+        {
+            if (!patchType.IsClass || patchType.GetCustomAttributes(typeof(HarmonyPatch), inherit: true).Length == 0)
+            {
+                continue;
+            }
+
+            try
+            {
+                harmony.CreateClassProcessor(patchType).Patch();
+                patchedOk++;
+            }
+            catch (Exception ex)
+            {
+                patchedFail++;
+                Logger.Warn($"[Harmony] 补丁 {patchType.FullName} 应用失败（已跳过，其它补丁继续）: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
+        // 汇总一行日志：排查「补丁没生效」时先看这行与上面的 [Harmony] 警告
+        GD.Print($"[pluma] Harmony 补丁: 成功 {patchedOk} 个，失败 {patchedFail} 个");
 
         // 注册皮肤同步所需的补丁：追踪当前大厅、为战斗模型创建提供玩家上下文
         var skinPatcher = RitsuLibFramework.CreatePatcher(ModId, "skin-sync");

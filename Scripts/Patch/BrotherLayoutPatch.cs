@@ -34,7 +34,7 @@ public static class BrotherLayoutPatch
             }
             // 与 BrotherCmd.Summon 的 tween 目标公式一致：布局位置 + 偏移
             creatureNode.Position += BrotherCmd.GetBrotherOffsetFromPlayer(creatureNode.Entity);
-            creatureNode.ToggleIsInteractable(true);
+            creatureNode.SetIsInteractable(on: true, changeVisibilityImmediately: true);
         }
     }
 }
@@ -55,7 +55,7 @@ public static class BrotherAddCreaturePatch
                 if (broNode is not null)
                 {
                     broNode.Position = BrotherCmd.BrotherPostion;
-                    broNode.ToggleIsInteractable(true);
+                    broNode.SetIsInteractable(on: true, changeVisibilityImmediately: true);
                 }
             }
         }

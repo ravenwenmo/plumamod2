@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -184,17 +185,24 @@ public class OpenWoundPower : ModPowerTemplate, IHealthBarForecastSource
         return base.Owner.Powers.OfType<FeintPower>().Sum(power => (int)power.Amount);
     }
 
+    // 0.113 的伤害统一从 CreatureCmd.Damage(..., IEnumerable<DamageTargetData>?, ...)（CreatureCmd.cs:285）
+    // 这个最内层重载执行：所有 Creature / IEnumerable<Creature> / DamageVar 重载最后都转调它。
+    // 特别注意：0.113 的 AttackCommand.cs:663 改成直接传 targetData 调这个重载
+    // （0.111 是传 targets: IEnumerable<Creature>），所以只补丁旧的 IEnumerable<Creature>
+    // 重载会导致「攻击伤害完全不触发创伤」——这正是 0.113 上创伤失效的原因。
+    // 只补丁最内层这一个，保证每次伤害命令只触发一次创伤（不会因多层重载嵌套而重复触发）。
     [HarmonyPatch(
         typeof(CreatureCmd),
         nameof(CreatureCmd.Damage),
         [
             typeof(PlayerChoiceContext),
-            typeof(IEnumerable<Creature>),
+            typeof(IEnumerable<DamageTargetData>),
             typeof(decimal),
             typeof(ValueProp),
             typeof(Creature),
             typeof(CardModel),
-            typeof(CardPlay)
+            typeof(CardPlay),
+            typeof(ModifyDamageHookType)
         ]
     )]
     public class OpenWoundPower_CreatureCmd_Damage_Patch

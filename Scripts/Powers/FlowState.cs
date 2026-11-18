@@ -16,6 +16,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Players;
+using Pluma.Scripts.Vfx;
 using STS2RitsuLib;
 
 namespace Pluma.Scripts;
@@ -49,6 +50,9 @@ public class FlowState : ModPowerTemplate
         await base.AfterPowerAmountChanged(choiceContext, power, amount, applier, cardSource);
 
         if (power != this || amount <= 0) return;
+
+        // 层数特效：向上的小箭头，跨过 12 层时额外爆一次光（纯本地视觉，不参与同步）
+        FlowVfx.PlayStackGain(base.Owner, (int)amount, (int)base.Amount);
 
         // 立即通知模组碎片（如果存在）
         var player = base.Owner.Player;
