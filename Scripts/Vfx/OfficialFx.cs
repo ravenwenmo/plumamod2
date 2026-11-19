@@ -97,6 +97,8 @@ public static class OfficialFx
             Modulate = tint,
             Material = AdditiveMaterial(),
             ShowBehindParent = false,
+            // 精灵表一格挨一格，线性过滤会把相邻帧采样进来（表现为"乱码方块"），故用最近邻
+            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
         };
         if (anchorBottom)
         {
