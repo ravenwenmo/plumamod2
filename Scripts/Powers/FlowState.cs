@@ -51,8 +51,8 @@ public class FlowState : ModPowerTemplate
 
         if (power != this || amount <= 0) return;
 
-        // 层数特效：向上的小箭头，跨过 12 层时额外爆一次光（纯本地视觉，不参与同步）
-        FlowVfx.PlayStackGain(base.Owner, (int)amount, (int)base.Amount);
+        // 特效：持有「渐入佳境」期间，小人身上一直挂着官方循环光环（纯本地视觉，不参与同步）
+        FlowVfx.SyncAura(base.Owner, true);
 
         // 立即通知模组碎片（如果存在）
         var player = base.Owner.Player;
@@ -175,6 +175,8 @@ public class FlowState : ModPowerTemplate
             }
         }
         _discountedCards.Clear();
+        // 能力消失（被清空层数 / 战斗结束）时把光环一起拆掉
+        FlowVfx.SyncAura(oldOwner, false);
         return Task.CompletedTask;
     }
 
