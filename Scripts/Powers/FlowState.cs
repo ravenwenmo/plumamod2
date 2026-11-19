@@ -54,6 +54,12 @@ public class FlowState : ModPowerTemplate
         // 特效：持有「渐入佳境」期间，小人身上一直挂着官方循环光环（纯本地视觉，不参与同步）
         FlowVfx.SyncAura(base.Owner, true);
 
+        // 首次叠满 12 层：官方满层扩散环（crow_attack_buff_03），只在跨越上限那一次播
+        if (base.Amount >= FlowVfx.MaxStacks && base.Amount - amount < FlowVfx.MaxStacks)
+        {
+            FlowVfx.PlayMaxStack(base.Owner);
+        }
+
         // 立即通知模组碎片（如果存在）
         var player = base.Owner.Player;
         if (player != null)
@@ -155,6 +161,8 @@ public class FlowState : ModPowerTemplate
         if (participants.Contains(base.Owner))
         {
             _discountedCards.Clear();
+            // 兜底：小人节点若被重建（换皮肤、读档、重进战斗）光环会跟着丢，这里每回合重挂一次
+            FlowVfx.SyncAura(base.Owner, base.Amount > 0);
         }
         return Task.CompletedTask;
     }

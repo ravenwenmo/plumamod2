@@ -46,6 +46,13 @@ public static class FlowVfx
     public static void PlayStackGain(Creature? owner, int gained, int total)
     {
         SyncAura(owner, true);
+        if (total >= MaxStacks && total - gained < MaxStacks) PlayMaxStack(owner);
+    }
+
+    /// <summary>满 12 层的一次性扩散环爆发（只在跨越上限那一次播）。</summary>
+    public static void PlayMaxStack(Creature? owner)
+    {
+        OfficialFx.PlayMaxStack(owner);
     }
 
     /// <summary>特性治疗自身时调用（白十字爆闪，1.5 倍、底边不动）。</summary>

@@ -27,6 +27,9 @@ public static class OfficialFx
 
         /// <summary>特性治疗自身时的一次性闪光。</summary>
         Heal,
+
+        /// <summary>渐入佳境首次叠满 12 层时的扩散环爆发。</summary>
+        MaxStack,
     }
 
     private const string Dir = "res://pluma/images/effects/official/";
@@ -44,6 +47,7 @@ public static class OfficialFx
     private static SheetSpec Spec(Kind kind) => kind switch
     {
         Kind.FlowAura => new SheetSpec("flow_aura", 90, 8, 256, 30f, true),
+        Kind.MaxStack => new SheetSpec("max_stack", 30, 8, 256, 30f, false),
         _ => new SheetSpec("heal_cross", 36, 8, 256, 30f, false),
     };
 
@@ -60,6 +64,12 @@ public static class OfficialFx
     public static void PlayHeal(Creature? owner)
     {
         Build(owner, Kind.Heal, 1.5f, Silver, anchorBottom: true, loop: false);
+    }
+
+    /// <summary>渐入佳境首次叠满 12 层：扩散环爆发（底边对齐脚下，往外扫）。</summary>
+    public static void PlayMaxStack(Creature? owner)
+    {
+        Build(owner, Kind.MaxStack, 2.2f, White, anchorBottom: true, loop: false);
     }
 
     private static Node2D? Build(Creature? owner, Kind kind, float scale, Color tint, bool anchorBottom, bool loop)
@@ -97,8 +107,6 @@ public static class OfficialFx
             Modulate = tint,
             Material = AdditiveMaterial(),
             ShowBehindParent = false,
-            // 精灵表一格挨一格，线性过滤会把相邻帧采样进来（表现为"乱码方块"），故用最近邻
-            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
         };
         if (anchorBottom)
         {
