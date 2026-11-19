@@ -9,8 +9,8 @@ namespace Pluma.Scripts.Vfx;
 ///
 ///   · <see cref="SyncAura"/>：渐入佳境**持有期间**持续播放的循环光环
 ///     （官方 crow_attack_buff_02 = 天赋 1 攻速叠层的身上特效）
-///   · <see cref="PlayHeal"/>：通过特性治疗自身时的一次性白十字闪光
-///     （官方 crow_attack_buff_01 = 特性回复特 effect）
+///   · <see cref="PlayHeal"/>：通过特性治疗自身时的一次性特效
+///     （官方 crow_attack_buff_01 = 特性回复 buff 的 <c>crow_trait[heal]</c>）
 ///
 /// 光环按 Creature 记账：同一场战斗里只挂一份，移除能力或战斗结束时拆掉。
 /// </summary>
@@ -55,7 +55,7 @@ public static class FlowVfx
         OfficialFx.PlayMaxStack(owner);
     }
 
-    /// <summary>特性治疗自身时调用（白十字爆闪，1.5 倍、底边不动）。</summary>
+    /// <summary>特性治疗自身时调用（官方 crow_attack_buff_01：溶解爆闪 + 7 枚十字爆散）。</summary>
     public static void PlayHeal(Creature? owner)
     {
         OfficialFx.PlayHeal(owner);
