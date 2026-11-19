@@ -36,8 +36,16 @@ public class ReaperHealingPower : ModPowerTemplate
 
         // 只要目标不是自己（避免自伤回血），就回血
         if (target == base.Owner) return;
-        // 回复 = 层数
-        await CreatureCmd.Heal(base.Owner, base.Amount);
+        // 回复 = 层数（先压掉原版治疗十字光，再放方舟官方那套）
+        PlumaHealVfx.Begin();
+        try
+        {
+            await CreatureCmd.Heal(base.Owner, base.Amount);
+        }
+        finally
+        {
+            PlumaHealVfx.End();
+        }
 
         // 银白十字特效（原版通过特性治疗时有同样的十字高光）
         FlowVfx.PlayHeal(base.Owner);

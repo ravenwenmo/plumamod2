@@ -15,6 +15,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.RestSite;
 using MegaCrit.Sts2.Core.Rooms; // 提供 RestSiteOption
+using Pluma.Scripts.Vfx;
 
 namespace Pluma.Scripts;
 
@@ -60,7 +61,20 @@ public class ReaperBadge : ModRelicTemplate
         if (target == base.Owner.Creature) return;
 
         Flash();
-        await CreatureCmd.Heal(base.Owner.Creature, 1);
+
+        // 压制杀戮尖塔原版的治疗十字光（vfx/vfx_cross_heal），只留方舟官方那一套
+        PlumaHealVfx.Begin();
+        try
+        {
+            await CreatureCmd.Heal(base.Owner.Creature, 1);
+        }
+        finally
+        {
+            PlumaHealVfx.End();
+        }
+
+        // 治疗特效：官方 common_heal_hit_01 染银白，1.5 倍、底边不动
+        FlowVfx.PlayHeal(base.Owner.Creature);
     }
 
     // 移除“休息”选项，让玩家无法选择

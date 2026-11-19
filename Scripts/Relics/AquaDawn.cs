@@ -14,6 +14,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using MegaCrit.Sts2.Core.Entities.RestSite; // 提供 RestSiteOption
 using Pluma.Scripts.Monsters;
+using Pluma.Scripts.Vfx;
 
 namespace Pluma.Scripts;
 
@@ -60,7 +61,19 @@ public class AquaDawn : ModRelicTemplate
         }
         else
         {
-            await CreatureCmd.Heal(base.Owner.Creature, 1);
+            // 压制杀戮尖塔原版的治疗十字光，只留方舟官方那一套
+            PlumaHealVfx.Begin();
+            try
+            {
+                await CreatureCmd.Heal(base.Owner.Creature, 1);
+            }
+            finally
+            {
+                PlumaHealVfx.End();
+            }
+
+            // 治疗特效：只有治疗羽毛笔自己时才闪银白十字（给龙舌兰回血不放）
+            FlowVfx.PlayHeal(base.Owner.Creature);
         }
     }
     
