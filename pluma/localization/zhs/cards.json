@@ -102,8 +102,11 @@
   "PLUMA_CARD_SLASHING_MASTER.description": "生成{Cards:diff()}张[gold]切割[/gold]。",
 
   "PLUMA_CARD_FORMAL_SCYTHE.title": "制式镰刀",
-  "PLUMA_CARD_FORMAL_SCYTHE.description": "造成{Damage:diff()}点伤害。\n选择一张攻击牌牌添加[gold]切割[/gold]。",
+  "PLUMA_CARD_FORMAL_SCYTHE.description": "造成{Damage:diff()}点伤害。\n{IfUpgraded:show:手牌中所有攻击牌添加[gold]切割[/gold]。|选择一张攻击牌添加[gold]切割[/gold]。}",
   "PLUMA_CARD_FORMAL_SCYTHE.selectPrompt": "选择一张手牌添加切割",
+
+  "PLUMA_CARD_DEFTNESS.title": "灵巧",
+  "PLUMA_CARD_DEFTNESS.description": "本回合失去{Stacks:diff()}点[gold]力量[/gold]和{Stacks:diff()}点[gold]敏捷[/gold]。\n本回合你的攻击段数翻倍，施加的[gold]创伤[/gold]翻倍。{IfUpgraded:show:\n升级后：获得[gold]本能[/gold]。|}",
 
   "PLUMA_CARD_KICK.title": "踢击",
   "PLUMA_CARD_KICK.description": "造成{Damage:diff()}点伤害。\n抽{Cards:diff()}张牌。",

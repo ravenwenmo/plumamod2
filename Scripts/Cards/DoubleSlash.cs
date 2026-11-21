@@ -14,7 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace Pluma.Scripts;
 
 
-// 注册卡牌到指定池（这里是无色）。如果要写自定义池看添加人物的开头
+// 双重切割：内部令牌牌（1费，造成2段5点伤害）。设为 Token 且图鉴隐藏，局内无法抓取/生成。
 [RegisterCard(typeof(PlumaCardPool))]
 // 注册成人物起始卡，后面是数量。不需要删除即可。
 public class DoubleSlash : ModCardTemplate
@@ -24,11 +24,12 @@ public class DoubleSlash : ModCardTemplate
     // 卡牌类型
     private const CardType type = CardType.Attack;
     // 卡牌稀有度
-    private const CardRarity rarity = CardRarity.Common;
+    // 改为 Token：不进奖励/商店等随机来源，局内无法抓取（同时从图鉴隐藏）
+    private const CardRarity rarity = CardRarity.Token;
     // 目标类型（AnyEnemy表示任意敌人）
     private const TargetType targetType = TargetType.AnyEnemy;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
+    // 是否在卡牌图鉴中显示（不可视）
+    private const bool shouldShowInCardLibrary = false;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

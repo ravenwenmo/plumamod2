@@ -169,5 +169,13 @@
 
   "PLUMA_POWER_NOM_POWER.title": "嚼",
   "PLUMA_POWER_NOM_POWER.description": "龙舌兰下一次斩杀敌人时，增加最大生命值。",
-  "PLUMA_POWER_NOM_POWER.smartDescription": "龙舌兰{Counter:choose(1):下一次|第{}次}斩杀敌人时，增加[blue]{Amount}[/blue]点最大生命值。"
+  "PLUMA_POWER_NOM_POWER.smartDescription": "龙舌兰{Counter:choose(1):下一次|第{}次}斩杀敌人时，增加[blue]{Amount}[/blue]点最大生命值。",
+
+  "PLUMA_POWER_DEFTNESS_POWER.title": "灵巧",
+  "PLUMA_POWER_DEFTNESS_POWER.description": "本回合你的攻击段数翻倍，施加的创伤层数翻倍。",
+  "PLUMA_POWER_DEFTNESS_POWER.smartDescription": "本回合你的攻击段数翻倍，施加的[gold]创伤[/gold]层数翻倍。回合结束时移除。",
+
+  "PLUMA_POWER_DEFTNESS_DOWN_POWER.title": "灵巧",
+  "PLUMA_POWER_DEFTNESS_DOWN_POWER.description": "本回合失去力量与敏捷，回合结束时返还。",
+  "PLUMA_POWER_DEFTNESS_DOWN_POWER.smartDescription": "本回合失去[blue]{Amount}[/blue]点[gold]力量[/gold]和[blue]{Amount}[/blue]点[gold]敏捷[/gold]，回合结束时返还。"
 }
